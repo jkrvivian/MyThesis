@@ -1,0 +1,11 @@
+% may be removed
+The publish-subscribe messaging model is widely used in IoT applications for exchanging data between devices due to its scalability and resource-effieciency. In the publish-subscribe system, a broker is the bridge to meet publishers and subscribers. Broker is a centralized group that arrange the communication between the publishers and subscribers. However, the centralized architecture brings potential vulnerabilities and security issues:
+
+\begin{enumerate}
+	\item Central point of failure. 
+	The broker is usually held by a single organization. If the centralized server is crashed or attacked, the services will not be available. 	
+	\item Data integrity.
+	As broker controls the interaction between publishers and subscribers, an unreliable or compromised broker can easily tamper data streams. 
+	\item Anonymity and privacy.
+	Broker matches publishers and subscribers in order to relay data streams to corresponding entities. The unreliable broker can expose the subscribers' interests and personal information of both entities.  
+\end{enumerate}
