@@ -9,3 +9,8 @@ The publish-subscribe messaging model is widely used in IoT applications for exc
 	\item Anonymity and privacy.
 	Broker matches publishers and subscribers in order to relay data streams to corresponding entities. The unreliable broker can expose the subscribers' interests and personal information of both entities.  
 \end{enumerate}
+
+% move belows to background-archi
+The pub/sub model is widely used in IoT applications for exchanging data between devices due to its scalability and resource-effieciency. Connections of participants are built via brokers, which can avert sensitive information leaks in order to establish communication. Yet the existing pub/sub models\cite{MQTT, Looci, centralPubSub} mostly rely on centralized servers which may bring potential vulnerabilities, for instance, the services are paralyzed if the server is crashed or attacked. Therefore, we adopted decentralized pub/sub model with no organization holding brokers. Finally, \textbf{data providers}, \textbf{data consumers} and \textbf{brokers} are the three main roles in the data marketplace.
+
+Ethereum Smart Contract is the key component to enforce the agreement between actors, such as data price and subscription period, and demands penalties when the rules are violated. This stimulates the economics incentives, and motivates data providers to involve data marketplace and maintain high data quality. Also, the interactions among different actors are transparent and validable by automatically recording them on Ethereum Smart Contracts. 
