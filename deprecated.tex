@@ -1,0 +1,21 @@
+% may be removed
+The publish-subscribe messaging model is widely used in IoT applications for exchanging data between devices due to its scalability and resource-effieciency. In the publish-subscribe system, a broker is the bridge to meet publishers and subscribers. Broker is a centralized group that arrange the communication between the publishers and subscribers. However, the centralized architecture brings potential vulnerabilities and security issues:
+
+\begin{enumerate}
+	\item Central point of failure. 
+	The broker is usually held by a single organization. If the centralized server is crashed or attacked, the services will not be available. 	
+	\item Data integrity.
+	As broker controls the interaction between publishers and subscribers, an unreliable or compromised broker can easily tamper data streams. 
+	\item Anonymity and privacy.
+	Broker matches publishers and subscribers in order to relay data streams to corresponding entities. The unreliable broker can expose the subscribers' interests and personal information of both entities.  
+\end{enumerate}
+
+% move belows to background-archi
+The pub/sub model is widely used in IoT applications for exchanging data between devices due to its scalability and resource-effieciency. Connections of participants are built via brokers, which can avert sensitive information leaks in order to establish communication. Yet the existing pub/sub models\cite{MQTT, Looci, centralPubSub} mostly rely on centralized servers which may bring potential vulnerabilities, for instance, the services are paralyzed if the server is crashed or attacked. Therefore, we adopted decentralized pub/sub model with no organization holding brokers. Finally, \textbf{data providers}, \textbf{data consumers} and \textbf{brokers} are the three main roles in the data marketplace.
+
+Ethereum Smart Contract is the key component to enforce the agreement between actors, such as data price and subscription period, and demands penalties when the rules are violated. This stimulates the economics incentives, and motivates data providers to involve data marketplace and maintain high data quality. Also, the interactions among different actors are transparent and validable by automatically recording them on Ethereum Smart Contracts. 
+
+In our proposed architecture, MAM is the data storage which is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT. MAM resolves the challenge of publishing authenticated streaming data as zero-value transactions to distributed ledgers, and provides the ability to publish and fetch encrypted messages over the Tangle along with data integrity and access control. Since the data is zero-value transactions on the Tangle, the concern of losing new uploaded data due to the disconnection does not exist, participants can retrieve the authoraized data streams anytime. 
+
+% MAM performance
+optimizing layers of MAM and compare the performance of different cryptosystems. Furthermore, we take offloading MAM operations to brokers as another solution to reduce the workload of IoT devices, since the brokers are considered to have higher computating power. In Section CITE-TA-SECTION, the security issues and methods of offloading will be discussed carefully.
