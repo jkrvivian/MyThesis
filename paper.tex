@@ -129,6 +129,36 @@ It provides the smart contract, which is a protocol for formulating agreement on
 
 With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be acheived. \textbf{Product Contract} is made for the product launching and trading process in the decentralized data marketplace. The information of data products such as MAM channel ID (the data entry point), data price, time period and the broker-verified encryption key are listed on Product Contract. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of both providers and subscribers.
 
+\subsection{Masked Authenticated Messaging}
+MAM resolves the challenge of publishing authenticated streaming data as zero-value transactions to IOTA ledger, and provides the ability to publish and fetch encrypted messages over the Tangle along with data integrity and access control. With MAM, the rights of data access is traded instead of a copy of data itself, which eliminates the need for data consumers to have additional storage.
+ 
+In the IOTA protocol, \textbf{seed} is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can produce addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
+
+Either channel or endpoint is like a singly-linked list. The MAM channel ID and endpoint ID are the addresses of transaction and are the root of a channel and endpoint. Each address of a message can be derived from the previous one. A user can create multiple channels and multiple endpoints under the same channel. The messages can be encrypted with the session key and broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only entities that know the session key to be able to decode these messages after retrieving them from the Tangle, and the singly-linked list structure implements the concept of forward secrecy, where anyone has no access to the data back from his/her entry point. Fig.~\ref{fig:mam_struct} shows the architecture of MAM.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{mam_struct}
+    \caption{The concept of MAM.}
+    \label{fig:mam_struct}
+\end{figure}
+
+The authentication in MAM includes source and data authentication. Source authentication ensures that the message originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees should be fixed at start, which is the size of a channel and the endpoint is decided before creation. Thus, data providers need to firstly decide how to distribute data product into MAM channels or endpoints.
+
+%to be modify
+Data providers are the primary role to interact with the MAM. With a seed, a provider can start creating a channel and endpoint. As mentioned above, the length of a channel and an endpoint is fixed, thus providers need to decide the selling unit of data products according to their data type or pricing strategy. Also data providers can a make product preview which is public and not encrypted on MAM. In Fig.~\ref{fig:mam_struct}, a "central endpoint" means its endpoint's ID is the same as channel's ID. By attaching part of the product to central endpoint can give subscribers a quick preview with channel's ID only, and users can easily verify the content with digital signatures in messages. Then if the trade is established, providers can then give subscribers the encrypted endpoint and session key to subscribers.
+ 
+The decentralized and fault-tolerant characteristic of distributed ledgers reduce the risks of centralized storage services, and the underlying IOTA network is scalable which withstands real-time data while increasing users all over the world. Moreover, the features of MAM make it an even better data storage which allows preserving streaming data while ensuring data integrity, proving data ownership to any participants and managing session keys of data. And through the access control and the protocol of MAM, participants are allowed to subscribe to the future data. This ensures that only service requester and selected provider are in possession of a key to decrypt and read the content of the MAM channel and therefore retrieve transaction data for audit.
+
+While the operations of MAM are time-consuming, brokers are responsible not only for being the bridge between providers and subscribers, but also for all MAM related operations, such as channel creation and encrypted data publishing in our system. See Fig.~ \ref{fig:launching_product}.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{launching_product}
+    \caption{The process of launching a product.}
+    \label{fig:launching_product}
+\end{figure}
+
 \section{Related Work}
 The publish/subscribe service model consists of publishers, subscribers and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in publish/subscribe system focused on the scalability and the different security issues such as, encrypted data communication, privacy preserving data subscription and access control of digital asset. A few work targets on the storage which is a vital considerations for IoT and mobile computing and the incentive for data economics.
 
@@ -145,37 +175,6 @@ The proposed data subscription framework\cite{MyDataMarketplace} is a decentrali
 \subsection{Components}
 There are several building blocks in the proposed design to meet the expectations: 1) emit and access encrypted data stream; 2) retrieve transaction data for audit; 3) digital identity for all participants; and 4) enforcement of transparency and traceability.
 
-
-\subsubsection{Masked Authenticated Messaging}
-IOTA is a feeless cryptocurrency designed for IoT while MAM is the second layer data communication protocol built on top of the IOTA network, the Tangle. MAM resolves the challenge of publishing authenticated streaming data as zero-value transactions to distributed ledgers, and provides the ability to publish and fetch encrypted messages over the Tangle along with data integrity and access control.
-With MAM, the rights of accessing data is traded instead of a copy of data itself, which gives a flexibilty for subscribers to obtain data anywhere anywhen that subscribers do not need additional storage to store the data it buy.
- 
-In the IOTA protocol, seed is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can produce addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
-
-Either channel or endpoint is like a singly-linked list. The MAM channel ID and endpoint ID are the addresses of transaction and are the root of a channel and endpoint. Each address of a message can be derived from the previous one. A user can create multiple channels and multiple endpoints under the same channel. The messages can be encrypted with the session key and broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only entities that know the session key to be able to decode these messages after retrieving them from the Tangle, and the singly-linked list structure implements the concept of forward secrecy, where anyone has no access to the data back from his/her entry point. Fig.~\ref{fig:mam_struct} shows the architecture of MAM.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{mam_struct}
-    \caption{The concept of MAM.}
-    \label{fig:mam_struct}
-\end{figure}
-
-The authentication in MAM includes source and data authentication. Source authentication ensures that the message originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees should be fixed at start, which is the size of a channel and the endpoint is decided before creation. Thus, data providers need to firstly decide how to distribute data product into MAM channels or endpoints.
-
-%use case illustration
-Data providers are the primary role to interact with the MAM. With a seed, a provider can start creating a channel and endpoint. As mentioned above, the length of a channel and an endpoint is fixed, thus providers need to decide the selling unit of data products according to their data type or pricing strategy. Also data providers can a make product preview which is public and not encrypted on MAM. In Fig.~\ref{fig:mam_struct}, a "central endpoint" means its endpoint's ID is the same as channel's ID. By attaching part of the product to central endpoint can give subscribers a quick preview with channel's ID only, and users can easily verify the content with digital signatures in messages. Then if the trade is established, providers can then give subscribers the encrypted endpoint and session key to subscribers.
- 
-The decentralized and fault-tolerant characteristic of distributed ledgers reduce the risks of centralized storage services, and the underlying IOTA network is scalable which withstands real-time data while increasing users all over the world. Moreover, the features of MAM make it an even better data storage which allows preserving streaming data while ensuring data integrity, proving data ownership to any participants and managing session keys of data. And through the access control and the protocol of MAM, participants are allowed to subscribe to the future data. This ensures that only service requester and selected provider are in possession of a key to decrypt and read the content of the MAM channel and therefore retrieve transaction data for audit.
-
-While the operations of MAM are time-consuming, brokers are responsible not only for being the bridge between providers and subscribers, but also for all MAM related operations, such as channel creation and encrypted data publishing in our system. See Fig.~ \ref{fig:launching_product}.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{launching_product}
-    \caption{The process of launching a product.}
-    \label{fig:launching_product}
-\end{figure}
 
 \subsubsection{TangleID}
 The TangleID\cite{TangleID} is a self-sovereign identity system based on IOTA that does not require any third-party authority to verify an identity and its digital footprint. With TangleID, the digital footprint is converted into digital assets under the principle of Decentralized Identifiers (DIDs)\cite{DID} defined by W3C. Posting DID documents on MAM channel makes TangleID a GDPR-compliant system\cite{GDPR}. Every participant in the data marketplace registers on TangleID, hence one can easily verify data providers' identity to ensure the data persistency from data sources.
