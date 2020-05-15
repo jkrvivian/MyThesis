@@ -64,13 +64,6 @@ In contrast to centralized architectures in \cite{DIaas, IOTAIdustryMarketplace,
 
 In the previous paper, we investigated the use of decentralized publish/subscribe (pub/sub) model and distributed ledger technologies (DLTs) to construct the authority-less and trusted infrastructure, particularly Ethereum Smart Contract\cite{smartContract} and IOTA Masked Authenticated Messaging (MAM)\cite{MAM}. The pub/sub model features the scalability and resource-efficiency, and the economic incentives are stimulated by regulating trading agreement and penalty on Ethereum Smart Contracts with transparency. Lastly, MAM as the data storage not only ensures the data integrity, but also enables access control and provides a scalable key and data management. These three keys meet the requirements mentioned previously.   
 
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.in]{system_design}
-    \caption{The system design of a decentralized data marketplace which consists of data providers, consumers and brokers.}
-    \label{fig:system_design}
-\end{figure}
-
 \subsection{Choice of Data Storage}
 Data storage is an important element of data marketplace where the data assets are reserved. We assume such storage system should be distributed which runs on the peer-to-peer network maintiaining by multiple nodes. Hence, the risk of system paralysis for server being compromised or shutdown unexpectedly can be removed. Among the existing distributed storage mentioned in Section. CITE-RELATED-WORK, different architectures, back-up mechanisms and access controls strategies are proposed. Yet the keys and addresses of data managed by participants are hard to be as small as possible especially for data streams.  
 
@@ -105,9 +98,58 @@ The contributions in the paper are summarized as follow:
 
 
 \subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section RELATED-WORK, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section BACKGROUND, the architecture of our proposed decentralized data marketplace is illustrated. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
+The rest of this paper is organized as follows. In Section BACKGROUND, the architecture of our proposed decentralized data marketplace is illustrated. In Section RELATED-WORK, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=3.in]{system_design}
+    \caption{The system design of a decentralized data marketplace which consists of data providers, consumers and brokers.}
+    \label{fig:system_design}
+\end{figure}
+
+\section{Background}
+In this section, we review the architecture of decentralized data marketplace and the two key components in the system, Ethereum Smart Contract and MAM.
+
+\subsection{Participants in Decentralized Data Marketplace}
+There are three major roles, data providers, data consumers and brokers in the decentralized data marketplace which is similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others. In our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. Fig.~\ref{fig:system_design}
+
+\begin{itemize}
+\item \textbf{Data Provider: }
+Data providers are the ones that generate, or filter streaming data, and set the data price based on the different types of data. With the subscription fee that earned via trading, data providers are incentivized to maintain and improve the quality of data.
+\item \textbf{Data Consumer: }
+Data consumers are entities that are willing to buy data streams. As it is laborious to widely deploy devices to collect data from scratch, and without a marketplace, it is also difficult to find providers of the data sets, purchases is the fastet and efficient way to get the desired data sets. 
+\item \textbf{Broker: }
+Brokers are responsible for building an agreement between data providers and consumers. Also brokers can represent data providers to perform computing tasks as brokers are expected to have higher resource. 
+\end{itemize}
+
+\subsection{Ethereum Smart Contract}
+Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. 
+It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it will be executed automatically without any third-parties and it is uninterruptible. 
+
+With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be acheived. \textbf{Product Contract} is made for the product launching and trading process in the decentralized data marketplace. The information of data products such as MAM channel ID (the data entry point), data price, time period and the broker-verified encryption key are listed on Product Contract. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of both providers and subscribers.
+
+\subsection{Masked Authenticated Messaging}
+MAM publishes authenticated streaming data as zero-value transactions to IOTA ledger and provides the ability to publish and fetch encrypted messages over the IOTA Tangle along with data integrity and access control. With MAM, the rights of data access are traded instead of a copy of data in the data marketplace, which eliminates the need for data consumers to have additional storage.
  
+In the IOTA protocol, \textbf{seed} is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can create addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
+
+Either channel or endpoint is like a singly-linked list. The singly-linked list structure implements the concept of forward secrecy, where no one has access to the data back from his/her entry point. Furthermore, each address of a message can be derived from the previous one, which enables data consumers to subscribe to future data by having the endpoint ID. A MAM channel/endpoint ID is the address of a transaction and the first message of a channel/endpoint. The central endpoint in Fig.~\ref{fig:mam_struct} means its endpoint ID is the same as channel ID. 
+
+A user can create multiple channels and endpoints, and the messages can be encrypted with the session key then broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only authorized entities are able to decode these messages after retrieving them from the Tangle. 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{mam_struct}
+    \caption{The concept of MAM.}
+    \label{fig:mam_struct}
+\end{figure}
+
+The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
+
+Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. 
+
+
 \section{Related Work}
 The publish/subscribe service model consists of publishers, subscribers and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in publish/subscribe system focused on the scalability and the different security issues such as, encrypted data communication, privacy preserving data subscription and access control of digital asset. A few work targets on the storage which is a vital considerations for IoT and mobile computing and the incentive for data economics.
 
@@ -120,54 +162,10 @@ Decentralized storage systems allow users to store files in a distributed networ
 \section{System Architecture}
 The proposed data subscription framework\cite{MyDataMarketplace} is a decentralized architecture with data providers, data subscribers and brokers that interact between data providers and subscribers, including data publishment, product metadata generation and trading process.
 
-\subsection{Participants}
-There are three major roles in the decentralized data marketplace (Fig.~\ref{fig:system_design}).
-
-\begin{itemize}
-\item \textbf{Data Provider: }
-Data providers generate and preserve streaming data, and are willing to provide streaming data to subscribers. Providers can use the subscription fee paid by subscribers to improve the quality of their service.
-\item \textbf{Subscribers: }
-Subscribers aspire to obtain streaming data to promote the value of their service. However, it is a significant challenge for most subscribers to collect the desired data by themselves, so they look to purchasing the streaming data from data providers.
-\item \textbf{Broker: }
-Brokers represent data providers and subscribers to perform blockchain computing tasks and are expected to have higher resource. The brokers are requested to handle the product launching and subscription process, and brokerage fees is charged in each process.
-\end{itemize}
-
-
 
 \subsection{Components}
 There are several building blocks in the proposed design to meet the expectations: 1) emit and access encrypted data stream; 2) retrieve transaction data for audit; 3) digital identity for all participants; and 4) enforcement of transparency and traceability.
 
-
-\subsubsection{Masked Authenticated Messaging}
-IOTA is a feeless cryptocurrency designed for IoT while MAM is the second layer data communication protocol built on top of the IOTA network, the Tangle. MAM resolves the challenge of publishing authenticated streaming data as zero-value transactions to distributed ledgers, and provides the ability to publish and fetch encrypted messages over the Tangle along with data integrity and access control.
-With MAM, the rights of accessing data is traded instead of a copy of data itself, which gives a flexibilty for subscribers to obtain data anywhere anywhen that subscribers do not need additional storage to store the data it buy.
- 
-In the IOTA protocol, seed is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can produce addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
-
-Either channel or endpoint is like a singly-linked list. The MAM channel ID and endpoint ID are the addresses of transaction and are the root of a channel and endpoint. Each address of a message can be derived from the previous one. A user can create multiple channels and multiple endpoints under the same channel. The messages can be encrypted with the session key and broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only entities that know the session key to be able to decode these messages after retrieving them from the Tangle, and the singly-linked list structure implements the concept of forward secrecy, where anyone has no access to the data back from his/her entry point. Fig.~\ref{fig:mam_struct} shows the architecture of MAM.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{mam_struct}
-    \caption{The concept of MAM.}
-    \label{fig:mam_struct}
-\end{figure}
-
-The authentication in MAM includes source and data authentication. Source authentication ensures that the message originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees should be fixed at start, which is the size of a channel and the endpoint is decided before creation. Thus, data providers need to firstly decide how to distribute data product into MAM channels or endpoints.
-
-%use case illustration
-Data providers are the primary role to interact with the MAM. With a seed, a provider can start creating a channel and endpoint. As mentioned above, the length of a channel and an endpoint is fixed, thus providers need to decide the selling unit of data products according to their data type or pricing strategy. Also data providers can a make product preview which is public and not encrypted on MAM. In Fig.~\ref{fig:mam_struct}, a "central endpoint" means its endpoint's ID is the same as channel's ID. By attaching part of the product to central endpoint can give subscribers a quick preview with channel's ID only, and users can easily verify the content with digital signatures in messages. Then if the trade is established, providers can then give subscribers the encrypted endpoint and session key to subscribers.
- 
-The decentralized and fault-tolerant characteristic of distributed ledgers reduce the risks of centralized storage services, and the underlying IOTA network is scalable which withstands real-time data while increasing users all over the world. Moreover, the features of MAM make it an even better data storage which allows preserving streaming data while ensuring data integrity, proving data ownership to any participants and managing session keys of data. And through the access control and the protocol of MAM, participants are allowed to subscribe to the future data. This ensures that only service requester and selected provider are in possession of a key to decrypt and read the content of the MAM channel and therefore retrieve transaction data for audit.
-
-While the operations of MAM are time-consuming, brokers are responsible not only for being the bridge between providers and subscribers, but also for all MAM related operations, such as channel creation and encrypted data publishing in our system. See Fig.~ \ref{fig:launching_product}.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{launching_product}
-    \caption{The process of launching a product.}
-    \label{fig:launching_product}
-\end{figure}
 
 \subsubsection{TangleID}
 The TangleID\cite{TangleID} is a self-sovereign identity system based on IOTA that does not require any third-party authority to verify an identity and its digital footprint. With TangleID, the digital footprint is converted into digital assets under the principle of Decentralized Identifiers (DIDs)\cite{DID} defined by W3C. Posting DID documents on MAM channel makes TangleID a GDPR-compliant system\cite{GDPR}. Every participant in the data marketplace registers on TangleID, hence one can easily verify data providers' identity to ensure the data persistency from data sources.
@@ -177,41 +175,6 @@ A public/private key pair and an IOTA seed are generated in TangleID. The public
 The digital identities are also used to establish trust between the communication partners. This is done on two levels to prove that the communication partner owns the DID and the partner can, optionally, proof that it is a trusted participant. This authentication process happens during the first messages of interaction. In order for one partner to listen to another, it authenticates the messages. The DID ownership authentication is done by proving a digitally signed copy of the DID document.
 
 The authentication of trust between the two parties is based on a Verifiable Credential, given out by a trusted issuer for the receiving party. If the receiving party does not trust the issuer, the credential is deemed worthless. If the party is recognized, the credential is verified and the messages will be labelled as trusted. In order to acquire this credential, the party needs to contact the issuer and ask for the credential. The issuer will need to know the DID of the party. If they decide to give out the credential, the issuer will sign the credential and send it encrypted over the blockchain to the requesting party's communication address. This is listed as a Service Endpoint (DID standard) in the DID Document of the requesting party.
-
-\subsubsection{Ethereum Smart Contract}
-The smart contract is a protocol for formulating agreement on a blockchain that provides verification and execution of the contract. The code in the smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All conditions and states established in the contract are transparent and enforceable. The appearance of smart contracts makes trading more flexible, and achieves more complex trading patterns in reality.
-
-The Product Contract is used during the trading process, where Product Contract records all the details of data products, such as MAM channel's and endpoint's ID, blinded session key and data providers' DID Document address. Furthermore, data providers and subscribers exchange session keys through a Product Contract without involving brokers. Though this design may cost more in transaction fees than doing so off-chain, it is considered a better strategy to assure the profit of both providers and subscribers. The further details of key exchangement will be illustrated in Section~\ref{section:trading}.
-
-\subsubsection{Blind Signature}
-There is an inherent risk in revealing session keys to brokers since contents may be copied by brokers, which would result in data providers' losses. Therefore, a blind signature is used to prevent session key copying for such circumstances. A blind signature\cite{blindSig} is a form of digital signature where the message is first "blinded" by a random "blinding factor", then passed to a signer to sign. Fig.~\ref{fig:blind_signature} illustrates the steps of blind signature. The resulting message, along with the blinding factor, can be later verified with the signer's public key. In our system design, brokers would perform blind signatures during the process of adding new products for data providers, in order to send the secret key of the MAM channel to the smart contract without knowing it.
-
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=2. in]{blind_signature}
-	\caption{The scheme of blind signature.}
-	\label{fig:blind_signature}
-\end{figure}
-
-RSA blind signature\cite{cryptoNote} is used in our research. The user chooses a random number $r$ and uses the signer's public key $e$ to generate a blinding factor $r^e$. To prevent the message $m$ from being known by the signer, the user sends blinding message $c$ to the signer instead of $m$.
-
-\begin{equation}
-C = r^e m
-\end{equation}
-
-The signer signs the blinding message with private key $d$.
-
-\begin{equation}
-S = C^d
-\end{equation}
-
-$S$ is the signer's signature of $C$. In RSA system, $ed$ is equal to 1. To remove the blinding factor, the user computes the following calculation.
-
-\begin{equation}
-\frac{S}{r}= \frac{C^d}{r} = \frac{(r^e m)^d}{r} = \frac{r^{ed} m^d}{r} = m^d
-\end{equation}
- 
-The user gets $m^d$ which is the signer's signature of the message $m$. At the same time, the signer does not know $m$ and the session key is protected. 
 
 \section{Trading Model}
 In the following, we describe the data trading process in detail. To participate a data marketplace, data providers and subscribers have to first register. Then,  the data provider can launch its product on the marketplace. Once a product is launched, it is searchable on IPFS where brokers upload the information of the product and can be subsequently traded. The whole trading and refunding process is defined in smart contracts which are easily traceable and irreversible.
@@ -223,6 +186,13 @@ At the beginning, all participant need to register on TangleID in order to get a
 \label{section:trading}
 
 The entire trading process is as shown in Fig.~\ref{fig:trading_product}. Once a subscriber wants to subscribe certain streaming data that is generated, he/she has to pay subscription fee to the Product Contract and will be automatically added to the subscriber list by the smart contract.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{launching_product}
+    \caption{The process of launching a product.}
+    \label{fig:launching_product}
+\end{figure}
 
 \begin{figure}[!t]
     \centering
