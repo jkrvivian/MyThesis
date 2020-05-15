@@ -1,4 +1,4 @@
-# Brains 2020
+# My Thesis
 
 Make sure to install `texlive-science` package for `algorithmic` package in .tex
 
