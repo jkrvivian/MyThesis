@@ -98,7 +98,7 @@ The contributions in the paper are summarized as follow:
 
 
 \subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section BACKGROUND, the architecture of our proposed decentralized data marketplace is illustrated. In Section RELATED-WORK, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
+The rest of this paper is organized as follows. In Section~\ref{section:background}, the architecture of our proposed decentralized data marketplace is illustrated. In Section~\ref{section:relatedWork}, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
 
 
 \begin{figure}[!t]
@@ -109,19 +109,8 @@ The rest of this paper is organized as follows. In Section BACKGROUND, the archi
 \end{figure}
 
 \section{Background}
-In this section, we review the architecture of decentralized data marketplace and the two key components in the system, Ethereum Smart Contract and MAM.
-
-\subsection{Participants in Decentralized Data Marketplace}
-There are three major roles, data providers, data consumers and brokers in the decentralized data marketplace which is similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others. In our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. Fig.~\ref{fig:system_design}
-
-\begin{itemize}
-\item \textbf{Data Provider: }
-Data providers are the ones that generate, or filter streaming data, and set the data price based on the different types of data. With the subscription fee that earned via trading, data providers are incentivized to maintain and improve the quality of data.
-\item \textbf{Data Consumer: }
-Data consumers are entities that are willing to buy data streams. As it is laborious to widely deploy devices to collect data from scratch, and without a marketplace, it is also difficult to find providers of the data sets, purchases is the fastet and efficient way to get the desired data sets. 
-\item \textbf{Broker: }
-Brokers are responsible for building an agreement between data providers and consumers. Also brokers can represent data providers to perform computing tasks as brokers are expected to have higher resource. 
-\end{itemize}
+\label{section:background}
+In this section, we review Ethereum Smart Contract, MAM, the architecture and workflow of decentralized data marketplace.
 
 \subsection{Ethereum Smart Contract}
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. 
@@ -149,8 +138,54 @@ The authentication in MAM includes two aspects: source and data. Source authenti
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. 
 
+\subsection{Participants in Decentralized Data Marketplace}
+There are three major roles, data providers, data consumers and brokers in the decentralized data marketplace which is similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others. In our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. Fig.~\ref{fig:system_design}
+
+\begin{itemize}
+\item \textbf{Data Provider: }
+Data providers are the ones that generate streaming data and set the data price based on the different types of data. With the subscription fee that earned via trading, data providers are incentivized to maintain and improve the quality of data.
+\item \textbf{Data Consumer: }
+Data consumers are entities that are willing to buy data streams. As it is laborious to widely deploy devices to collect data from scratch, and without a marketplace, it is also difficult to find providers of the data sets, purchases is the fastet and efficient way to get the desired data sets. 
+\item \textbf{Broker: }
+Brokers are responsible for building an agreement between data providers and consumers. Also brokers can represent data providers to perform computing tasks as brokers are expected to have higher resource. 
+\end{itemize}
+
+\subsection{Trading Models of Decentralized Data Marketplace}
+\subsubsection{Set Up}
+All participants need to register on TangleID\cite{TangleID}, a self-soverign identity system built on top of MAM, enables authentication without any third party via a decentralized identifiers and a public/private key pair for authentication. 
+
+\subsubsection{Launch Data Products}
+To launch a data product, data providers need to create a MAM channel/endpoint and a Product Contract. However, considering IoT devices have no ability to handle both uploading data to MAM and interacting Ethereum smart contracts while collecting continuous data with low computing power, these works are offloaded to brokers. 
+
+The details of data product, such as data price, MAM channel/endpoint ID and time period are listed on the Product Contract. As regard to the encryption key of data product, it is certified by a broker with blind signature\cite{blindSig}, a mechanism that allows users to sign contents without knowing it, and written the signed key on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers frauding data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product}. 
+
+Data providers start uploading data once the MAM channel/endpoint are created, each MAM message contains encrypted contexts along with signatures which allows data consumers to check the integrity. In addition, one can perform the signature validation without the encryption key on MAM.
+ 
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{launching_product}
+    \caption{The process of launching a product.}
+    \label{fig:launching_product}
+\end{figure}
+
+\subsubsection{Trading}
+Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the "access" of data products on MAM instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can retreive it from Product Contract. 
+
+Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange}. 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=3.5in]{key_exchange}
+    \caption{Encryption key exchangement process.}
+    \label{fig:key_exchange}
+\end{figure}
+
+\subsubsection{Refunding}
+Subscribing to future data is a high-risk which data provider may not upload data as the agreement set after recieving the subscription fee. Therefore, in our proposed architecture, data consumers can initiate a refund procedure if the data is not available or defective. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM. When the refund procedure is launched, all consumers start voting based on their opinions on the data product. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer. 
+
 
 \section{Related Work}
+\label{section:relatedWork}
 The publish/subscribe service model consists of publishers, subscribers and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in publish/subscribe system focused on the scalability and the different security issues such as, encrypted data communication, privacy preserving data subscription and access control of digital asset. A few work targets on the storage which is a vital considerations for IoT and mobile computing and the incentive for data economics.
 
 M. B. Abdullahi and G. Wang\cite{centralPubSub} presented a secure publish/subscribe data storage service in Wireless sensor networks (WSNs) which ensures several security issues. Each user has an identity for authentication, whereas subscribers' interests are encoded before matching to protect users' interests. Additionally, the proposed encryption scheme can prevent adversary to access published data if the sensor node is compromised. However, the access control and encryption keys of data is enforced by the network controllers (NCs) and Cirtificate Authorities (CAs), which may be a potential security risk of the system. Also the storage is not well illustrated in the work. G. S. Ramachandran et al.\cite{trinity} pointed out the security risk of centralized brokers, and applied DLTs to build a distributed pub/sub system which promotes the transparency of interactions of participants and the status of data. With the help of Smart Contract, usesrs can perform data validation easily, and brokers can keep track of data status. But data is plaintext on blockchain, which the privacy problem of sensitive data need to be considered carefully. The economics incentives that can encourage the publishers to participate the system and pay more attention on the quality control are not included. 
@@ -159,117 +194,10 @@ In \cite{userCentricData}, the publisher runs a node in blockchain that preserve
 
 Decentralized storage systems allow users to store files in a distributed network that is maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems as data storage and also an incentive layer to encourage people get involved in the network. Filecoin \cite{FileCoin} in Inter-Planetary File system(IPFS)\cite{IPFS} is an incentive layer to incent nodes to provide storage. IPFS is a content-based addressing storage model in a peer-to-peer network, which users can obtain the data with the unique hash value through the network. However, no cryptographic system is applied for user-uploaded files. Sia\cite{Sia} splits the uploaded file into multiple data segments encrypted with the owner's private key, then cipher text is sent to the Sia nodes that rent the storage in Siacoin through smart contracts. Files are duplicated in multiple nodes to prevent data loss.
  
-\section{System Architecture}
-The proposed data subscription framework\cite{MyDataMarketplace} is a decentralized architecture with data providers, data subscribers and brokers that interact between data providers and subscribers, including data publishment, product metadata generation and trading process.
 
 
-\subsection{Components}
-There are several building blocks in the proposed design to meet the expectations: 1) emit and access encrypted data stream; 2) retrieve transaction data for audit; 3) digital identity for all participants; and 4) enforcement of transparency and traceability.
 
 
-\subsubsection{TangleID}
-The TangleID\cite{TangleID} is a self-sovereign identity system based on IOTA that does not require any third-party authority to verify an identity and its digital footprint. With TangleID, the digital footprint is converted into digital assets under the principle of Decentralized Identifiers (DIDs)\cite{DID} defined by W3C. Posting DID documents on MAM channel makes TangleID a GDPR-compliant system\cite{GDPR}. Every participant in the data marketplace registers on TangleID, hence one can easily verify data providers' identity to ensure the data persistency from data sources.
-
-A public/private key pair and an IOTA seed are generated in TangleID. The public MAM channel is created with the seed and its MAM channel ID becomes part of the unique user ID, which at the same time serves as DID with the purpose of publishing the public key of the entity. Private key along with the IOTA seed is stored in the local database of the entity. The public/private key pair can be used in secure message sharing within users and digital signature.
-
-The digital identities are also used to establish trust between the communication partners. This is done on two levels to prove that the communication partner owns the DID and the partner can, optionally, proof that it is a trusted participant. This authentication process happens during the first messages of interaction. In order for one partner to listen to another, it authenticates the messages. The DID ownership authentication is done by proving a digitally signed copy of the DID document.
-
-The authentication of trust between the two parties is based on a Verifiable Credential, given out by a trusted issuer for the receiving party. If the receiving party does not trust the issuer, the credential is deemed worthless. If the party is recognized, the credential is verified and the messages will be labelled as trusted. In order to acquire this credential, the party needs to contact the issuer and ask for the credential. The issuer will need to know the DID of the party. If they decide to give out the credential, the issuer will sign the credential and send it encrypted over the blockchain to the requesting party's communication address. This is listed as a Service Endpoint (DID standard) in the DID Document of the requesting party.
-
-\section{Trading Model}
-In the following, we describe the data trading process in detail. To participate a data marketplace, data providers and subscribers have to first register. Then,  the data provider can launch its product on the marketplace. Once a product is launched, it is searchable on IPFS where brokers upload the information of the product and can be subsequently traded. The whole trading and refunding process is defined in smart contracts which are easily traceable and irreversible.
-
-\subsection{Set up}
-At the beginning, all participant need to register on TangleID in order to get a DID document and public/private key pairs. The DID document is shared within the following operations to perform authentication, key exchangement and secure communication. 
-
-\subsection{Trading}
-\label{section:trading}
-
-The entire trading process is as shown in Fig.~\ref{fig:trading_product}. Once a subscriber wants to subscribe certain streaming data that is generated, he/she has to pay subscription fee to the Product Contract and will be automatically added to the subscriber list by the smart contract.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{launching_product}
-    \caption{The process of launching a product.}
-    \label{fig:launching_product}
-\end{figure}
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{trading_product}
-    \caption{The process for the product trading.}
-    \label{fig:trading_product}
-\end{figure}
-
-In the proposed architecture, the "access" to specific data stream is traded instead of giving out the raw data copies. Subscribers can retrieve data on MAM at any time without equipping extra storage to preserve data, and one can also query for arbitrary section of data rather downloading them all. Thus, the most important part of trading process is to give the session key $k$, the encryption key of data stream, to the subscribers. In order to exchange data, Azaria et al\cite{Medrec} seek an off-chain solution which is based on an end-to-end communication to ensure the efficiency and low costs. However, it is hard to avoid that the data source is unavailable or the sender sends incorrect data intentionally. Instead of the off-chain solution, we use smart contract to transfer the session key\cite{3tierDataMarket} that not only ensures the consistency of the session key, the availability of the source and the traceability of the record, but also prevents malicious participants to cheat others. With the help of brokers and smart contracts, both providers and subscribers do not need to be online at the same time to proceed the trading process.
-
-\lstdefinestyle{solidity}{
-	captionpos=b,
-	tabsize=4,
-	basicstyle=\scriptsize
-}
-\lstset{style=solidity}
-
-\begin{lstlisting}[caption={Update encryption key}, label={lst:key_exchange}, frame=single]
-function addEncryptKey(
-  address _subscriber,
-  string memory _encryptKey
-) public {
-  require(
-      msg.sender == provider,
-      "Only provider can add blindedKey."
-  );
-  require(
-      subscriber2Purchase[_subscriber].isKeyAdded == false,
-      "One encryptKey has been added."
-  );
-  subscriber2Purchase[_subscriber].encryptKey = _encryptKey;
-  subscriber2Purchase[_subscriber].isKeyAdded = true;
-  emit newEncryptKey(_subscriber, _encryptKey);
-}
-\end{lstlisting}
-
-The trading process is shown in Fig.~\ref{fig:key_exchange}. The data provider can obtain public keys of each subscriber from the DID document. For each subscriber, the data provider encrypts the session key and broker's signature with the subscriber's public key and sends the ciphertext $Encrypt(k + Sign(k))$ to the product contract by calling $addEncryptKey()$ (Listing \ref{lst:key_exchange}). Subscribers listen to the $newEncryptKey$ event which is triggered when the ciphertext is updated, and decrypt the ciphertext to obtain the session key $k$ and signature $Sign(k)$.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.5in]{key_exchange}
-    \caption{Session key exchange process between the data provider and subscriber.}
-    \label{fig:key_exchange}
-\end{figure}
-
-Subscribers can obtain the broker's public key on the DID document as well, so they can verify that the validation of signature and the session key is the only one certified by the broker. Afterward, with the MAM channel ID and session key $k$, subscribers can obtain the data.
-
-\subsection{Refunding}
-
-It is probable that the streaming data sources are delayed or even interrupted after the subscribers pay the subscription fee. To protect subscriber rights, the subscription fee are not transferred to the data provider until data is generated and published to the MAM channel. If the expected data is not available, subscribers can request refunds. We assume that a very small percentage of subscribers in the product contract are irrational and/or malicious. When a subscriber consents to refund, he can vote at any time. After the ratio of consent votes of refunding is higher than the $threshold$, the subscription fee is proportionally transferred to the data provider, broker and every subscriber. Fig.~\ref{fig:refund} shows the refund process.
-
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=1.5in]{refund}
-	\caption{The process of refund.}
-	\label{fig:refund}
-\end{figure}
-
-The subscription fee can be prorated as below:
-
-\begin{equation}
-    F_{DataProvider}(i) = N price \frac{i-1}{M} (1-F_{b}) -F_{t}
-\end{equation}
-
-\begin{equation}
-    F_{Broker}(i) = N price \frac{i-1}{M} F_{b} -F_{t}
-\end{equation}
-
-\begin{equation}
-    F_{Subscriber}(i) = price \frac{M-i+1}{M} -F_{t}
-\end{equation}
-
-where $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, $N$ is the number of subscribers in this contract.
-
-To refund or withdraw subscription fees from the smart contract, the data provider, broker, and subscriber send a transaction to execute the smart contract and are responsible for the transaction fee. We assume that only a half of the expected records are published to the MAM channel. When $F_{b}$ is 5\%, the data provider and broker can withdraw half of the total subscription fee from the smart contract and 5\% of the subscription fee belongs to the broker while the remaining belongs to the data provider. For subscribers, they can receive half of the subscription fee refunded which should be deducted from the transaction fee.
-
-Considering the situation that one of the subscribers requests a refund in the future, when the subscriber is disappointed with the data quality, he/she may request a refund.
 
 \section{Evaluations}
 It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
