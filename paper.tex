@@ -66,8 +66,71 @@ In contrast to centralized architectures in \cite{DIaas, IOTAIdustryMarketplace,
 
 In the previous paper, we investigated the use of decentralized publish/subscribe (pub/sub) model and DLTs to construct the authority-less and trusted infrastructure, particularly Ethereum Smart Contract\cite{smartContract} and IOTA Masked Authenticated Messaging (MAM)\cite{MAM}. The pub/sub model features the scalability and resource-efficiency, and the economic incentives are stimulated by regulating trading agreement and penalty on Ethereum Smart Contracts with transparency. Lastly, MAM as the data storage not only ensures the data integrity, but also enables access control and provides a scalable key and data management. These three keys meet the requirements mentioned previously.   
 
+
+\subsection{Contributions}
+The contributions in the paper are summarized as follow:
+\begin{itemize}
+	\item Standing on our proposed decentralized data marketplace, we review several decentralized data marketplace architectures as well as the existing distributed storage, and clarify the necessity of using MAM.  
+    \item We make an in-depth analysis of each layer of MAM, in addition to the performance evaluation and optimization of the current implementation. We also compare the perfomance of exchanging different cryptosystems.
+	\item We analyze the security concerns when offloading MAM operations to brokers, and propose a solution to resolve them.
+\end{itemize}
+
+
+\subsection{Paper Organization}
+The rest of this paper is organized as follows. In Section~\ref{section:background}, the architecture of our proposed decentralized data marketplace is illustrated. In Section~\ref{section:relatedWork}, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=3.in]{system_design}
+    \caption{The system design of a decentralized data marketplace which consists of data providers, consumers and brokers.}
+    \label{fig:system_design}
+\end{figure}
+
+\section{Related Work}
+\label{section:relatedWork}
+% pub/sub
+\subsection{Data exchangement mechanism for IoT}
+The publish/subscribe service model consists of publishers, subscribers and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in publish/subscribe system focused on the scalability and the different security issues such as, encrypted data communication, privacy preserving data subscription and access control of digital asset. A few work targets on the storage which is a vital considerations for IoT and mobile computing and the incentive for data economics.
+
+M. B. Abdullahi and G. Wang\cite{centralPubSub} presented a secure publish/subscribe data storage service in Wireless sensor networks (WSNs) which ensures several security issues. Each user has an identity for authentication, whereas subscribers' interests are encoded before matching to protect users' interests. Additionally, the proposed encryption scheme can prevent adversary to access published data if the sensor node is compromised. However, the access control and encryption keys of data is enforced by the network controllers (NCs) and Cirtificate Authorities (CAs), which may be a potential security risk of the system. Also the storage is not well illustrated in the work. G. S. Ramachandran et al.\cite{trinity} pointed out the security risk of centralized brokers, and applied DLTs to build a distributed pub/sub system which promotes the transparency of interactions of participants and the status of data. With the help of Smart Contract, usesrs can perform data validation easily, and brokers can keep track of data status. But data is plaintext on blockchain, which the privacy problem of sensitive data need to be considered carefully. The economics incentives that can encourage the publishers to participate the system and pay more attention on the quality control are not included. 
+
+In \cite{userCentricData}, the publisher runs a node in blockchain that preserves all the history data of the ledger, therefore, they can publish and manage data without any third-parties. The subscribers request publisher directly and ask them to save a cache space for interested data. The main contribution of the system is to ensure data owners have full controls of produced data, but the data owners need to have well devices and environment to perform such functionalities and preserve data. Also, the rights for accessing digital assets is more compatible in the IoT scenarios instead of copying raw data. Secure Pub-Sub model\cite{SPS}, a brokerless of publish/subscribe model, is proposed to eliminate the security risk of middlewares in the model and to provide a reputation-based fairness payment strategy on blockcahin. The privacy and data security are considered thoroughly with the encryption scheme, while the reputation of publishers, payment and data sharing are deployed on smart contracts that allows all operations are transparent. The reputation system and the punishment rules against malicous acts of subscribers and publishers. Yet, without brokers, providers and subscribers may need to reveal more sensitive information like IP address in order to match the both sides. Another broker-less model in \cite{PrivacyPreservPubSub} protects the subscribers' privacy by encrypting users' interests with the light-weight PKEwET\cite{PKEwET}, which allows publishers to match the subscribers' interests in cipher text. 
+
+\subsection{Decentralized Data Marketplace Infrastructure}
+% decentralized DM
+
+\subsection{Distributed Storage System}
+% distributed data storage
+Decentralized storage systems allow users to store files in a distributed network that is maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems as data storage and also an incentive layer to encourage people get involved in the network. Filecoin \cite{FileCoin} in Inter-Planetary File system(IPFS)\cite{IPFS} is an incentive layer to incent nodes to provide storage. IPFS is a content-based addressing storage model in a peer-to-peer network, which users can obtain the data with the unique hash value through the network. However, no cryptographic system is applied for user-uploaded files. Sia\cite{Sia} splits the uploaded file into multiple data segments encrypted with the owner's private key, then cipher text is sent to the Sia nodes that rent the storage in Siacoin through smart contracts. Files are duplicated in multiple nodes to prevent data loss.
+
+ 
+\section{System Design Thinking}
+\subsection{The Architecture}
+% TODO: pub/sub model selection
+% use IPFS as searching indexes
 \subsection{Choice of Data Storage}
 Data storage is an important element of data marketplace where the data assets are reserved. We assume such storage system should be distributed which runs on the peer-to-peer network maintiaining by multiple nodes. Hence, the risk of system paralysis for server being compromised or shutdown unexpectedly can be removed. Among the existing distributed storage mentioned in Section~\ref{section:relatedWork}, different architectures, back-up mechanisms and access controls strategies are proposed. Yet the keys and addresses of data managed by participants are hard to be as small as possible especially for data streams.  
+
+% MAM
+MAM publishes authenticated streaming data as zero-value transactions to IOTA ledger and provides the ability to publish and fetch encrypted messages over the IOTA Tangle along with data integrity and access control. With MAM, the rights of data access are traded instead of a copy of data in the data marketplace, which eliminates the need for data consumers to have additional storage.
+ 
+In the IOTA protocol, \textbf{seed} is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can create addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
+
+Either channel or endpoint is like a singly-linked list. The singly-linked list structure implements the concept of forward secrecy, where no one has access to the data back from his/her entry point. Furthermore, each address of a message can be derived from the previous one, which enables data consumers to subscribe to future data by having the endpoint ID. A MAM channel/endpoint ID is the address of a transaction and the first message of a channel/endpoint. The central endpoint in Fig.~\ref{fig:mam_struct} means its endpoint ID is the same as channel ID. 
+
+A user can create multiple channels and endpoints, and the messages can be encrypted with the session key then broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only authorized entities are able to decode these messages after retrieving them from the Tangle. 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=2.5in]{mam_struct}
+    \caption{The concept of MAM.}
+    \label{fig:mam_struct}
+\end{figure}
+
+The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
+
+Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. 
 
 %scalability
 In our proposed architecture, MAM is the data storage which is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT. MAM allows users to put encrypted data streams into \textbf{channel}s and \textbf{endpoint}s, which consist of zero-value transactions on the Tangle. With an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of transaction and retrieve data. Table.~\ref{tab:mam_scalability} compares the key and addresses that need to be managed by using MAM and other distributed storage systems. Assuming the length of data stream is 7, and each record is encrypted with the same key. With MAM, only 1 key and 1 entry point is required while other distributed storage need to reserve 7 entry points for each data record.
@@ -96,57 +159,19 @@ Moreover, data tracability is an important security issue that allows users to t
 
 The operations of MAM are frequent, especially for data providers, who either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace. In this paper, we evaluate the performance of MAM, and improve the effeciency with different strategies. Also, we take offloading the computation tasks to brokers as another possiblie approach for IoT devices, since brokers are considered to have higher computating power.
 
+% alternative solution => IPFS(data) + MAM(index)
 
-\subsection{Contributions}
-The contributions in the paper are summarized as follow:
-\begin{itemize}
-	\item Standing on our proposed decentralized data marketplace, we review several decentralized data marketplace architectures as well as the existing distributed storage, and clarify the necessity of using MAM.  
-    \item We make an in-depth analysis of each layer of MAM, in addition to the performance evaluation and optimization of the current implementation. We also compare the perfomance of exchanging different cryptosystems.
-	\item We analyze the security concerns when offloading MAM operations to brokers, and propose a solution to resolve them.
-\end{itemize}
-
-
-\subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section~\ref{section:background}, the architecture of our proposed decentralized data marketplace is illustrated. In Section~\ref{section:relatedWork}, some related work of decentralized data marketplace, distributed data storage and use cases of MAM are analyzed. In Section ARCHI, the interactions of MAM and Ethereum Smart Contract in trading model is well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
-
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.in]{system_design}
-    \caption{The system design of a decentralized data marketplace which consists of data providers, consumers and brokers.}
-    \label{fig:system_design}
-\end{figure}
-
-\section{Background}
-\label{section:background}
-In this section, we review Ethereum Smart Contract, MAM, the architecture and workflow of decentralized data marketplace.
-
-\subsection{Ethereum Smart Contract}
+\subsection{Enable Automated Trading Process}
+% Ethereum Smart Contract
+% use ethereum smart contract => IOTA smart contracts are still under development
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. 
 It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it will be executed automatically without any third-parties and it is uninterruptible. 
 
 With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be acheived. \textbf{Product Contract} is made for the product launching and trading process in the decentralized data marketplace. The information of data products such as MAM channel ID (the data entry point), data price, time period and the broker-verified encryption key are listed on Product Contract. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of both providers and subscribers.
 
-\subsection{Masked Authenticated Messaging}
-MAM publishes authenticated streaming data as zero-value transactions to IOTA ledger and provides the ability to publish and fetch encrypted messages over the IOTA Tangle along with data integrity and access control. With MAM, the rights of data access are traded instead of a copy of data in the data marketplace, which eliminates the need for data consumers to have additional storage.
- 
-In the IOTA protocol, \textbf{seed} is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can create addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
 
-Either channel or endpoint is like a singly-linked list. The singly-linked list structure implements the concept of forward secrecy, where no one has access to the data back from his/her entry point. Furthermore, each address of a message can be derived from the previous one, which enables data consumers to subscribe to future data by having the endpoint ID. A MAM channel/endpoint ID is the address of a transaction and the first message of a channel/endpoint. The central endpoint in Fig.~\ref{fig:mam_struct} means its endpoint ID is the same as channel ID. 
 
-A user can create multiple channels and endpoints, and the messages can be encrypted with the session key then broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only authorized entities are able to decode these messages after retrieving them from the Tangle. 
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{mam_struct}
-    \caption{The concept of MAM.}
-    \label{fig:mam_struct}
-\end{figure}
-
-The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
-
-Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. 
-
+\section{Decentralized Data Marketplace Case Study}
 \subsection{Participants in Decentralized Data Marketplace}
 There are three major roles, data providers, data consumers and brokers in the decentralized data marketplace which is similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others. In our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. Fig.~\ref{fig:system_design}
 
@@ -191,21 +216,6 @@ Transferring the encryption key on smart contract instead of off-chain not only 
 
 \subsubsection{Refunding}
 Subscribing to future data is a high-risk which data provider may not upload data as the agreement set after recieving the subscription fee. Therefore, in our proposed architecture, data consumers can initiate a refund procedure if the data is not available or defective. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM. When the refund procedure is launched, all consumers start voting based on their opinions on the data product. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer. 
-
-
-\section{Related Work}
-\label{section:relatedWork}
-The publish/subscribe service model consists of publishers, subscribers and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in publish/subscribe system focused on the scalability and the different security issues such as, encrypted data communication, privacy preserving data subscription and access control of digital asset. A few work targets on the storage which is a vital considerations for IoT and mobile computing and the incentive for data economics.
-
-M. B. Abdullahi and G. Wang\cite{centralPubSub} presented a secure publish/subscribe data storage service in Wireless sensor networks (WSNs) which ensures several security issues. Each user has an identity for authentication, whereas subscribers' interests are encoded before matching to protect users' interests. Additionally, the proposed encryption scheme can prevent adversary to access published data if the sensor node is compromised. However, the access control and encryption keys of data is enforced by the network controllers (NCs) and Cirtificate Authorities (CAs), which may be a potential security risk of the system. Also the storage is not well illustrated in the work. G. S. Ramachandran et al.\cite{trinity} pointed out the security risk of centralized brokers, and applied DLTs to build a distributed pub/sub system which promotes the transparency of interactions of participants and the status of data. With the help of Smart Contract, usesrs can perform data validation easily, and brokers can keep track of data status. But data is plaintext on blockchain, which the privacy problem of sensitive data need to be considered carefully. The economics incentives that can encourage the publishers to participate the system and pay more attention on the quality control are not included. 
-
-In \cite{userCentricData}, the publisher runs a node in blockchain that preserves all the history data of the ledger, therefore, they can publish and manage data without any third-parties. The subscribers request publisher directly and ask them to save a cache space for interested data. The main contribution of the system is to ensure data owners have full controls of produced data, but the data owners need to have well devices and environment to perform such functionalities and preserve data. Also, the rights for accessing digital assets is more compatible in the IoT scenarios instead of copying raw data. Secure Pub-Sub model\cite{SPS}, a brokerless of publish/subscribe model, is proposed to eliminate the security risk of middlewares in the model and to provide a reputation-based fairness payment strategy on blockcahin. The privacy and data security are considered thoroughly with the encryption scheme, while the reputation of publishers, payment and data sharing are deployed on smart contracts that allows all operations are transparent. The reputation system and the punishment rules against malicous acts of subscribers and publishers. Yet, without brokers, providers and subscribers may need to reveal more sensitive information like IP address in order to match the both sides. Another broker-less model in \cite{PrivacyPreservPubSub} protects the subscribers' privacy by encrypting users' interests with the light-weight PKEwET\cite{PKEwET}, which allows publishers to match the subscribers' interests in cipher text. 
-
-Decentralized storage systems allow users to store files in a distributed network that is maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems as data storage and also an incentive layer to encourage people get involved in the network. Filecoin \cite{FileCoin} in Inter-Planetary File system(IPFS)\cite{IPFS} is an incentive layer to incent nodes to provide storage. IPFS is a content-based addressing storage model in a peer-to-peer network, which users can obtain the data with the unique hash value through the network. However, no cryptographic system is applied for user-uploaded files. Sia\cite{Sia} splits the uploaded file into multiple data segments encrypted with the owner's private key, then cipher text is sent to the Sia nodes that rent the storage in Siacoin through smart contracts. Files are duplicated in multiple nodes to prevent data loss.
- 
-
-
-
 
 
 \section{Evaluations}
