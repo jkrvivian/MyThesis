@@ -123,7 +123,7 @@ Decentralized storage systems allow users to store files in a distributed networ
 \section{System Design Thinking}
 \subsection{The Architecture}
 % TODO: pub/sub model selection
-There are three major roles, data providers, data consumers and brokers in the decentralized data marketplace which is similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others. In our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. Fig.~\ref{fig:system_design}
+There are three major roles, data providers, data consumers and brokers which are similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others, in our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. As shown in Fig.~\ref{fig:system_design}.
 
 \begin{itemize}
 \item \textbf{Data Provider: }
@@ -136,11 +136,26 @@ Brokers are responsible for building an agreement between data providers and con
 
 % use IPFS as searching indexes
 \subsection{Choice of Data Storage}
-Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt MAM as data storage to resolve the challenges of managing and verifying data streams. Also, on top of MAM, a self-soverign identity system is built to prove the participants' identities without any trusted authorities. Furthermore, MAM fulfills the requirements of scalability which reduce the number of keys and addresses that need to be managed by participants, and confidentiality that provides access control.
+Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt Masked Authenticated Messaging (MAM)\cite{MAM} as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. Carrying these properties, MAM is also appropriate for building a self-soverign identity system where the identity information such as public key, unique identifiers of services and metadatas are stored. One can easily prove himself by sharing the identifier on MAM without any authority. 
 
-MAM publishes authenticated streaming data as zero-value transactions to IOTA ledger and provides the ability to publish and fetch encrypted messages over the IOTA Tangle along with data integrity and access control. With MAM, the rights of data access are traded instead of a copy of data in the data marketplace, which eliminates the need for data consumers to have additional storage. In the IOTA protocol, \textbf{seed} is the identifier of its owner. An IOTA seed represents the ownership of all things associated with the user in the IOTA ecosystem, such as IOTA tokens or messages on the Tangle. With the seed, the owner can create addresses and signatures in order to issue transactions or publish messages to MAM channels and endpoints.
+In our work, MAM build the trust of the platform while meeting the requirements of data trading which can be concluded below:
 
-Either channel or endpoint is like a singly-linked list. The singly-linked list structure implements the concept of forward secrecy, where no one has access to the data back from his/her entry point. Furthermore, each address of a message can be derived from the previous one, which enables data consumers to subscribe to future data by having the endpoint ID. A MAM channel/endpoint ID is the address of a transaction and the first message of a channel/endpoint. The central endpoint in Fig.~\ref{fig:mam_struct} means its endpoint ID is the same as channel ID. 
+\begin{itemize}
+    \item \textbf{Scalability}: for both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible
+    \item \textbf{Integrity}: 
+	\begin{itemize}    	
+    	\item messages published to DLT are tamperproof that against malicious modification. 
+    	\item messages are signed with the keys pre-generated under Merkle signature scheme\cite{MSS} (MSS) that both keys and messages can be verified by participants.
+    \end{itemize}
+    \item \textbf{Confidentiality}:
+    \begin{itemize}    	
+    	\item The encrypted data are uploaded that only participants that have keys can decrypt. 
+    	\item The authorized users can retrieve data streams, since data is written on DLT which can be queried as long as the IOTA network is alive.
+    	\item MAM provides forward-secrecy. The entry points of future data can be derived, but it's impossible to trace back those in the past. This feature prevents adversaries from retrieving published history even if the key is revealed.
+    \end{itemize}
+\end{itemize}
+
+MAM publishes authenticated streaming data as zero-value transactions to the Tangle and provides the ability to publish and fetch encrypted messages over the network along with data integrity and access control. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. Channel and endpoint represent a stream of messages, which functions as singly-linked lists. The singly-linked list structure implements the concept of forward secrecy, where no one has access to the data back from his/her entry point. Furthermore, each address of a message can be derived from the previous one, which enables data consumers to subscribe to future data by having the endpoint ID. A MAM channel/endpoint ID is the address of a transaction and the first message of a channel/endpoint. The central endpoint in Fig.~\ref{fig:mam_struct} means its endpoint ID is the same as channel ID. 
 
 A user can create multiple channels and endpoints, and the messages can be encrypted with the session key then broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only authorized entities are able to decode these messages after retrieving them from the Tangle. 
 
@@ -151,7 +166,7 @@ A user can create multiple channels and endpoints, and the messages can be encry
     \label{fig:mam_struct}
 \end{figure}
 
-The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the Merkle signature scheme\cite{MSS} (MSS) which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
+The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from that sender. These are achieved through the MSS which is a digital signature scheme based on Merkle Hash Trees and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. 
 
