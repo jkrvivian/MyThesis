@@ -126,7 +126,7 @@ There are three major roles, data providers, data consumers and brokers which ar
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=3.in]{pub_sub_model}
+    \includegraphics[width=3.5in]{pub_sub_model}
     \caption{The players in data subsciption-based trading platform consists of data providers, data consumers and brokers.}
     \label{fig:pub_sub_model}
 \end{figure}
@@ -141,6 +141,14 @@ Brokers are responsible for building an agreement between data providers and con
 \end{itemize}
 
 We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum info like its identifier and public key. Third, as brokers running on machines in a stable network and electricity environment, besides matching procedures, participants on resource-constrained devices can offload the computation tasks to brokers. In our proposed protocol, devices can delegate the uploading and trading processes to brokers after signing the data, and brokers can perform verifiable checks without knowing the contents.           
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{channel_and_key}
+    \caption{Within MAM channel, the message publisher has 2 types of key, the encryption keys for content encryption and signature keys for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
+    \label{fig:channel_and_key}
+\end{figure*}
+
 
 \subsection{Choice of Data Storage}
 Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt Masked Authenticated Messaging (MAM)\cite{MAM} as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. 
@@ -164,20 +172,14 @@ In our work, MAM build the trust of the platform while meeting the requirements 
 
 MAM publishes authenticated streaming data to channel and endpoint as zero-value transactions to the Tangle and provides the ability to publish and fetch encrypted messages over the network along with data integrity and access control. The payload of a MAM message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents, the ciphertext is then signed with \textbf{signature key} generated with MSS and attached to the Tangle. This approach allows users to validate the signatures without knowing the actual contents but ensuring the messages do come from the exact source. See Fig.~\ref{fig:channel_and_key} for illustration. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. 
 
-\begin{figure*}[!t]
-    \centering
-    \includegraphics[width=\linewidth]{channel_and_key}
-    \caption{Within MAM channel, the message publisher has 2 types of key, the encryption keys for content encryption and signature keys for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
-    \label{fig:channel_and_key}
-\end{figure*}
-
 % alternative solution => IPFS(data) + MAM(index)
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. In our architecture, a self-soverign identity system TangleID\cite{TangleID} is used to manage the identity information that allow entities to prove its identity without any third-party authority. TangleID is built on top of MAM where change log of the Decentralized Identifiers (DIDs)\cite{DID} defined by W3C is traceable. The identity information such as public key, unique identifiers of services and metadatas consist a DID document. One can easily prove himself by sharing the identifier on MAM without any authority. 
 
 Through TangleID, every entity gets a public/private key pair, the location of DID document and the seed that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible. See Fig.~\ref{fig:TangleID}
 
-\begin{figure}[!t]
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=3.5in]{TangleID}
     \caption{Data provider sends the encryption key of data products to data consumer. The encryption key is encrypted with data consumer's public key on DID document that only the consumer can retreive.}
@@ -230,6 +232,7 @@ contract Product {
     State public state;
 }
 \end{lstlisting}
+
 
 \subsection{Enable delegation of computation tasks to broker}
 To participate data subscription, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
