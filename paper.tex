@@ -171,10 +171,11 @@ MAM publishes authenticated streaming data to channel and endpoint as zero-value
     \label{fig:channel_and_key}
 \end{figure*}
 
-
 % alternative solution => IPFS(data) + MAM(index)
 \subsection{Digital Identity}
-Carrying these properties, MAM is also appropriate for building a self-soverign identity system where the identity information such as public key, unique identifiers of services and metadatas are stored. One can easily prove himself by sharing the identifier on MAM without any authority. 
+The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. In our architecture, a self-soverign identity system TangleID\cite{TangleID} is used to manage the identity information that allow entities to prove its identity without any third-party authority. TangleID is built on top of MAM where change log of the Decentralized Identifiers (DIDs)\cite{DID} defined by W3C is traceable. The identity information such as public key, unique identifiers of services and metadatas consist a DID document. One can easily prove himself by sharing the identifier on MAM without any authority. 
+
+Through TangleID, every entity gets a public/private key pair, the location of DID document and the seed that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible.
 
 \subsection{Enable Automated Trading Process}
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it is uninterruptible and will be executed automatically without any third-parties. 
