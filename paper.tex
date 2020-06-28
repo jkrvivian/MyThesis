@@ -188,9 +188,17 @@ Through TangleID, every entity gets a public/private key pair, the location of D
 
 
 \subsection{Enable Automated Trading Process}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=5in]{smart_contract_mam}
+    \caption{The identity information and data streams are stored on the Tangle with MAM which are all recorded on Product Contracts. Participants can easily retrieve information via Product Contract and proceed trading.}
+    \label{fig:smart_contract_mam}
+\end{figure*}
+
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it is uninterruptible and will be executed automatically without any third-parties. 
 
-With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be acheived. In our system, \textbf{Product Contract} is made for the product launching and trading. The information of data products such as address of the data provider, subscription fee, brokerage fee, threshold of consent votes of refunding, MAM channel/endpoint ID (the data entry point), time period and the broker-verified encryption key are listed on Product Contract. See Listing. \ref{lst:constructor}. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of participants.
+With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be acheived. In our system, \textbf{Product Contract} is made for the product launching and trading. The information of data products such as address of the data provider, subscription fee, brokerage fee, threshold of consent votes of refunding, MAM channel/endpoint ID (the data entry point), time period and the broker-verified encryption key are listed on Product Contract. Listing. \ref{lst:constructor} list the data fields of Product Contract, and Fig.~\ref{fig:smart_contract_mam} shows the relationship of Product Contract and MAM. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of participants.
 
 The transparency of smart contracts bring advantages for data providers and consumers. One of the advantage is that the trading states and progress are visible and verifiable which profits providers and consumers respectively. For data providers, with every details opened, the consumer list functions like a reputation evaluation, the better the quality the more the consumers he/her has. The consumer list and the states of products, which includes \textit{Launched, KeyCertified, Finished} and \textit{Refunded} are key reputation referenced for data consumers to decide whether to subscribe. 
 
@@ -233,7 +241,6 @@ contract Product {
 }
 \end{lstlisting}
 
-
 \subsection{Enable delegation of computation tasks to broker}
 To participate data subscription, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
 
@@ -268,7 +275,7 @@ MAM publishes authenticated streaming data as zero-value transactions to the Tan
 
 A user can create multiple channels and endpoints, and the messages can be encrypted with the session key then broadcasted in chronological order to the Tangle by attaching it to an endpoint. This allows only authorized entities are able to decode these messages after retrieving them from the Tangle. 
 
-\begin{figure}[!t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=2.5in]{mam_struct}
     \caption{The concept of MAM.}
