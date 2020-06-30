@@ -240,10 +240,18 @@ contract Product {
 \end{lstlisting}
 
 \subsection{Enable computation tasks delegation to broker with privacy}
-To participate data subscription, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
+To manage data products and to benefit from trading, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
 
-The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To record encryption key to smart contract, data provider compute the digest of sensitive contents with hash function, and send the digest to brokers. Note that the broker need to sign the digest, which has been proven to be key uploaded by a broker recorded on the Product Contract. The key upload times is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the session key does not match the signature or can not decrypt data streams as expected, they can launch a refund to withdraw their funds.
+The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To record encryption key to smart contract, data provider compute the digest of sensitive contents with hash function, and send the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key, otherwise the process is aborted. Note that the broker need to sign the messages he/she receives, which has been proven to be key uploaded by a broker recorded on the Product Contract. The key upload times is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the encryption key does not match the signature or can not decrypt data streams as expected, they can launch a refund to withdraw their funds. Fig.~\ref{fig:key_upload} demonstrate the key upload to Product Contract via a broker. 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.5in]{key_upload}
+    \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well, then write the result to the Product Contract.}
+    \label{fig:key_upload}
+\end{figure}
+
+As for MAM operations, the performance results in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore we present an alternative solution for data providers to delegate these computing tasks to brokers while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}. 
 
 \section{Masked Authenticate Messaging}
 Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt Masked Authenticated Messaging (MAM)\cite{MAM} as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. Carrying these properties, MAM is also appropriate for building a self-soverign identity system where the identity information such as public key, unique identifiers of services and metadatas are stored. One can easily prove himself by sharing the identifier on MAM without any authority. 
@@ -288,6 +296,10 @@ Moreover, data tracability is an important security issue that allows users to t
 
 The operations of MAM are frequent, especially for data providers, who either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace. In this paper, we evaluate the performance of MAM, and improve the effeciency with different strategies. Also, we take offloading the computation tasks to brokers as another possiblie approach for IoT devices, since brokers are considered to have higher computating power.
 
+\subsection{TA - endpoint}
+\label{section:ta_endpoint}
+
+
 \section{Decentralized Data Marketplace Case Study}
 Trading Models of Decentralized Data Marketplace
 \subsubsection{Set Up}
@@ -327,6 +339,7 @@ Subscribing to future data is a high-risk which data provider may not upload dat
 It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
 
 \subsection{MAM Performance Evaluation}
+\label{section:mam_performance}
 MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
 
 In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC, 3.2GHz 64-bit 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (1.2 GHz 64-bit quad-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM. 
