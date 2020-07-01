@@ -80,3 +80,28 @@ While the operations of MAM are time-consuming, brokers are responsible not only
 \subsection{Components}
 There are several building blocks in the proposed design to meet the expectations: 1) emit and access encrypted data stream; 2) retrieve transaction data for audit; 3) digital identity for all participants; and 4) enforcement of transparency and traceability.
 
+\subsection{Enable delegation of computation tasks to broker}
+To participate data subscription, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
+
+The delegation should also ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To deal this issue, we use blind signature\cite{blindSig} to allow brokers to certify and update the sensitive contents without knowing it. Blind signature is a form of digital signature where the message is first "blinded" by a random "blinding factor", then passed to a signer to sign. Figure \ref{fig:blind_signature} illustrates the steps of blind signature. The resulting message, along with the blinding factor, can be later verified with the signer's public key. 
+% TODO: redraw blind signature diagram
+
+RSA blind signature\cite{cryptoNote} is used in our research. The user chooses a random number $r$ and uses the signer's public key $e$ to generate a blinding factor $r^e$. To prevent the message $m$ from being known by the signer, the user sends blinding message $c$ to the signer instead of $m$.
+
+\begin{equation}
+C = r^e m
+\end{equation}
+
+The signer signs the blinding message with his private key $d$.
+
+\begin{equation}
+S = C^d
+\end{equation}
+
+$S$ is the signer's signature of $C$. In RSA system, $ed$ is equal to 1. To remove the blinding factor, the user computes the following calculation.
+
+\begin{equation}
+\frac{S}{r}= \frac{C^d}{r} = \frac{(r^e m)^d}{r} = \frac{r^{ed} m^d}{r} = m^d
+\end{equation}
+ 
+The user gets $m^d$ which is the signer's signature of the message $m$. At the same time, the signer does not know $m$ and the session key is protected. 
