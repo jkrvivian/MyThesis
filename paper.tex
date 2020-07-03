@@ -269,10 +269,8 @@ A channel/endpoint is a stream of MAM transaction bundles, which consist of sign
     \label{fig:mam_structure}
 \end{figure}
 
-The publishers can decide whether to turn the encryption on and off to protect messages. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. For validation check, subscribers can validate the signature added in the signature section of MAM bundle.
-
 \subsection{Enable Access Control and Authentication}
-The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
+The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
 
 
 \subsection{The Advantages of Adopting MAM in Subscription-based Data Trading Infrastructure}
