@@ -260,7 +260,14 @@ As for MAM operations, the performance results in Section.\ref{section:mam_perfo
 MAM enables broadcasting encrypted and authenticated data stream, referring as channel, on the Tangle. The publisher publishes messages that are propagated through the network and can be accessed by the subscribers only. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. 
 
 \subsection{The Message Streams}
-A channel/endpoint is a stream of MAM transaction bundles, which consist of signature and the masked message payload. To publish a MAM message to channel, MAM deploys MSS to sign the message payload to channel, where $channel ID = root$ i.e., the MSS Merkle root. Furthermore, the structure of channel/endpoint implements forward linking, each address of a message can be derived from the previous one that other entities can fetch the next payload. This design also brings the advantage of forward secrecy, where no one has access to the data back from his/her entry point. 
+A channel/endpoint is a stream of MAM transaction bundles, which consist of signature and the masked message payload. To publish a MAM message to channel, MAM deploys MSS to sign the message payload to channel, where $channel\ ID = root$ i.e., the MSS Merkle root. Furthermore, the structure of channel/endpoint implements forward linking, each address of a message can be derived from the previous one that other entities can fetch the next payload. This design also brings the advantage of forward secrecy, where no one has access to the data back from his/her entry point. Figure.~\ref{fig:mam_structure} shows the structure of MAM channel/endpoint. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.5in]{mam_structure}
+    \caption{A user can generate multiple channels, which can then generate multiple endpoints. The IDs of channel and endpoint are the roots of different Merkle trees in MSS. The "central endpoint" has ID, where $endpoint\ ID = channel\ ID$}
+    \label{fig:mam_structure}
+\end{figure}
 
 The publishers can decide whether to turn the encryption on and off to protect messages. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. For validation check, subscribers can validate the signature added in the signature section of MAM bundle.
 
