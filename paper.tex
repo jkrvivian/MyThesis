@@ -296,17 +296,57 @@ The importance of scalable key and data entry points management increases over t
 
 %classify
 \subsubsection{Data Sreams Classification}
-The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, a voice assistant can create a channel every day with multiple endpoints for each gadgets to record daily logs. Another example is sensor devices like AirBox\cite{LASS}, collects environmental data, can split the statitics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. To do the classification in other distributed storage also encounters the aforementioned scalability problem.    
+The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, a voice assistant can create a channel every day with multiple endpoints for each gadgets to record daily logs. Another example is sensor devices like AirBox\cite{LASS}, collects environmental data, can split the statistics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. To do the classification in other distributed storage also encounters the aforementioned scalability problem.
 
 %data trace
 \subsubsection{A Traceable Data Stream}
-Data tracability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
+Data traceability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
 
 \subsection{Delegate MAM operations to Tangle-accelerator}
 \label{section:ta_endpoint}
-MAM builds a secure and authenticated communication protocol on top of multiple cyptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers.
+MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers.
 
-\subsubsection{Plight for Low-level edge device}
+\subsubsection{Infrastructure}
+To build the system, MQTT is chosen as the communication protocol. MQTT protocol utilizes much more lightweight packet than HTTP protocol has. The topic-based publish-subscribe pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on low-level edge devices with limited bandwidth. The publish-subscribe model decouples publishers and subscribers in many ways:
+
+\begin{itemize}
+    \item Space decoupling: Both publisher and subscriber don't need to know each other.
+    \item Time decoupling: Publishers and subscribers do not need to run at the same time.
+    \item Synchronization decoupling: Operations are decoupled from the publisher and subscriber. If we can decouple the operations, then the endpoint doesn’t need to maintain the connection until receive the response. Message from endpoint can be served as send-and-forget fashion.
+\end{itemize}
+
+\subsubsection{End-to-End-Encryption}
+Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures only authorized subscribers can read the messages published on MAM.
+
+%pic
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{MAM_E2EE}
+    \caption{The process of E2EE.}
+    \label{fig:MAM_E2EE}
+\end{figure*}
+
+In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the whole E2EE process we present. The following section addresses the process.
+
+\begin{enumerate}
+    \item Generate symmetric key with unique device identifier and Message Authentication Code (MAC) of the previous message. If the message is the genesis message, then a sharing secret initialization information would serve as the MAC of previous message. Key Derivation Function (KDF) is used to generate the symmetric keys.
+    \item Compute the Message Authentication Code (MAC) of current message with Hash-based Message Authentication Code(HMAC). Both plaintext and symmetric key would be given as parameters in HMAC.
+    \item Apply the generated symmetric key to encrypt plaintext.
+    \item Concatenate the MAC of current message would and the MAC of previous message, and then the result will be signed with digital signature algorithm.
+    \item Send the ciphertext along with signed MAC.
+\end{enumerate}
+
+\subsubsection{Register Machine}
+User with channel seed can acquire channel chain ownership. Seed is generated by unique hardware information on edge device, so it should be transmitted to tangle-accelerator which allows tangle-accelerator to publish messages on MAM channel chain. Asymmetric encryption is utilizing during the process of exchanging Seed. Digital signature should be taken at the same time to ensure data integrity. Once seed has been successfully exchanged, edge device is successfully registered on the specific tangle-accelerator. Thus, seed isn't needed to be exposed during communication after an edge device is successfully registered.
+
+\subsubsection{Issues in End-to-End-Encryption}
+E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, we met a few challenges in the E2EE we proposed.
+
+\paragraph{Linear Time to Read Message}
+It is linear time to decrypt message instead of constant time. Nevertheless, there is one way to speed up the message decryption process. A subscriber can fetch multiple MAM messages with one API call, then the subscriber can decrypt the ciphertext at local side. This procedure can reduce the time spending on internet communication.
+
+\paragraph{Spam on Message Channel Chain}
+Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
 
 \section{Decentralized Data Marketplace Case Study}
 Trading Models of Decentralized Data Marketplace
