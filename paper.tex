@@ -330,12 +330,13 @@ Transferring the encryption key on smart contract instead of off-chain not only 
 \end{figure}
 
 \subsection{Unsubscribe to Data Products}
-Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract hold an unsubscribe list to record the unsubscribers. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, $N$ is the number of consumers in this contract.
-Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The updated key is uploaded to the remaining subscribers in $consumer2Purchase$ list in Product Contract. 
+Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract hold an unsubscribe list to record the unsubscribers. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, $N$ is the number of consumers in this contract. And $F_{extra}$ is the extra fee charged for unsubscription, since brokers need extra fee to go through the key changing procedure.
+
+Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The new key should be updated to the remaining subscribers in $consumer2Purchase$ list in Product Contract. Fig.~\ref{fig:unsubscribe} shows the unsubscription flow.
 
 \begin{equation}
 \label{equation:unsubscribe_provider}
-    F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}) -F_{t}
+    F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{extra}) -F_{t} 
 \end{equation}
 
 \begin{equation}
@@ -345,11 +346,18 @@ Also, data provider will change the encryption key of data product to prevent un
 
 \begin{equation}
 \label{equation:unsubscribe_consumer}
-    F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
+    F_{Consumer}(i) = price (1-\frac{i-1}{M})(1 -F_{extra}) -F_{t}
 \end{equation}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.5in]{unsubscribe}
+    \caption{Once a data consumer launch a unsubscription procedure, he/she is added to unsubscriber list and the Product Contract will distribute the funds to provider, broker and consumers respectively. Then, the data provider will generate a new encryption key and upload it for every remaining subscribers.}
+    \label{fig:unsubscribe}
+\end{figure}
+
 \subsection{Launch a Refund}
-Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can initiate a refund procedure if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer.
+Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following:
 
 \begin{equation}
     F_{DataProvider}(i) = Nprice \frac{i-1}{M} (1-F_{b}) -F_{t}
@@ -362,6 +370,13 @@ Data subscription is a high risk which data provider may not upload data as the 
 \begin{equation}
     F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
 \end{equation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.5in]{refund}
+    \caption{Once a data consumer launch a refund procedure, all consumers votes to decide whether they want a refund from data providers. Finally, the establishment of refund is determined by Product Contract after checking the votes is higher than a threshold or not.}
+    \label{fig:refund}
+\end{figure}
 
 
 \section{Evaluations}
