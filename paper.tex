@@ -4,7 +4,7 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
+\usepackage{algorithmic,algorithm}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -299,17 +299,16 @@ The operations of MAM are frequent, especially for data providers, who either up
 
 \subsubsection{Plight for Low-level edge device}
 
-\section{Decentralized Data Marketplace Case Study}
-Trading Models of Decentralized Data Marketplace
-\subsubsection{Set Up}
-All participants need to register on TangleID\cite{TangleID}, a self-sovereign identity system built on top of MAM, enables authentication without any third party via a decentralized identifiers and a public/private key pair for authentication.
+\section{Decentralized Subscription-based Data Trading Case Study}
+In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
 
-\subsubsection{Launch Data Products}
-To launch a data product, data providers need to create a MAM channel/endpoint and a Product Contract. However, considering IoT devices have no ability to handle both uploading data to MAM and interacting Ethereum smart contracts while collecting continuous data with low computing power, these works are offloaded to brokers. 
+\subsection{Prerequisite}
+All participants are required to register on TangleID to get DID document and public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
 
-The details of data product, such as data price, MAM channel/endpoint ID and time period are listed on the Product Contract. As regard to the encryption key of data product, it is certified by a broker with blind signature\cite{blindSig}, a mechanism that allows users to sign contents without knowing it, and written the signed key on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product}.
+\subsection{Launch Data Products}
+To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
 
-Data providers start uploading data once the MAM channel/endpoint are created, each MAM message contains encrypted contexts along with signatures which allows data consumers to check the integrity. In addition, one can perform the signature validation without the encryption key on MAM.
+The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and written on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product}. Finally, data providers can start uploading data.
  
 \begin{figure}[!t]
     \centering
@@ -318,10 +317,10 @@ Data providers start uploading data once the MAM channel/endpoint are created, e
     \label{fig:launching_product}
 \end{figure}
 
-\subsubsection{Trading}
-Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the "access" of data products on MAM instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can retrieve it from Product Contract.
+\subsection{Trading}
+Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can decode it via Product Contract.
 
-Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange}. 
+Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
 
 \begin{figure}[!t]
     \centering
@@ -330,8 +329,56 @@ Transferring the encryption key on smart contract instead of off-chain not only 
     \label{fig:key_exchange}
 \end{figure}
 
-\subsubsection{Refunding}
-Subscribing to future data is a high-risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can initiate a refund procedure if the data is not available or defective. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM. When the refund procedure is launched, all consumers start voting based on their opinions on the data product. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer.
+\subsection{Unsubscribe to Data Products}
+Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract hold an unsubscriber list to record the unsubscribers. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, $N$ is the number of consumers in this contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. 
+
+In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers charge cancellation fee if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue that should be carefully studied.
+
+Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The new key should be updated to the remaining subscribers in $consumer2Purchase$ list in Product Contract. Fig.~\ref{fig:unsubscribe} shows the unsubscription flow.
+
+\begin{equation}
+\label{equation:unsubscribe_provider}
+    F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} 
+\end{equation}
+
+\begin{equation}
+\label{equation:unsubscribe_broker}
+    F_{Broker}(i) = price \frac{i-1}{M} F_{b} -F_{t}
+\end{equation}
+
+\begin{equation}
+\label{equation:unsubscribe_consumer}
+    F_{Consumer}(i) = price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
+\end{equation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.5in]{unsubscribe}
+    \caption{Once a data consumer launch a unsubscription procedure, he/she is added to unsubscriber list and the Product Contract will distribute the funds to provider, broker and consumers respectively. Then, the data provider will generate a new encryption key and upload it for every remaining subscribers.}
+    \label{fig:unsubscribe}
+\end{figure}
+
+\subsection{Launch a Refund}
+Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following:
+
+\begin{equation}
+    F_{DataProvider}(i) = Nprice \frac{i-1}{M} (1-F_{b}) -F_{t}
+\end{equation}
+
+\begin{equation}
+    F_{Broker}(i) = Nprice \frac{i-1}{M} F_{b} -F_{t}
+\end{equation}
+
+\begin{equation}
+    F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
+\end{equation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.5in]{refund}
+    \caption{Once a data consumer launch a refund procedure, all consumers votes to decide whether they want a refund from data providers. Finally, the establishment of refund is determined by Product Contract after checking the votes is higher than a threshold or not.}
+    \label{fig:refund}
+\end{figure}
 
 
 \section{Evaluations}
