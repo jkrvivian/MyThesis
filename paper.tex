@@ -315,12 +315,12 @@ MAM builds a secure and authenticated communication protocol on top of multiple 
 
 
 \subsubsection{Infrastructure}
-To build the system, MQTT\cite{MQTT} is chosen as the communication protocol. MQTT protocol utilizes much more lightweight packet than HTTP protocol has. The topic-based publish-subscribe pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on low-level edge devices with limited bandwidth. The publish-subscribe model decouples publishers and subscribers in many ways:
+In the following sections, we refer the low-level devices as \textbf{endpoint}s. MQTT\cite{MQTT} is chosen as the communication protocol, which requires fewer TCP packets and less traffic. The topic-based pub/sub pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on endpoints with limited bandwidth. The pub/sub model decouples publishers and subscribers in many ways:
 
 \begin{itemize}
-    \item Space decoupling: Both publisher and subscriber don't need to know each other.
-    \item Time decoupling: Publishers and subscribers do not need to run at the same time.
-    \item Synchronization decoupling: Operations are decoupled from the publisher and subscriber. If we can decouple the operations, then the endpoint doesn’t need to maintain the connection until receive the response. Message from endpoint can be served as send-and-forget fashion.
+    \item Space decoupling: Both publishers and subscribers don't need to know each other.
+    \item Time decoupling: Publishers and subscribers do not need to be active at the same time.
+    \item Synchronization decoupling: Operations are decoupled from the publishers and subscribers. The publishers do not need to be alive until the response arrives. Messages from publisher can be served as send-and-forget fashion.
 \end{itemize}
 
 \subsubsection{End-to-End-Encryption}
