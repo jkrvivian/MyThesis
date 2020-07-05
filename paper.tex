@@ -304,7 +304,15 @@ Data traceability is an important security issue that allows users to track the 
 
 \subsection{Delegate MAM operations to Tangle-accelerator}
 \label{section:ta_endpoint}
-MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers.
+MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers. Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{delegation}
+    \caption{Data providers can use MAM in 2 ways: the provider performs MAM operations locally, and the provider delegate MAM operations to Tangle-accelerator.}
+    \label{fig:delegation}
+\end{figure}
+
 
 \subsubsection{Infrastructure}
 To build the system, MQTT is chosen as the communication protocol. MQTT protocol utilizes much more lightweight packet than HTTP protocol has. The topic-based publish-subscribe pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on low-level edge devices with limited bandwidth. The publish-subscribe model decouples publishers and subscribers in many ways:
