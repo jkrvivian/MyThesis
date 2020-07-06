@@ -174,9 +174,6 @@ MAM publishes authenticated streaming data to channel and endpoint as zero-value
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
-
-
-% alternative solution => IPFS(data) + MAM(index)
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
 
@@ -187,23 +184,29 @@ The digital identity represents an entity and holds the digital assets within th
 	\hline
 		\textbf{Identity Model} & \textbf{Centralized} & \textbf{Decentralized} \\
 		\hline
-		Control & Enterprises control identities & Entities control their identities \\ 
+		Control & Enterprises control identities & Entities control their identities \\
 		\hline
-		Security & Identity holded in a centralized service is a honeypot for cyber attacks & Decentralized identity limits data exposure \\ 
+		Security & Identity holded in a centralized service is a honeypot for cyber attacks & Decentralized identity limits data exposure \\
 		\hline
-		Protability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\ 
+		Protability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\
 		\hline
 	\end{tabularx}
 \end{table}
 
-Centralized identity model may have single point failure in identifier management, also security issues like data leakage. With sensitive information holding on certain authorities, whether the data leakage is caused by cyber attacks or unscrupulous organizations trading user data, the users' privacy are damaged. Furthermore, having a recognizable and portable identifier is important, otherwise, it is hard to cooperate fragmented identities of different data formats among institutions, and organizations may not approve identifiers of others.  
+Centralized identity model may have single point failure in identifier management and security issues like data leakage. With sensitive information holding on certain authorities, whether the data leakage is caused by cyber attacks or unscrupulous organizations trading user data, the users' privacy are damaged. Furthermore, having a recognizable and portable identifier is important, otherwise, it is hard to cooperate fragmented identities of different data formats among institutions, and organizations may not approve identifiers of others.
 
-%here, todo
-In the decentralized identity model, the digital footprints of entities is made up of Verifiable Credential (VC) issued by trusted issuer, such as school and government, and VCs are only worthy when verifying party recognize the issuer. If the VC is verified, the message will be labelled as trusted. Fig. shows the relationship of VC issuer, verifier and user.   
+In the decentralized identity model, every entity has a Decentralized Identifiers (DID\cite{DID} defined by W3C that contains identity information such as public key, unique identifiers of services and metadata. The digital footprints of entities is made up of Verifiable Credential (VC) added to their DIDs, issued by trusted issuers, such as schools and government departments. If a VC is verified via issuer's public key, the message will be labelled as trusted. Fig.~\ref{fig:did_vc} shows the relationship of VC issuer, verifier and user.
 
-In our architecture, a decentralized self-sovereign identity system TangleID\cite{TangleID} is used to manage the identity information that allow entities to prove its identity without any third-party authority. TangleID is built on top of MAM where change logs of the Decentralized Identifiers (DIDs)\cite{DID} defined by W3C is traceable. The identity information such as public key, unique identifiers of services and metadata consists a DID document. One can easily prove himself by sharing the identifier on MAM without any authority.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.in]{DID_VC}
+    \caption{The trusted issuer requests user's DID, then issues a VC with his/hers signature. The user can then present the VC to verifier for signature validation.}
+    \label{fig:did_vc}
+\end{figure}
 
-Through TangleID, containing public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible. See Fig.~\ref{fig:TangleID}
+In our architecture, a decentralized identity system TangleID\cite{TangleID} is used, which is built on top of MAM where change logs of DIDs are traceable. One can easily prove himself by sharing the identifier on MAM without any authority.
+
+Through TangleID, entities get a public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible. See Fig.~\ref{fig:TangleID}
 
 \begin{figure}[h]
     \centering
