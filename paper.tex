@@ -4,6 +4,7 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{float}
+\usepackage{tabularx}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic,algorithm}
 \usepackage{graphicx}
@@ -173,13 +174,39 @@ MAM publishes authenticated streaming data to channel and endpoint as zero-value
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
-
-
-% alternative solution => IPFS(data) + MAM(index)
 \subsection{Digital Identity}
-The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. In our architecture, a self-sovereign identity system TangleID\cite{TangleID} is used to manage the identity information that allow entities to prove its identity without any third-party authority. TangleID is built on top of MAM where change logs of the Decentralized Identifiers (DIDs)\cite{DID} defined by W3C is traceable. The identity information such as public key, unique identifiers of services and metadata consists a DID document. One can easily prove himself by sharing the identifier on MAM without any authority.
+The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
 
-Through TangleID, containing public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible. See Fig.~\ref{fig:TangleID}
+\begin{table}[h]
+	\caption{The comparism of centralized and decentralized identity model}
+	\label{tab:did}
+	\begin{tabularx}{\linewidth}{|l|X|X|}
+	\hline
+		\textbf{Identity Model} & \textbf{Centralized} & \textbf{Decentralized} \\
+		\hline
+		Control & Enterprises control identities & Entities control their identities \\
+		\hline
+		Security & Identity held in a centralized service is a honeypot for cyber attacks & Decentralized identity limits data exposure \\
+		\hline
+		Protability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\
+		\hline
+	\end{tabularx}
+\end{table}
+
+Centralized identity model may have single point failure in identifier management and security issues like data leakage. With sensitive information holding on certain authorities, whether the data leakage is caused by cyber attacks or unscrupulous organizations trading user data, the users' privacy are damaged. Furthermore, having a recognizable and portable identifier is important, otherwise, it is hard to cooperate fragmented identities of different data formats among institutions, and organizations may not approve identifiers of others.
+
+In the decentralized identity model, every entity has a Decentralized Identifiers (DID\cite{DID} defined by W3C that contains identity information such as public key, unique identifiers of services and metadata. The digital footprints of entities is made up of Verifiable Credential (VC) added to their DIDs, issued by trusted issuers, such as schools and government departments. If a VC is verified via issuer's public key, the message will be labelled as trusted. Fig.~\ref{fig:did_vc} shows the relationship of VC issuer, verifier and user.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.in]{DID_VC}
+    \caption{The trusted issuer requests user's DID, then issues a VC with his/hers signature. The user can then present the VC to verifier for signature validation.}
+    \label{fig:did_vc}
+\end{figure}
+
+In our architecture, a decentralized identity system TangleID\cite{TangleID} is used, which is built on top of MAM where change logs of DIDs are traceable. One can easily prove himself by sharing the identifier on MAM without any authority.
+
+Through TangleID, entities get a public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible. See Fig.~\ref{fig:TangleID}
 
 \begin{figure}[h]
     \centering
@@ -247,7 +274,7 @@ To manage data products and to benefit from trading, data providers have to inte
 
 The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To record encryption key to smart contract, data provider compute the digest of sensitive contents with hash function, and send the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key, otherwise the process is aborted. Note that the broker need to sign the messages he/she receives, which has been proven to be key uploaded by a broker recorded on the Product Contract. The key upload times is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the encryption key does not match the signature or can not decrypt data streams as expected, they can launch a refund to withdraw their funds. Fig.~\ref{fig:key_upload} demonstrate the key upload to Product Contract via a broker. 
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=3.5in]{key_upload}
     \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well, then write the result to the Product Contract.}
