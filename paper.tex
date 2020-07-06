@@ -274,7 +274,7 @@ To manage data products and to benefit from trading, data providers have to inte
 
 The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To record encryption key to smart contract, data provider compute the digest of sensitive contents with hash function, and send the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key, otherwise the process is aborted. Note that the broker need to sign the messages he/she receives, which has been proven to be key uploaded by a broker recorded on the Product Contract. The key upload times is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the encryption key does not match the signature or can not decrypt data streams as expected, they can launch a refund to withdraw their funds. Fig.~\ref{fig:key_upload} demonstrate the key upload to Product Contract via a broker. 
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=3.5in]{key_upload}
     \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well, then write the result to the Product Contract.}
