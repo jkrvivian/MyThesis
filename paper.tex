@@ -171,7 +171,7 @@ In our work, MAM build the trust of the platform while meeting the requirements 
 
 MAM publishes authenticated streaming data to channel and endpoint as zero-value transactions to the Tangle and provides the ability to publish and fetch encrypted messages over the network along with data integrity and access control. The payload of a MAM message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents, the ciphertext is then signed with \textbf{signature key} generated with MSS and attached to the Tangle. This approach allows users to validate the signatures without knowing the actual contents but ensuring the messages do come from the exact source. See Fig.~\ref{fig:channel_and_key} for illustration. 
 
-Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristic of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
+Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
 
 
@@ -296,17 +296,72 @@ The importance of scalable key and data entry points management increases over t
 
 %classify
 \subsubsection{Data Sreams Classification}
-The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, a voice assistant can create a channel every day with multiple endpoints for each gadgets to record daily logs. Another example is sensor devices like AirBox\cite{LASS}, collects environmental data, can split the statitics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. To do the classification in other distributed storage also encounters the aforementioned scalability problem.    
+The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, a voice assistant can create a channel every day with multiple endpoints for each gadgets to record daily logs. Another example is sensor devices like AirBox\cite{LASS}, collects environmental data, can split the statistics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. To do the classification in other distributed storage also encounters the aforementioned scalability problem.
 
 %data trace
 \subsubsection{A Traceable Data Stream}
-Data tracability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
+Data traceability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
 
 \subsection{Delegate MAM operations to Tangle-accelerator}
 \label{section:ta_endpoint}
-MAM builds a secure and authenticated communication protocol on top of multiple cyptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers.
+MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers. Fig.~ \ref{fig:ta_struct} shows the structure of Tangle-accelerator, and Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
 
-\subsubsection{Plight for Low-level edge device}
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=3.5in]{ta_structure}
+    \caption{Tangle-accelerator distribute IOTA api requests to idle IOTA nodes (i.e., full nodes) and provide Proof-of-Work acceleration. It can also cache the requests/responses in a key-value store to shorten response time, and automatically resend requests if failed. Tangle-accelerators also form a firewall for full nodes, which don't need to reveal the IP address to public and reduce the risks of being attacks.}
+    \label{fig:ta_struct}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{delegation}
+    \caption{Data providers can use MAM in 2 ways: the provider performs MAM operations locally, and the provider delegates MAM operations to Tangle-accelerator.}
+    \label{fig:delegation}
+\end{figure}
+
+
+\subsubsection{Infrastructure}
+In the following sections, we refer the low-level devices as \textbf{endpoint}s. MQTT\cite{MQTT} is chosen as the communication protocol, which requires fewer TCP packets and less traffic. The topic-based pub/sub pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on endpoints with limited bandwidth. The pub/sub model decouples publishers and subscribers in many ways:
+
+\begin{itemize}
+    \item Space decoupling: Both publishers and subscribers don't need to know each other.
+    \item Time decoupling: Publishers and subscribers do not need to be active at the same time.
+    \item Synchronization decoupling: Operations are decoupled from the publishers and subscribers. The publishers do not need to be alive until the response arrives. Messages from publisher can be served as send-and-forget fashion.
+\end{itemize}
+
+\subsubsection{End-to-End-Encryption}
+Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures only authorized subscribers can read the messages published on MAM.
+
+%pic
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{MAM_E2EE}
+    \caption{The process of E2EE.}
+    \label{fig:MAM_E2EE}
+\end{figure*}
+
+In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the whole E2EE process we present. The following section addresses the process.
+
+\begin{enumerate}
+    \item Generate symmetric keys with unique device identifier and Message Authentication Code (MAC) of the previous message. If the message is the genesis message, then a sharing secret initialization information would serve as the MAC of previous message. Key Derivation Function (KDF) is used to generate the symmetric keys.
+    \item Compute the Message Authentication Code (MAC) of current message with Hash-based Message Authentication Code(HMAC). Both plaintext and symmetric key would be given as parameters in HMAC.
+    \item Apply the generated symmetric key to encrypt plaintext.
+    \item Concatenate the MAC of current message would and the MAC of previous message, and then the result will be signed with digital signature algorithm.
+    \item Send the ciphertext along with signed MAC.
+\end{enumerate}
+
+\subsubsection{Register Machine}
+User with channel seed can acquire channel chain ownership. Seed is generated by unique hardware information on edge device, so it should be transmitted to tangle-accelerator which allows tangle-accelerator to publish messages on MAM channel chain. Asymmetric encryption is utilizing during the process of exchanging Seed. Digital signature should be taken at the same time to ensure data integrity. Once seed has been successfully exchanged, edge device is successfully registered on the specific tangle-accelerator. Thus, seed isn't needed to be exposed during communication after an edge device is successfully registered.
+
+\subsubsection{Issues in End-to-End-Encryption}
+E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, we met a few challenges in the E2EE we proposed.
+
+\paragraph{Linear Time to Read Message}
+It is linear time to decrypt message instead of constant time. Nevertheless, there is one way to speed up the message decryption process. A subscriber can fetch multiple MAM messages with one API call, then the subscriber can decrypt the ciphertext at local side. This procedure can reduce the time spending on internet communication.
+
+\paragraph{Spam on Message Channel Chain}
+Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
 
 \section{Decentralized Subscription-based Data Trading Case Study}
 In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
@@ -469,14 +524,7 @@ Tips selection requires a stable network connection to wait the response from IO
 
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
-Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator\cite{TA}. Where Ethereum client is used to interact with Ethereum and Tangle-accelerator is a caching proxy server for IOTA, which can serve thousands of IOTA requests at once without accessing remote IOTA full nodes frequently and provide PoW acceleration. Fig.~ \ref{fig:ta_struct} shows the structure of Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.  
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3in]{ta_structure}
-    \caption{The structure of Tangle-accelerator.}
-    \label{fig:ta_struct}
-\end{figure}
+Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator\cite{TA}. Where Ethereum client is used to interact with Ethereum and Tangle-accelerator is a caching proxy server for IOTA, which can serve thousands of IOTA requests at once without accessing remote IOTA full nodes frequently and provide PoW acceleration. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \section{Conclusions}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants and enable secure communication and flexible trading mechanisms.
