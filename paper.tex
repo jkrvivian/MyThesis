@@ -5,6 +5,8 @@
 \usepackage{cite}
 \usepackage{float}
 \usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{multirow}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic,algorithm}
 \usepackage{graphicx}
@@ -552,6 +554,68 @@ Tips selection requires a stable network connection to wait the response from IO
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
 Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator\cite{TA}. Where Ethereum client is used to interact with Ethereum and Tangle-accelerator is a caching proxy server for IOTA, which can serve thousands of IOTA requests at once without accessing remote IOTA full nodes frequently and provide PoW acceleration. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
+
+\subsection{Smart Contract}
+In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. In the report of Ethereum network in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
+
+\begin{table*}[h]
+	\caption{Gas consumption for each function of Product Contract}
+	\label{tab:gas}
+	\centering
+	\resizebox{0.7\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{function} & \textbf{sender} & \textbf{Gas used} \\
+		\hline
+		generate contract & Broker & 2251002 \\
+		subscribe product & Consumer & 44486 \\
+		upload signed key to consumer & Provider & 147369 \\
+		upload certified key & Broker & 167678 \\
+		update encrypt key & Provider & 166784 \\
+		update the amount of uploaded data & Broker & 32825 \\
+		request refund & Consumer & 22545 \\
+		unsubscribe & Consumer & 22641 \\
+		withdraw & Broker/Provider/Consumer & 14719 \\
+		\hline
+	\end{tabular}
+	}
+\end{table*}
+
+Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. Creating a Product Contract (Listing \ref{lst:constructor}) costs the most Gas (0.164 - 0.596 Ether), providers should have enough Ethers to launch the product at start. Functions (Listing \ref{lst:key_exchange} (0.012 - 0.044 Ether) and Listing \ref{lst:key_certification}) (0.022 - 0.0834 Ether) that are related to key certification and key exchange need a lot of gas as well. Storage on blockchain is expensive. For instance, an SSTORE operation may cost 20000 gas when the value is set to non-zero from zero according to Ethereum Yellow Paper\cite{Ethereum}. However, in our trading model, we preserve a lot of information in Product Contract in order to record as more details as possible during trading procedures, such as ciphertexts,  signatures during key certification and key exchange. Especially, in the key exchange protocol, it takes several steps of communications between brokers, data providers and data consumers via storing states to Product Contract. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys. However, using zero-knowledge protocol is out of the scope of this paper that we list it in the future work.
+
+Base on Gas estimation in Table.~\ref{tab:gas}, we calculate the exact Ether with Formula~\ref{equa:ether_calculation} that data providers and data consumers need during the trade in Table.~\ref{tab:ether}. We combine the Gas usage of providers and brokers, since the brokerage fee is also a critical cost to sustain the trade, which providers should considered. We conclude the four situations during the trading process: w/o refund and unsubscribe, w/ refund only, w/unsubscribe and w/ refund and unsubscribe. The condition of w/o refund and unsubscribe represents the basic cost of  triggering regular functions, such as launch, add encryption key. 
+
+\begin{equation}
+\label{equa:ether_calculation}
+Ethers = Gas \ Price \times Gas \ Amount
+\end{equation}
+
+When a consumer request a refund, he/she need to pay 0.001 Ether additionally. Then if the refund esablished, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategey coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
+
+\begin{table*}[h]
+	\caption{Data Price Estimation}
+	\label{tab:ether}
+	\centering
+	\resizebox{0.8\textwidth}{!}{
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{condition} & \textbf{sender} & \textbf{minimum price (Ether)} & \textbf{maximum price (Ether)} \\
+		\hline
+		\multirow{2}{*}{\makecell{w/o refund \\ unsubscribe}} & provider & 0.224 & 0.816 \\
+		 & consumer & 0.003 & 0.011 \\
+		\hline
+		\multirow{2}{*}{w/ refund} & provider & 0.224 & 0.816 \\
+		 & consumer & 0.004 & 0.016 \\
+		\hline
+		\multirow{2}{*}{w/ unsubscribe} & provider & \makecell{0.224 + 0.011N \\ (update encryption key for consumers)} & \makecell{0.816  + 0.011N \\ (update encryption key for consumers)}\\
+		 & consumer & 0.004 & 0.016 \\
+		\hline
+		\multirow{2}{*}{\makecell{w/ refund \\ unsubscribe}} & provider & \makecell{0.224 + 0.011N \\ (update encryption key for consumers)} & \makecell{0.816  + 0.011N \\ (update encryption key for consumers)}\\
+		 & consumer & 0.005 & 0.020 \\
+		\hline
+	\end{tabular}
+	}
+\end{table*}
 
 \section{Conclusions}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants and enable secure communication and flexible trading mechanisms.
