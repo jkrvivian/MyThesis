@@ -180,7 +180,7 @@ Using MAM as a data storage benefits from the scalability of the underlying IOTA
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
 
 \begin{table}[h]
-	\caption{The comparism of centralized and decentralized identity model}
+	\caption{The comparison of centralized and decentralized identity model}
 	\label{tab:did}
 	\begin{tabularx}{\linewidth}{|l|X|X|}
 	\hline
@@ -190,7 +190,7 @@ The digital identity represents an entity and holds the digital assets within th
 		\hline
 		Security & Identity held in a centralized service is a honeypot for cyber attacks & Decentralized identity limits data exposure \\
 		\hline
-		Protability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\
+		Portability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\
 		\hline
 	\end{tabularx}
 \end{table}
@@ -649,7 +649,7 @@ Base on Gas estimation in Table.~\ref{tab:gas}, we calculate the exact Ether wit
 Ethers = Gas \ Price \times Gas \ Amount
 \end{equation}
 
-When a consumer request a refund, he/she need to pay 0.001 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategey coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
+When a consumer request a refund, he/she need to pay 0.001 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategy coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
 
 \begin{table*}[h]
 	\caption{Data Price Estimation}
