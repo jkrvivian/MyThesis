@@ -411,36 +411,36 @@ The details of data product, such as data price, MAM channel/endpoint ID and the
 \end{figure}
 
 \begin{lstlisting}[caption={Functions of hased key update and certified key update}, label={lst:key_certification}, frame=single]
-	function addHashedKey(
-		string memory _hashedKey
-	) public {
-		require(
-			msg.sender == provider,
-			"Only provider can add hashed key."
-		);
-		require(
-			state == State.Launched,
-			"One key has been certified."
-		);
-		hashedKey = hashedKey;
-		emit newHashedKey(hashedKey);
-	}
-	
-	function addCertifiedKey(
-		string memory _certifiedKey
-	) public {
-		require(
-			msg.sender == broker,
-			"Only broker can add certifiedKey."
-		);
-		require(
-			state == State.Launched,
-			"One key has been certified."
-		);
-		certifiedKey = _certifiedKey;
-		state = State.KeyCertified;
-		emit newCertifiedKey(certifiedKey);
-	}
+    function addHashedKey(
+        string memory _hashedKey
+    ) public {
+        require(
+            msg.sender == provider,
+            "Only provider can add hashed key."
+        );
+        require(
+            state == State.Launched,
+            "One key has been certified."
+        );
+        hashedKey = hashedKey;
+        emit newHashedKey(hashedKey);
+    }
+    	
+    function addCertifiedKey(
+        string memory _certifiedKey
+    ) public {
+        require(
+            msg.sender == broker,
+            "Only broker can add certifiedKey."
+        );
+        require(
+            state == State.Launched,
+            "One key has been certified."
+        );
+        certifiedKey = _certifiedKey;
+        state = State.KeyCertified;
+        emit newCertifiedKey(certifiedKey);
+    }
 \end{lstlisting}
 
 \subsection{Trading}
