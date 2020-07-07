@@ -80,17 +80,16 @@ Taking all the requirements and the features of streaming data into consideratio
 
 \subsection{Contributions}
 The contributions in the paper are summarized as follow:
-automating the trading of digital assets and services.
-
 \begin{itemize}
-	\item We propose a decentralized subscription-based IoT data trading platform, which enables participants to trade the digital assets  .
-	\item We .  
-	\item We analyze the cost of designed smart contract to estimate the minimum data product price for data providers, the minimum cost for data consumers to interact with date product.
+	\item We investigate the usage of DLTs and distribute data storages in order to propose a decentralized architecture for IoT trading, and enables participants to automate the trading procedures and secure digital assets exchange across different organizations.
+	\item We apply the subscription-based services economic model to adapt the features of IoT streaming data, and clarify the importance of using a decentralized identity system for trading.
+	\item We evaluate the performance and concerns of adopting an end-to-end encrypted transmission protocol, and propose an alternative approach for low-level devices to adopt this protocol while ensure the privacy of using the protocol.
+	\item We analyze the cost of designed smart contract to estimate the minimum data product price for data providers to sustain a product and the minimum cost for data consumers to interact with date product.
 \end{itemize}
 
 
 \subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of data exchange mechanisms for IoT, decentralized data trading infrastructures and distributed data storage are analyzed. In Section ARCHI, the design thinking of proposed data trading architecture. In Section ARCHI, the trading models are well explained. The analysis and improvement of MAM are given in Section MAM-EXP. In Section OFFLOAD, the security issues and methods of offloading MAM operations to brokers will be discussed carefully. Finally, we conclude the paper in Section CONCLUSION.
+The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of data exchange mechanisms for IoT, decentralized data trading infrastructures and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the componets of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the paper in Section~\ref{section:conclusion}.
 
 \begin{figure}[!t]
     \centering
@@ -125,6 +124,7 @@ O. Lamtzidis and J. Gialelis \cite{IOTASensorNode} proposed a distributed sensor
 Decentralized storage systems allow users to store files in a distributed network that is maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems as data storage and also an incentive layer to encourage people get involved in the network. Filecoin \cite{FileCoin} in Inter-Planetary File system (IPFS) is an incentive layer to incent nodes to provide storage. IPFS is a content-based addressing storage model in a peer-to-peer network, which users can obtain the data with the unique hash value through the network. However, no cryptographic system is applied for user-uploaded files. Sia\cite{Sia} splits the uploaded file into multiple data segments encrypted with the owner's private key, then cipher text is sent to the Sia nodes that rent the storage in Siacoin through smart contracts. Files are duplicated in multiple nodes to prevent data loss.
 
 \section{System Design Thinking}
+\label{section:design_thinking}
 \subsection{Data subscription-based trading platform players}
 There are three major roles, data providers, data consumers and brokers which are similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others, in our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. As shown in Fig.~\ref{fig:pub_sub_model}.
 
@@ -288,6 +288,7 @@ The delegation should ensure the privacy of data providers, for instance, broker
 As for MAM operations, the performance results in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}. 
 
 \section{Masked Authenticated Messaging}
+\label{section:MAM}
 MAM enables broadcasting encrypted and authenticated data stream, referring as channel, on the Tangle. The publisher publishes messages that are propagated through the network and can be accessed by the subscribers only. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. 
 
 \subsection{The Message Streams}
@@ -395,6 +396,7 @@ It is linear time to decrypt message instead of constant time. Nevertheless, the
 Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
 
 \section{Decentralized Subscription-based Data Trading Case Study}
+\label{section:trading_model}
 In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
 
 \subsection{Prerequisite}
@@ -536,6 +538,7 @@ Data subscription is a high risk which data provider may not upload data as the 
 
 
 \section{Evaluations}
+\label{section:evaluation}
 It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
 
 \subsection{MAM Performance Evaluation}
@@ -679,6 +682,7 @@ When a consumer request a refund, he/she need to pay 0.001 Ether additionally. T
 \end{table*}
 
 \section{Conclusions}
+\label{section:conclusion}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants and enable secure communication and flexible trading mechanisms.
 
 \bibliographystyle{IEEEtran}
