@@ -146,7 +146,7 @@ Data consumers are entities that are willing to buy data streams. As it is labor
 Brokers are responsible for building an agreement between data providers and consumers. Also brokers can represent data providers to perform computing tasks as brokers are expected to have higher resource.
 \end{itemize}
 
-We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum info like its identifier and public key. Third, as brokers running on machines in a stable network and electricity environment, besides matching procedures, participants on resource-constrained devices can offload the computation tasks to brokers. In our proposed protocol, devices can delegate the uploading and trading processes to brokers after signing the data, and brokers can perform verifiable checks without knowing the contents.
+We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum info like its identifier and public key. Third, as brokers running on machines in a stable network and electricity environment, participants on resource-constrained devices can offload the computation tasks to brokers that enables an proxy server implementation mentioned in Section~\ref{section:ta_endpoint}. With the end-to-end encryption trasmission protocol we used, brokers can perform verifiable checks without knowing the contents.
 
 \begin{figure*}[!t]
     \centering
@@ -162,7 +162,11 @@ Data storage is the trust basis of data trading platforms where the data assets 
 In our work, MAM build the trust of the platform while meeting the requirements of data trading which can be concluded below:
 
 \begin{itemize}
-    \item \textbf{Scalability}: For both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible
+    \item \textbf{Scalability}:
+	\begin{itemize}
+		\item Benefits from the underlying Tangle network, the system scales when more participants and more transactions join the network. 
+    	\item For both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible
+    \end{itemize}    
     \item \textbf{Integrity}: 
 	\begin{itemize}    	
         \item Messages published to the Tangle are tamper-proof that against malicious modification.
@@ -249,6 +253,7 @@ contract Product {
     bool isBrokerWithdraw;
     bool isProviderWithdraw;
     address[] consumers;
+    address[] unsubscriber;
     
     struct Purchase {
         bool affirmativeVote;
@@ -267,8 +272,8 @@ contract Product {
     uint public totalNumber;
     uint public uploadedNumber;
     uint public affirmativeVotes;
-    string blindedKey;
-    string signedBlindedKey;
+    string hashedKey;
+    string certifiedKey;
     
     enum State {Launched, KeyCertified, Finished, Refunded}
     State public state;
