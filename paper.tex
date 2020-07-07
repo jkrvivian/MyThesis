@@ -401,7 +401,7 @@ All participants are required to register on TangleID to get DID document and pu
 \subsection{Launch Data Products}
 To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
 
-The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and written on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product}. Finally, data providers can start uploading data.
+The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and written on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product} and the certification codes in Product Contract is in Listing.~\ref{lst:key_certification}. Finally, the data product is launched and data providers can start uploading data.
  
 \begin{figure}[!t]
     \centering
@@ -410,10 +410,43 @@ The details of data product, such as data price, MAM channel/endpoint ID and the
     \label{fig:launching_product}
 \end{figure}
 
+\begin{lstlisting}[caption={Functions of hased key update and certified key update}, label={lst:key_certification}, frame=single]
+	function addHashedKey(
+		string memory _hashedKey
+	) public {
+		require(
+			msg.sender == provider,
+			"Only provider can add hashed key."
+		);
+		require(
+			state == State.Launched,
+			"One key has been certified."
+		);
+		hashedKey = hashedKey;
+		emit newHashedKey(hashedKey);
+	}
+	
+	function addCertifiedKey(
+		string memory _certifiedKey
+	) public {
+		require(
+			msg.sender == broker,
+			"Only broker can add certifiedKey."
+		);
+		require(
+			state == State.Launched,
+			"One key has been certified."
+		);
+		certifiedKey = _certifiedKey;
+		state = State.KeyCertified;
+		emit newCertifiedKey(certifiedKey);
+	}
+\end{lstlisting}
+
 \subsection{Trading}
 Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can decode it via Product Contract.
 
-Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
+Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange} and Listing.~\ref{lst:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
 
 \begin{figure}[!t]
     \centering
@@ -421,6 +454,32 @@ Transferring the encryption key on smart contract instead of off-chain not only 
     \caption{Encryption key exchange process.}
     \label{fig:key_exchange}
 \end{figure}
+
+\lstdefinestyle{solidity}{
+	captionpos=b,
+	tabsize=4,
+	basicstyle=\scriptsize
+}
+\lstset{style=solidity}
+
+\begin{lstlisting}[caption={Add encryption key to data consumers}, label={lst:key_exchange}, frame=single]
+    function addEncryptKey(
+        address _consumer,
+        string memory _encryptKey
+    ) public {
+        require(
+            msg.sender == provider,
+            "Only provider can add the encrypted key."
+        );
+        require(
+            consumer2Purchase[_consumer].isKeyAdded == false,
+            "Encryption key has been added."
+        );
+        consumer2Purchase[_consumer].encryptKey = _encryptKey;
+        consumer2Purchase[_consumer].isKeyAdded = true;
+        emit newEncryptKey(_consumer, _encryptKey);
+    }
+\end{lstlisting}
 
 \subsection{Unsubscribe to Data Products}
 Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract hold an unsubscriber list to record the unsubscribers. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, $N$ is the number of consumers in this contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. 
