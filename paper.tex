@@ -638,15 +638,15 @@ In this experiment, we investigate the cost of executing Product Contract with E
 		\hline
 		\textbf{function} & \textbf{sender} & \textbf{Gas used} \\
 		\hline
-		generate contract & Broker & 2251002 \\
-		subscribe product & Consumer & 44486 \\
-		upload signed key to consumer & Provider & 147369 \\
-		upload certified key & Broker & 167678 \\
-		upload hased encryption key & Provider & 166784 \\
-		update the amount of uploaded data & Broker & 32825 \\
-		request refund & Consumer & 22545 \\
-		unsubscribe & Consumer & 22641 \\
-		withdraw & Broker/Provider/Consumer & 14719 \\
+		generate contract & broker & 2558980 \\ 
+		subscribe product & consumer & 72259 \\ 
+		upload hash key & provider & 68276  \\ 
+		upload encryption key to consumer & provider & 86614 \\ 
+		upload certified key & broker & 131535 \\
+		update amount of uploaded data & broker & 32157 \\
+		unsubscribe & consumer & 8234 \\
+		request refund & consumer & 12067 \\
+		withdraw & broker & 11313 \\
 		\hline
 	\end{tabular}
 	}
