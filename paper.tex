@@ -253,12 +253,12 @@ contract Product {
     bool isBrokerWithdraw;
     bool isProviderWithdraw;
     address[] consumers;
-    address[] unsubscriber;
     
     struct Purchase {
         bool affirmativeVote;
         bool isConsumerWithdraw;
         bool isKeyAdded;
+        bool isSubscribe;
         string encryptKey;
     }
     mapping(address => Purchase) public consumer2Purchase;
@@ -266,6 +266,7 @@ contract Product {
     uint public price;
     uint public totalAmount;
     uint public brokerage;
+    uint public cancellation;
     uint public threshold;
     string public channelRoot;
     string public endPoint;
