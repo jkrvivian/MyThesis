@@ -81,7 +81,7 @@ Taking all the requirements and the features of streaming data into consideratio
 \subsection{Contributions}
 The contributions in the paper are summarized as follow:
 \begin{itemize}
-	\item We investigate the usage of DLTs and distribute data storages in order to propose a decentralized architecture for IoT trading, and enables participants to automate the trading procedures and secure digital assets exchange across different organizations.
+	\item We investigate the usage of DLTs and distributed data storages in order to propose a decentralized architecture for IoT trading, and enables participants to automate the trading procedures and secure digital assets exchange across different organizations.
 	\item We apply the subscription-based services economic model to adapt the features of IoT streaming data, and clarify the importance of using a decentralized identity system for trading.
 	\item We evaluate the performance and concerns of adopting an end-to-end encrypted transmission protocol, and propose an alternative approach for low-level devices to adopt this protocol while ensure the privacy of using the protocol.
 	\item We analyze the cost of designed smart contract to estimate the minimum data product price for data providers to sustain a product and the minimum cost for data consumers to interact with date product.
@@ -89,7 +89,7 @@ The contributions in the paper are summarized as follow:
 
 
 \subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of data exchange mechanisms for IoT, decentralized data trading infrastructures and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the componets of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the paper in Section~\ref{section:conclusion}.
+The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of pub/sub over blockchain, decentralized data trading infrastructures and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the componets of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the paper in Section~\ref{section:conclusion}.
 
 \begin{figure}[!t]
     \centering
@@ -636,6 +636,33 @@ Therefore, transferring MAM operations to brokers while ensuring the profit and 
     \label{fig:rpi3_pow}
 \end{figure}
 
+\subsection{MAM vs. the delegated MAM}
+\label{section:smart_contract_evaluation}
+What follows is an account of performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values.
+
+The steps counted in MAM benchmark including:
+\begin{itemize}
+	\item Encrypt input payload
+	\item Publish final message on IOTA Tangle
+\end{itemize}
+
+The steps counted in E2EE benchmark including:
+\begin{itemize}
+	\item Generate symmetric key for encryption
+	\item Hash input payload
+	\item Encrypt input payload
+	\item Transmit final message to tangle-accelerator
+\end{itemize}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=3in]{mam_vs_e2ee}
+    \caption{Compare the performance between MAM and E2EE on Raspberry Pi.}
+    \label{fig:mam_vs_e2ee}
+\end{figure}
+
+It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
+
 \subsection{Smart Contract}
 In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
 
@@ -697,37 +724,12 @@ When a consumer request a refund, he/she need to pay 0.0003 Ether additionally. 
 	\end{tabular}
 	}
 \end{table*}
-\subsection{MAM vs. the delegated MAM}
-What follows is an account of performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values.
-
-The steps counted in MAM benchmark including:
-\begin{itemize}
-	\item Encrypt input payload
-	\item Publish final message on IOTA Tangle
-\end{itemize}
-
-The steps counted in E2EE benchmark including:
-\begin{itemize}
-	\item Generate symmetric key for encryption
-	\item Hash input payload
-	\item Encrypt input payload
-	\item Transmit final message to tangle-accelerator
-\end{itemize}
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3in]{mam_vs_e2ee}
-    \caption{Compare the performance between MAM and E2EE on Raspberry Pi.}
-    \label{fig:mam_vs_e2ee}
-\end{figure}
-
-It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
 
 \section{Conclusions}
 \label{section:conclusion}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants, enable secure communication and flexible trading mechanisms.
 
-In the subscription-based data trading, there are some issues that worth discussing and improving. Firstly, reduce the Gas usage of trading models, as we mentioned in Section~\ref{smart_contract_evaluation}, the key exchange process consumes a lot of Gas due to the frequent store operation. Therefore, it is worth discussing that how zero-knowledge protocol could used to exchange key with lower cost, and even validate the key within transfers. Second, brokers are the key to operating a stable system, since they are irreplaceable either from the view of architecture design or trading procedures. However, the issues such as the minimum number of brokers needed to operation the system, and the evaluation of adopting gossip protocol among brokers to gossipped trading status, which enables other brokers to handle trading process when on crashed.
+In the subscription-based data trading, there are some issues that worth discussing and improving. Firstly, reduce the Gas usage of trading models, as we mentioned in Section~\ref{section:smart_contract_evaluation}, the key exchange process consumes a lot of Gas due to the frequent store operation. Therefore, it is worth discussing that how zero-knowledge protocol could used to exchange key with lower cost, and even validate the key within transfers. Second, brokers are the key to operating a stable system, since they are irreplaceable either from the view of architecture design or trading procedures. However, the issues such as the minimum number of brokers needed to operation the system, and the evaluation of adopting gossip protocol among brokers to gossipped trading status, which enables other brokers to handle trading process when on crashed.
 
 Third, to let consumers search and find interested data products, a search engine is needed to collect all distributed data products, which might need an authority to design and run the service. The extending issue of searching is ranking, how would the search service provider rank the products, how would that affect data consumers and providers. Fourth, in our design, we do not restrict the qualifications of data providers and brokers, which is different from operating the App store currently ,and it is also an interesting issue to discuss.
 
