@@ -633,14 +633,14 @@ In this experiment, we investigate the cost of executing Product Contract with E
 	\caption{Gas consumption for each function of Product Contract}
 	\label{tab:gas}
 	\centering
-	\resizebox{0.7\textwidth}{!}{
+	\resizebox{0.5\textwidth}{!}{
 	\begin{tabular}{|c|c|c|c|}
 		\hline
 		\textbf{function} & \textbf{sender} & \textbf{Gas used} \\
 		\hline
 		generate contract & broker & 2558980 \\ 
 		subscribe product & consumer & 72259 \\ 
-		upload hash key & provider & 68276  \\ 
+		upload hashed key & provider & 68276  \\ 
 		upload encryption key to consumer & provider & 86614 \\ 
 		upload certified key & broker & 131535 \\
 		update amount of uploaded data & broker & 32157 \\
@@ -661,28 +661,28 @@ Base on Gas estimation in Table.~\ref{tab:gas}, we calculate the exact Ether wit
 Ethers = Gas \ Price \times Gas \ Amount
 \end{equation}
 
-When a consumer request a refund, he/she need to pay 0.001 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategy coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
+When a consumer request a refund, he/she need to pay 0.0003 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategy coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
 
 \begin{table*}[h]
 	\caption{Data Price Estimation}
 	\label{tab:ether}
 	\centering
 	\resizebox{0.8\textwidth}{!}{
-	\begin{tabular}{|c|c|c|c|}
+	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
-		\textbf{condition} & \textbf{sender} & \textbf{minimum price (Ether)} & \textbf{maximum price (Ether)} \\
+		\textbf{condition} & \textbf{sender} & \textbf{\makecell{minimum price \\ (Ether)}} & \textbf{\makecell{minimum price \\ (USD)}} & \textbf{\makecell{maximum price \\ (Ether)}} & \textbf{\makecell{maximum price \\ (USD)}} \\
 		\hline
-		\multirow{2}{*}{\makecell{w/o refund \\ unsubscribe}} & provider & 0.224 & 0.816 \\
-		 & consumer & 0.003 & 0.011 \\
+		\multirow{2}{*}{\makecell{w/o refund \\ unsubscribe}} & provider & 0.021 & 5.038 & 0.076 & 18.291 \\
+		 & consumer & 0.00061 & 0.145 & 0.0022 & 0.527\\
 		\hline
-		\multirow{2}{*}{w/ refund} & provider & 0.224 & 0.816 \\
-		 & consumer & 0.004 & 0.016 \\
+		\multirow{2}{*}{w/ refund} & provider & 0.021 & 5.038 & 0.076 & 18.291 \\
+		 & consumer & 0.00069 & 0.166 & 0.0025 & 0.603 \\
 		\hline
-		\multirow{2}{*}{w/ unsubscribe} & provider & \makecell{0.224 + 0.011N \\ (update encryption key for consumers)} & \makecell{0.816  + 0.011N \\ (update encryption key for consumers)}\\
-		 & consumer & 0.004 & 0.016 \\
+		\multirow{2}{*}{w/ unsubscribe} & provider & 0.021 + 0.002N & 5.038 + 0.497N & 0.076  + 0.007N & 18.291 + 1.806N \\
+		 & consumer & 0.00067 & 0.159 & 0.0024 & 0.579 \\
 		\hline
-		\multirow{2}{*}{\makecell{w/ refund \\ unsubscribe}} & provider & \makecell{0.224 + 0.011N \\ (update encryption key for consumers)} & \makecell{0.816  + 0.011N \\ (update encryption key for consumers)}\\
-		 & consumer & 0.005 & 0.020 \\
+		\multirow{2}{*}{\makecell{w/ refund \\ unsubscribe}} & provider & 0.021 + 0.002N & 5.038 + 0.497N & 0.076  + 0.007N & 18.291 + 1.806N\\
+		 & consumer & 0.0007 & 0.180 & 0.0027 & 0.655 \\
 		\hline
 	\end{tabular}
 	}
