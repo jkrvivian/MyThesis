@@ -33,7 +33,7 @@
 % ------------------------------------------------
 %                   DOI Watermark
 % ------------------------------------------------
-\usepackage{draftwatermark}  % For DOI watermark
+%\usepackage{draftwatermark}  % For DOI watermark
 \usepackage{listings, makecell, multirow}
 
 \newcommand{\ShowDOI}[1]{
@@ -48,7 +48,7 @@
 }
 
 \begin{document}
-\ShowDOI{doi:XXXX/NCKU2019XXXXX}
+%\ShowDOI{doi:XXXX/NCKU2019XXXXX}
 
 % ------------------------------------------------
 %                封面內頁 Inner Cover
@@ -267,7 +267,7 @@ The rest of this paper is organized as follows. In Section~\ref{section:relatedW
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=3.in]{img/system_design}
+    \includegraphics[width=5.in]{img/system_design}
     \caption{The system design of a decentralized data trading infrastructure which consists of data providers, consumers and brokers.}
     \label{fig:system_design}
 \end{figure}
@@ -329,9 +329,9 @@ Decentralized storage systems allow users to store files in a distributed networ
 \subsection{Data subscription-based trading platform players}
 There are three major roles, data providers, data consumers and brokers which are similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others, in our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. As shown in Fig.~\ref{fig:pub_sub_model}.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=15cm]{img/pub_sub_model}
+    \includegraphics[width=4.5in]{img/pub_sub_model}
     \caption{The players in data subscription-based trading platform consists of data providers, data consumers and brokers.}
     \label{fig:pub_sub_model}
 \end{figure}
@@ -373,15 +373,15 @@ In our work, MAM build the trust of the platform while meeting the requirements 
 
 MAM publishes authenticated streaming data to channel and endpoint as zero-value transactions to the Tangle and provides the ability to publish and fetch encrypted messages over the network along with data integrity and access control. The payload of a MAM message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents, the ciphertext is then signed with \textbf{signature key} generated with MSS and attached to the Tangle. This approach allows users to validate the signatures without knowing the actual contents but ensuring the messages do come from the exact source. See Fig.~\ref{fig:channel_and_key} for illustration. 
 
+Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
+
 \begin{figure}
     \centering
-    \includegraphics[width=15cm]{img/channel_and_key}
+    \includegraphics[width=6.5in]{img/channel_and_key}
     \caption{Within MAM channel, the message publisher has 2 types of key, the encryption keys for content encryption and signature keys for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
     \label{fig:channel_and_key}
 \end{figure}
 \clearpage
-
-Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
@@ -395,9 +395,9 @@ The digital identity represents an entity and holds the digital assets within th
 		\hline
 		Control & Enterprises control identities & Entities control their identities \\
 		\hline
-		Security & Identity held in a centralized service is a honeypot for cyber attacks & Decentralized identity limits data exposure \\
+		Security & \makecell{Identity held in a centralized service \\ is a  honeypot for cyber attacks} & \makecell{Decentralized identity \\ limits data exposure} \\
 		\hline
-		Portability & Identity is fragmented across enterprises & Identity can be portable across enterprises \\
+		Portability & \makecell{Identity is fragmented \\ across enterprises} & \makecell{Identity can be portable \\ across enterprises} \\
 		\hline
 	\end{tabular}
 \end{table}
@@ -408,7 +408,7 @@ In the decentralized identity model, every entity has a Decentralized Identifier
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=3.in]{img/DID_VC}
+    \includegraphics[width=4.5in]{img/DID_VC}
     \caption{The trusted issuer requests user's DID, then issues a VC with his/hers signature. The user can then present the VC to verifier for signature validation.}
     \label{fig:did_vc}
 \end{figure}
@@ -419,30 +419,35 @@ Through TangleID, entities get a public/private key pair, the location of DID do
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=3.5in]{img/TangleID}
+    \includegraphics[width=5.5in]{img/TangleID}
     \caption{To participate the data trading, players are required to have DID document issued by TangleID. The Consumer first need to send a registration request to TangleID to get the MAM channel ID of DID document and a public/private key pair for authentication. When the trade establish, the consumer sends the DID MAM channel ID to provider in order to perform encryption key exchange. The data provider can then retrieve the consumer's public key and encrypt the content with it. After the consumer gets the encrypted message, he/she can decrypt the ciphertext with private key and finally get the encryption key of data product.}
     \label{fig:TangleID}
 \end{figure}
+\clearpage
 
 
 \subsection{Enable Automated Trading Process}
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=4in]{img/smart_contract_mam}
-    \caption{The information of identity and data streams are stored on the Tangle with MAM which are all recorded on Product Contracts. Participants can easily retrieve information via Product Contract and proceed trading. For signature validation check and further exchange encryption keys, the MAM channel ID of participants' DID document  are written down, presented in blue color. The orange color stands for the information of data products, which includes the data stream channel/endpoint ID and encryption key certified by broker.}
-    \label{fig:smart_contract_mam}
-\end{figure*}
-
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it is uninterruptible and will be executed automatically without any third-parties. 
 
 With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be achieved. In our system, \textbf{Product Contract} is made for the product launching and trading. The information of data products such as address of the data provider, subscription fee, brokerage fee, threshold of consent votes of refunding, MAM channel/endpoint ID (the data entry point), time period and the broker-verified encryption key are listed on Product Contract. Listing. \ref{lst:constructor} list the data fields of Product Contract, and Fig.~\ref{fig:smart_contract_mam} shows the relationship of Product Contract and MAM. Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, it is considered a more secure strategy to protect the privacy of participants.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=5.5in]{img/smart_contract_mam}
+    \caption{The information of identity and data streams are stored on the Tangle with MAM which are all recorded on Product Contracts. Participants can easily retrieve information via Product Contract and proceed trading. For signature validation check and further exchange encryption keys, the MAM channel ID of participants' DID document  are written down, presented in blue color. The orange color stands for the information of data products, which includes the data stream channel/endpoint ID and encryption key certified by broker.}
+    \label{fig:smart_contract_mam}
+\end{figure}
+\clearpage
+
 The transparency of smart contracts bring advantages for data providers and consumers. One of the advantage is that the trading states and progress are visible and verifiable which profits providers and consumers respectively. For data providers, with every details opened, the consumer list functions like a reputation evaluation, the better the quality the more the consumers he/her has. The consumer list and the states of products, which includes \textit{Launched, KeyCertified, Finished} and \textit{Refunded} are key reputation referenced for data consumers to decide whether to subscribe. 
 
+
 \lstdefinestyle{solidity}{
+	numbers=left,
+    numbersep=1em,
 	captionpos=b,
 	tabsize=4,
-	basicstyle=\scriptsize
+	basicstyle=\linespread{0.9}\small
 }
 \lstset{style=solidity}
 \begin{lstlisting}[caption={Product Contract data fields}, label={lst:constructor}, frame=single]
@@ -479,6 +484,7 @@ contract Product {
     State public state;
 }
 \end{lstlisting}
+\clearpage
 
 \subsection{Enable computation tasks delegation to broker with privacy}
 To manage data products and to benefit from trading, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the resources of low-level devices are precious which should be used to focus on its jobs. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
@@ -487,7 +493,7 @@ The delegation should ensure the privacy of data providers, for instance, broker
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=3.5in]{img/key_upload}
+    \includegraphics[width=5.5in]{img/key_upload}
     \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well, then write the result to the Product Contract.}
     \label{fig:key_upload}
 \end{figure}
@@ -515,10 +521,11 @@ A channel/endpoint is a stream of MAM transaction bundles, which consist of sign
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=3.5in]{img/mam_structure}
+    \includegraphics[width=5.5in]{img/mam_structure}
     \caption{With a seed, users can generate multiple channels, which can then generate multiple endpoints. The IDs of channel and endpoint are the roots of different Merkle trees in MSS. The "central endpoint" are endpoints that has ID, where $endpoint\ ID = channel\ ID$.}
     \label{fig:mam_structure}
 \end{figure}
+\clearpage
 
 \subsection{Enable Access Control and Authentication}
 The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
@@ -556,21 +563,22 @@ Data traceability is an important security issue that allows users to track the 
 \subsection{Delegate MAM operations to Tangle-accelerator}
 \label{section:ta_endpoint}
 MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers. Fig.~ \ref{fig:ta_struct} shows the structure of Tangle-accelerator, and Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
+\clearpage
 
-\begin{figure}[!t]
+\begin{figure}[t]
     \centering
-    \includegraphics[width=3.5in]{img/ta_structure}
+    \includegraphics[width=5.5in]{img/ta_structure}
     \caption{Tangle-accelerator distribute IOTA api requests to idle IOTA nodes (i.e., full nodes) and provide Proof-of-Work acceleration. It can also cache the requests/responses in a key-value store to shorten response time, and automatically resend requests if failed. Tangle-accelerators also form a firewall for full nodes, which don't need to reveal the IP address to public and reduce the risks of being attacks.}
     \label{fig:ta_struct}
 \end{figure}
 
-\begin{figure}[!t]
+\begin{figure}[b]
     \centering
     \includegraphics[width=\linewidth]{img/delegation}
     \caption{Data providers can use MAM in 2 ways: the provider performs MAM operations locally, and the provider delegates MAM operations to Tangle-accelerator.}
     \label{fig:delegation}
 \end{figure}
-
+\clearpage
 
 \subsubsection{Communication Protocol}
 In the following sections, we refer the low-level devices as \textbf{endpoint}s. MQTT\cite{MQTT} is chosen as the communication protocol, which requires fewer TCP packets and less traffic. The topic-based pub/sub pattern and lightweight packet that MQTT adopts would undoubtedly play an important role on endpoints with limited bandwidth. The pub/sub model decouples publishers and subscribers in many ways:
@@ -585,12 +593,12 @@ In the following sections, we refer the low-level devices as \textbf{endpoint}s.
 Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures only authorized subscribers can read the messages published on MAM.
 
 %pic
-\begin{figure*}[!t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{img/MAM_E2EE}
     \caption{The process of E2EE.}
     \label{fig:MAM_E2EE}
-\end{figure*}
+\end{figure}
 
 In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE process. The details of steps are addressed below:
 
@@ -638,15 +646,18 @@ All participants are required to register on TangleID to get DID document and pu
 \subsection{Launch Data Products}
 To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
 
-The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and write it on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product} and the certification codes in Product Contract is in Listing.~\ref{lst:key_certification}. Finally, the data product is launched and data providers can start uploading data.
  
-\begin{figure}[!t]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=2.5in]{img/launching_product}
+    \includegraphics[width=5in]{img/launching_product}
     \caption{The process of launching a product.}
     \label{fig:launching_product}
 \end{figure}
+\clearpage
 
+The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and write it on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product} and the certification codes in Product Contract is in Listing.~\ref{lst:key_certification}. Finally, the data product is launched and data providers can start uploading data.
+
+\lstset{style=solidity}
 \begin{lstlisting}[caption={Functions of hased key update and certified key update}, label={lst:key_certification}, frame=single]
     function addHashedKey(
         string memory _hashedKey
@@ -679,26 +690,22 @@ The details of data product, such as data price, MAM channel/endpoint ID and the
         emit newCertifiedKey(certifiedKey);
     }
 \end{lstlisting}
+\clearpage
 
 \subsection{Subscribe to Data Product}
 Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can decode it via Product Contract.
 
 Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange} and Listing.~\ref{lst:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
 
-\begin{figure}[!t]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=3.5in]{img/key_exchange}
+    \includegraphics[width=5.5in]{img/key_exchange}
     \caption{Encryption key exchange process.}
     \label{fig:key_exchange}
 \end{figure}
+\clearpage
 
-\lstdefinestyle{solidity}{
-	captionpos=b,
-	tabsize=4,
-	basicstyle=\scriptsize
-}
 \lstset{style=solidity}
-
 \begin{lstlisting}[caption={Add encryption key to data consumers}, label={lst:key_exchange}, frame=single]
     function addEncryptKey(
         address _consumer,
@@ -742,10 +749,11 @@ Also, data provider will change the encryption key of data product to prevent un
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=3.5in]{img/unsubscribe}
+    \includegraphics[width=5.5in]{img/unsubscribe}
     \caption{Once a data consumer launch a unsubscription procedure, he/she is added to unsubscriber list and the Product Contract will distribute the funds to provider, broker and consumers respectively. Then, the data provider will generate a new encryption key and upload it for every remaining subscribers.}
     \label{fig:unsubscribe}
 \end{figure}
+\clearpage
 
 \subsection{Launch a Refund}
 Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where$N$ is the number of consumers in this contract:
@@ -764,7 +772,7 @@ Data subscription is a high risk which data provider may not upload data as the 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1.5in]{img/refund}
+    \includegraphics[width=2.5in]{img/refund}
     \caption{Once a data consumer launch a refund procedure, all consumers votes to decide whether they want a refund from data providers. Finally, the establishment of refund is determined by Product Contract after checking the votes is higher than a threshold or not.}
     \label{fig:refund}
 \end{figure}
@@ -779,7 +787,7 @@ Data subscription is a high risk which data provider may not upload data as the 
 % ------------------------------------------------
 \newpage
 \phantomsection
-\chapter{Conclusion}
+\chapter{Evaluation}
 \pagestyle{plain}
 
 \begin{spacing}{2.0}
@@ -837,9 +845,9 @@ The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is t
 
 The results of Table \ref{tab:channel_create} and Table \ref{tab:endpoint_create} are plotted in Fig.~\ref{fig:mam_create}. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
   
-\begin{figure}[!t]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=3.in]{img/mam_create}
+    \includegraphics[width=5.in]{img/mam_create}
     \caption{Time cost of MAM creation.}
     \label{fig:mam_create}
 \end{figure}
@@ -853,9 +861,9 @@ Publishing a message to MAM is attaching a zero-value transaction to the Tangle 
 
 Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. Fig.~\ref{fig:mam_send} shows probability distribution function of publishing a message to MAM endpoint. The time of Raspberry Pi 3 distributed widely, since the randomness of PoW has huge impact while all the tests on PC remain in a acceptable range.
 
-\begin{figure}[!t]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=3.in]{img/mam_send}
+    \includegraphics[width=5.in]{img/mam_send}
     \caption{The probability distributed function of time cost for sending a message through MAM.}
     \label{fig:mam_send}
 \end{figure}
@@ -864,9 +872,9 @@ The simulation results above indicate that MAM is difficult for low-level sensor
 
 Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with local Pow on Raspberry Pi 3 and remote Pow on Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
-\begin{figure}[!t]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=3.5in]{img/rpi3_pow}
+    \includegraphics[width=5in]{img/rpi3_pow}
     \caption{Local PoW vs. Remote PoW}
     \label{fig:rpi3_pow}
 \end{figure}
@@ -889,23 +897,24 @@ The steps counted in E2EE benchmark including:
 	\item Transmit final message to tangle-accelerator
 \end{itemize}
 
-\begin{figure}[!t]
+It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
+
+\begin{figure}[h]
     \centering
-    \includegraphics[width=3in]{img/mam_vs_e2ee}
+    \includegraphics[width=4.5in]{img/mam_vs_e2ee}
     \caption{Compare the performance between MAM and E2EE on Raspberry Pi.}
     \label{fig:mam_vs_e2ee}
 \end{figure}
-
-It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
+\clearpage
 
 \subsection{Smart Contract}
 In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
 
-\begin{table*}[h]
+\begin{table}[h]
 	\caption{Gas consumption for each function of Product Contract}
 	\label{tab:gas}
 	\centering
-	\resizebox{0.5\textwidth}{!}{
+	\resizebox{0.7\textwidth}{!}{
 	\begin{tabular}{|c|c|c|c|}
 		\hline
 		\textbf{function} & \textbf{sender} & \textbf{Gas used} \\
@@ -922,7 +931,7 @@ In this experiment, we investigate the cost of executing Product Contract with E
 		\hline
 	\end{tabular}
 	}
-\end{table*}
+\end{table}
 
 Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. Creating a Product Contract (Listing \ref{lst:constructor}) costs the most Gas (0.164 - 0.596 Ether), providers should have enough Ethers to launch the product at start. Functions (Listing \ref{lst:key_exchange} (0.012 - 0.044 Ether) and Listing \ref{lst:key_certification}) (0.022 - 0.0834 Ether) that are related to key certification and key exchange need a lot of gas as well. Storage on blockchain is expensive. For instance, an SSTORE operation may cost 20000 gas when the value is set to non-zero from zero according to Ethereum Yellow Paper\cite{Ethereum}. However, in our trading model, we preserve a lot of information in Product Contract in order to record as more details as possible during trading procedures, such as ciphertexts,  signatures during key certification and key exchange. Especially, in the key exchange protocol, it takes several steps of communications between brokers, data providers and data consumers via storing states to Product Contract. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys. However, using zero-knowledge protocol is out of the scope of this paper.
 
@@ -935,11 +944,11 @@ Ethers = Gas \ Price \times Gas \ Amount
 
 When a consumer request a refund, he/she need to pay 0.0003 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategy coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
 
-\begin{table*}[h]
+\begin{table}[h]
 	\caption{Data Price Estimation}
 	\label{tab:ether}
 	\centering
-	\resizebox{0.8\textwidth}{!}{
+	\resizebox{0.98\linewidth}{!}{
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
 		\textbf{condition} & \textbf{sender} & \textbf{\makecell{minimum price \\ (Ether)}} & \textbf{\makecell{minimum price \\ (USD)}} & \textbf{\makecell{maximum price \\ (Ether)}} & \textbf{\makecell{maximum price \\ (USD)}} \\
@@ -958,7 +967,7 @@ When a consumer request a refund, he/she need to pay 0.0003 Ether additionally. 
 		\hline
 	\end{tabular}
 	}
-\end{table*}
+\end{table}
 
 \end{spacing}
 
@@ -1002,27 +1011,6 @@ Third, to let consumers search and find interested data products, a search engin
 % 學校規定以作者英文姓氏第一字排列順序，故使用 plain ，如果要按照引用順序，可改用 ieeetr
 \bibliographystyle{plain}			% reference style
 \bibliography{thesis}				% target .bib file
-
-\clearpage
-\setstretch{1.2}
-
-% ------------------------------------------------
-%                   附錄 Appendix
-% ------------------------------------------------
-\BeginAppendixChapter				% User-defined function
-\SetupAppendixNumberingFormat		% User-defined function
-\newpage
-\phantomsection
-\chapter{Title of Appendix A}
-
-\begin{spacing}{2.0}
-
-Write your Appendix here.
-
-  \section{Dolor sit amet}
-    Appendix
-
-\end{spacing}
 
 \clearpage
 \setstretch{1.2}
