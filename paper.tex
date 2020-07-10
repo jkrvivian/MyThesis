@@ -464,13 +464,11 @@ The steps counted in E2EE benchmark including:
 
 It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
 
-\section{Conclusions}
+\section{Conclusion and Future Work}
 \label{section:conclusion}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants, enable secure communication and flexible trading mechanisms.
 
-In the subscription-based data trading, there are some issues that worth discussing and improving. Firstly, reduce the Gas usage of trading models, as we mentioned in Section~\ref{section:smart_contract_evaluation}, the key exchange process consumes a lot of Gas due to the frequent store operation. Therefore, it is worth discussing that how zero-knowledge protocol could used to exchange key with lower cost, and even validate the key within transfers. Second, brokers are the key to operate a stable system, since they are irreplaceable either from the view of architecture design or trading procedures. However, the issues such as the minimum number of brokers needed to operation the system, and the evaluation of adopting gossip protocol among brokers to gossipped trading status, which enables other brokers to handle trading process when on crashed.
-
-Third, to let consumers search and find interested data products, a search engine is needed to collect all distributed data products, which might need an authority to design and run the service. The extending issue of searching is ranking, how would the search service provider rank the products, how would that affect data consumers and providers. Fourth, in our design, we do not restrict the qualifications of data providers and brokers, which is different from operating the App store currently ,and it is also an interesting issue to discuss.
+Some issues are worth discussing and improving. Brokers are the key to operate a stable system. However, we do not discuss the conditions that brokers are not responsive during trading process. It is worth studying the necessity of adoptin gossip protocol among brokers, which enables other brokers to continue the undone works. Search engine is needed to let consumers search and find interested data products, which might need an authority to design and run the service. 
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
