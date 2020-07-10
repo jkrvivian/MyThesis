@@ -89,7 +89,7 @@ The contributions in the paper are summarized as follow:
 
 
 \subsection{Paper Organization}
-The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of pub/sub over blockchain, decentralized data trading infrastructures and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the componets of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the paper in Section~\ref{section:conclusion}.
+The rest of this paper is organized as follows. In Section~\ref{section:relatedWork}, some related work of pub/sub over blockchain, decentralized data trading infrastructures and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the components of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the paper in Section~\ref{section:conclusion}.
 
 \begin{figure}[!t]
     \centering
@@ -677,17 +677,40 @@ The steps counted in E2EE benchmark including:
 	\item Transmit final message to tangle-accelerator
 \end{itemize}
 
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3in]{mam_vs_e2ee}
-    \caption{Compare the performance between MAM and E2EE on Raspberry Pi.}
-    \label{fig:mam_vs_e2ee}
-\end{figure}
+\begin{table}[htbp]
+	\caption{Compare the performance between MAM and E2EE on Raspberry Pi}
+    \label{tab:mam_vs_e2ee}
+    \resizebox{0.5\textwidth}{!}{
+        \begin{tabular}{|c||c|c|}
+        \hline
+            \textbf{size (bytes)} & \textbf{MAM(ms)} & \textbf{E2EE(ms)} \\
+            \hline
+            100 & 20.28 & 9.21 \\ 
+            500 &  26.92 & 9.27 \\ 
+            900 & 32.02 &  9.35  \\ 
+            1300 & 36.67 & 9.41 \\ 
+            1700 & 40.55 & 9.54 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
 
-It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range.
+It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
+
+\begin{equation}
+    \label{eq:lin_mam}
+    y=0.0126 x+19.979  
+\end{equation}
+
+\begin{equation}
+    \label{eq:lin_e2ee}
+    y=0.0002 x+9.174
+\end{equation}
+
+The Eq.~\ref{eq:lin_mam} and Eq.~\ref{eq:lin_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
 
 \subsubsection{Time Complexity}
-With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc) apparently makes E2EE perform with smaller slope.
+With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc), ensures gentle slope as Eq.~\ref{eq:lin_e2ee} shows.
 
 \subsection{Smart Contract}
 In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
@@ -695,7 +718,6 @@ In this experiment, we investigate the cost of executing Product Contract with E
 \begin{table*}[h]
 	\caption{Gas consumption for each function of Product Contract}
 	\label{tab:gas}
-	\centering
 	\resizebox{0.5\textwidth}{!}{
 	\begin{tabular}{|c|c|c|c|}
 		\hline
