@@ -651,68 +651,6 @@ The steps counted in E2EE benchmark including:
 
 It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
 
-\subsection{Smart Contract}
-In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
-
-\begin{table*}[h]
-	\caption{Gas consumption for each function of Product Contract}
-	\label{tab:gas}
-	\centering
-	\resizebox{0.5\textwidth}{!}{
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		\textbf{function} & \textbf{sender} & \textbf{Gas used} \\
-		\hline
-		generate contract & broker & 2558980 \\ 
-		subscribe product & consumer & 72259 \\ 
-		upload hashed key & provider & 68276  \\ 
-		upload encryption key to consumer & provider & 86614 \\ 
-		upload certified key & broker & 131535 \\
-		update amount of uploaded data & broker & 32157 \\
-		unsubscribe & consumer & 8234 \\
-		request refund & consumer & 12067 \\
-		withdraw & broker & 11313 \\
-		\hline
-	\end{tabular}
-	}
-\end{table*}
-
-Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. Creating a Product Contract (Listing \ref{lst:constructor}) costs the most Gas (0.164 - 0.596 Ether), providers should have enough Ethers to launch the product at start. Functions (Listing \ref{lst:key_exchange} (0.012 - 0.044 Ether) and Listing \ref{lst:key_certification}) (0.022 - 0.0834 Ether) that are related to key certification and key exchange need a lot of gas as well. Storage on blockchain is expensive. For instance, an SSTORE operation may cost 20000 gas when the value is set to non-zero from zero according to Ethereum Yellow Paper\cite{Ethereum}. However, in our trading model, we preserve a lot of information in Product Contract in order to record as more details as possible during trading procedures, such as ciphertexts,  signatures during key certification and key exchange. Especially, in the key exchange protocol, it takes several steps of communications between brokers, data providers and data consumers via storing states to Product Contract. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys. However, using zero-knowledge protocol is out of the scope of this paper.
-
-Base on Gas estimation in Table.~\ref{tab:gas}, we calculate the exact Ether with Formula~\ref{equa:ether_calculation} that data providers and data consumers need during the trade in Table.~\ref{tab:ether}. We combine the Gas usage of providers and brokers, since the brokerage fee is also a critical cost to sustain the trade, which providers should considered. We conclude the four situations during the trading process: w/o refund and unsubscribe, w/ refund only, w/unsubscribe and w/ refund and unsubscribe. The condition of w/o refund and unsubscribe represents the basic cost of  triggering regular functions, such as launch, add encryption key. 
-
-\begin{equation}
-\label{equa:ether_calculation}
-Ethers = Gas \ Price \times Gas \ Amount
-\end{equation}
-
-When a consumer request a refund, he/she need to pay 0.0003 Ether additionally. Then if the refund established, all participants will withdraw the payment, which is already included in the basic cost. Observing the situation of w/ unsubscribe and w/ refund and unsubscribe, it does not cost them much more Ether for consumers. However, the data provider need to update all encryption keys for remaining consumers that \textit{update encrypt key} will be triggered $N$ times, where $N$ is the amount of remaining subscribers. This would cost data providers a lot if the unsubscription is frequent or many consumers subscribe to the data product. Hence, an efficient, low-cost and secure way to perform access control while recording the unsubscription process transparent is important. An alternative strategy coming up with the latest development of MAM, which is renaming to Streams\cite{stream}, provides a new functionality for subscribers to unsubscribe to data streams, thus, it is possible to perform access control directly through it rather than uploading new encryption key to the Product Contract. Nevertheless, Streams is still in an alpha version, the details and protocol still need to be well studied.
-
-\begin{table*}[h]
-	\caption{Data Price Estimation}
-	\label{tab:ether}
-	\centering
-	\resizebox{0.8\textwidth}{!}{
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		\textbf{condition} & \textbf{sender} & \textbf{\makecell{minimum price \\ (Ether)}} & \textbf{\makecell{minimum price \\ (USD)}} & \textbf{\makecell{maximum price \\ (Ether)}} & \textbf{\makecell{maximum price \\ (USD)}} \\
-		\hline
-		\multirow{2}{*}{\makecell{w/o refund \\ unsubscribe}} & provider & 0.021 & 5.038 & 0.076 & 18.291 \\
-		 & consumer & 0.00061 & 0.145 & 0.0022 & 0.527\\
-		\hline
-		\multirow{2}{*}{w/ refund} & provider & 0.021 & 5.038 & 0.076 & 18.291 \\
-		 & consumer & 0.00069 & 0.166 & 0.0025 & 0.603 \\
-		\hline
-		\multirow{2}{*}{w/ unsubscribe} & provider & 0.021 + 0.002N & 5.038 + 0.497N & 0.076  + 0.007N & 18.291 + 1.806N \\
-		 & consumer & 0.00067 & 0.159 & 0.0024 & 0.579 \\
-		\hline
-		\multirow{2}{*}{\makecell{w/ refund \\ unsubscribe}} & provider & 0.021 + 0.002N & 5.038 + 0.497N & 0.076  + 0.007N & 18.291 + 1.806N\\
-		 & consumer & 0.0007 & 0.180 & 0.0027 & 0.655 \\
-		\hline
-	\end{tabular}
-	}
-\end{table*}
-
 \section{Conclusions}
 \label{section:conclusion}
 By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants, enable secure communication and flexible trading mechanisms.
