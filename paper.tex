@@ -395,11 +395,11 @@ In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE pr
 	\caption{AES256 Encryption Performance Numbers}
 	\label{tab:AES_NI}
 	\begin{center}
-        \begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|  }
+        \begin{tabular}{ |c||c|c|c|  }
             %\hline
             %\multicolumn{4}{|c|}{} \\
             \hline
-            Size& NON AES-NI (msecs) & AES-NI (msecs) & Encryption Acceleration (\%) \\
+            Size& \makecell{NON AES-NI \\ (msecs)} & \makecell{AES-NI \\ (msecs)} & \makecell{Encryption \\ Acceleration (\%)} \\
             \hline
             50 MB  & 1026  & 563   & 45.13 \\
             100 MB & 2036  & 1297  & 36.30 \\
@@ -686,7 +686,7 @@ The steps counted in E2EE benchmark including:
 It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point.
 
 \subsubsection{Time Complexity}
-With given E2EE protocol framework. ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is O(n).\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is O(n), too. Therefore, the E2EE protocol framework takes only linear time. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc) apparently makes E2EE perform with smaller slope.
+With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc) apparently makes E2EE perform with smaller slope.
 
 \subsection{Smart Contract}
 In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing a trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
