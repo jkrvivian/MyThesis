@@ -566,13 +566,14 @@ Data subscription is a high risk which data provider may not upload data as the 
     \label{fig:refund}
 \end{figure}
 
-
 \section{Evaluations}
 \label{section:evaluation}
-It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
+We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider. 2) Evaluate the minimum cost for participants to sustain or subscribe to a data product on Product Contract.
 
 \subsection{MAM Performance Evaluation}
 \label{section:mam_performance}
+It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
+
 MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
 
 In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC, 3.2GHz 64-bit 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (1.2 GHz 64-bit quad-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM. 
