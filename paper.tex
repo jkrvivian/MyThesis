@@ -123,12 +123,12 @@ Brokers are responsible for building an agreement between data providers and con
 
 We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum information like its identifier and public key. Third, as brokers running on machines in a stable network and electricity environment, participants on resource-constrained devices can offload the computation tasks to brokers that enables a proxy server implementation mentioned in Section~\ref{section:ta_endpoint}. With the end-to-end encryption trasmission protocol we used, brokers can perform verifiable checks without knowing the contents.
 
-\begin{figure*}[!t]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{channel_and_key}
+    \includegraphics[width=3.5in]{channel_and_key_fold}
     \caption{Within MAM channel, the message publisher has 2 types of key, the encryption keys for content encryption and signature keys for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
     \label{fig:channel_and_key}
-\end{figure*}
+\end{figure}
 
 
 \subsection{Choice of Data Storage}
@@ -194,12 +194,12 @@ In our architecture, a decentralized identity system TangleID\cite{TangleID} is 
 Through TangleID, entities get a public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible.
 
 \subsection{Enable Automated Trading Process}
-\begin{figure*}[t]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=4in]{smart_contract_mam}
+    \includegraphics[width=3.5in]{smart_contract_mam_shrink}
     \caption{The information of identity and data streams are stored on the Tangle with MAM which are all recorded on Product Contracts. Participants can easily retrieve information via Product Contract and proceed trading. For signature validation check and further exchange encryption keys, the MAM channel ID of participants' DID document  are written down, presented in blue color. The orange color stands for the information of data products, which includes the data stream channel/endpoint ID and encryption key certified by broker.}
     \label{fig:smart_contract_mam}
-\end{figure*}
+\end{figure}
 
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it is uninterruptible and will be executed automatically without any third-parties. 
 
@@ -283,12 +283,12 @@ MAM builds a secure and authenticated communication protocol on top of multiple 
 Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures only authorized subscribers can read the messages published on MAM.
 
 %pic
-\begin{figure*}[!t]
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=\linewidth]{MAM_E2EE}
+    \includegraphics[width=3in]{MAM_E2EE_fold}
     \caption{The process of E2EE.}
     \label{fig:MAM_E2EE}
-\end{figure*}
+\end{figure}
 
 In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE process. The details of steps are addressed below:
 
@@ -366,7 +366,7 @@ Also, data provider will change the encryption key of data product to prevent un
 \end{equation}
 
 \subsection{Launch a Refund}
-Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where$N$ is the number of consumers in this contract:
+Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where $N$ is the number of consumers in this contract:
 
 \begin{equation}
     F_{DataProvider}(i) = Nprice \frac{i-1}{M} (1-F_{b}) -F_{t}
@@ -379,14 +379,6 @@ Data subscription is a high risk which data provider may not upload data as the 
 \begin{equation}
     F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
 \end{equation}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1.5in]{refund}
-    \caption{Once a data consumer launch a refund procedure, all consumers votes to decide whether they want a refund from data providers. Finally, the establishment of refund is determined by Product Contract after checking the votes is higher than a threshold or not.}
-    \label{fig:refund}
-\end{figure}
-
 
 \section{Evaluations}
 \label{section:evaluation}
