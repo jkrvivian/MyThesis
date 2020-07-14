@@ -324,7 +324,7 @@ Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The ti
 \endminipage\hfill
 \minipage{0.32\textwidth}%
   \includegraphics[width=\linewidth]{rpi3_pow}
-  \caption{Local PoW vs. Remote PoW}\label{fig:rpi3_pow}
+  \caption{Local PoW vs. Remote PoW vs. E2EE}\label{fig:rpi3_pow}
 \endminipage
 \end{figure*}
 
@@ -339,27 +339,29 @@ Tips selection requires a stable network connection to wait the response from IO
 
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
-Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with local PoW on Raspberry Pi 3 and remote PoW on Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
+Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local Pow on Raspberry Pi 3, remote Pow on Tangle-accelerator and E2EE on Raspberry Pi 3. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
 
 \subsubsection{Experiment}
-Applying remote PoW greatly reduces the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM messages. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
+PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. Applying remote PoW greatly reduces the elapsed time. To improve MAM into a reliable solution for low-level devices, channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
-\begin{itemize}
-	\item Encrypt input payload
+\begin{enumerate}
+    \item Write key information in header
+	\item Write and encrypt input payload
 	\item Publish final message on IOTA Tangle
-\end{itemize}
+\end{enumerate}
 
 The steps counted in delegated MAM (E2EE) benchmark including:
-\begin{itemize}
+\begin{enumerate}
 	\item Generate symmetric key for encryption
 	\item Hash input payload
 	\item Encrypt input payload
 	\item Transmit final message to tangle-accelerator
-\end{itemize}
+\end{enumerate}
+
 \begin{table}[htbp]
 	\caption{Compare the performance between MAM and E2EE on Raspberry Pi}
     \label{tab:mam_vs_e2ee}
