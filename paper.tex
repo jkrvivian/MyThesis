@@ -269,10 +269,14 @@ In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE pr
     \item Send the ciphertext along with signed MAC.
 \end{enumerate}
 
-The E2EE protocol presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On some certain devices, hardware acceleration would be supported. With hardware acceleration, the elapsed time could be dropped a step more. For example applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration}
+The E2EE protocol framework presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On some certain devices, hardware acceleration would be supported. With hardware acceleration, the elapsed time could be dropped a step more. For example applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration}
+
+\subsubsection{Time Complexity}
+In this paper, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and ECDSA P-256 for digital signature. In this E2EE protocol, ECDSA would take constant time, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length.
 
 \subsubsection{Issues in End-to-End-Encryption}
 E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, there are some challenges in the E2EE process. Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
+
 
 \section{Decentralized Subscription-based Data Trading Case Study}
 \label{section:trading_model}
@@ -374,7 +378,7 @@ Therefore, transferring MAM operations to brokers while ensuring the profit and 
 \label{section:smart_contract_evaluation}
 
 \subsubsection{Experiment}
-Applying remote PoW greatly reduce the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM message. With employing delegated MAM and E2EE, MAM channel creation would be delegated by tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values. In the E2EE protocol framework, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
+Applying remote PoW greatly reduce the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM message. With employing delegated MAM and E2EE, MAM channel creation would be delegated by tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol framework, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
 \begin{itemize}
@@ -382,7 +386,7 @@ The steps counted in MAM benchmark including:
 	\item Publish final message on IOTA Tangle
 \end{itemize}
 
-The steps counted in E2EE benchmark including:
+The steps counted in delegated MAM (E2EE) benchmark including:
 \begin{itemize}
 	\item Generate symmetric key for encryption
 	\item Hash input payload
@@ -406,15 +410,12 @@ The steps counted in E2EE benchmark including:
         \end{tabular}
 \end{table}
 
-It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
 \begin{align}
     y &= 0.0126 x+19.979 \label{lin_mam} \\
     y &= 0.0002 x+9.174 \label{lin_e2ee}
 \end{align}
-The equations in Eq.~\ref{lin_mam},~\ref{lin_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
 
-\subsubsection{Time Complexity}
-With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc), ensures gentle slope as Eq.~\ref{eq:lin_e2ee} shows.
+Table~\ref{tab:mam_vs_e2ee} is the experiment result of the two methods. Eq.~\ref{lin_mam},~\ref{lin_e2ee} are the linear equations for the experiment data of MAM and E2EE respectively. The result reveals elapsed time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data. The slope of the result of E2EE is much more flat than the result of MAM which ensures E2EE can consistently perform in an acceptable time range.
 
 \section{Conclusion and Future Work}
 \label{section:conclusion}
