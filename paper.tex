@@ -423,11 +423,10 @@ The steps counted in E2EE benchmark including:
 
 It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
 \begin{align}
-\label{eq:lin_mam_e2ee}
-    y &= 0.0126 x+19.979 \\
-    y &= 0.0002 x+9.174
+    y &= 0.0126 x+19.979 \label{lin_mam} \\
+    y &= 0.0002 x+9.174 \label{lin_e2ee}
 \end{align}
-The equations in Eq.~\ref{eq:lin_mam_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
+The equations in Eq.~\ref{lin_mam},~\ref{lin_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
 
 \subsubsection{Time Complexity}
 With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc), ensures gentle slope as Eq.~\ref{eq:lin_e2ee} shows.
