@@ -300,14 +300,27 @@ In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE pr
     \item Send the ciphertext along with signed MAC.
 \end{enumerate}
 
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{AES-NI}
-    \caption{AES256 Encryption/Decryption Performance Numbers}
-    \label{fig:AES-NI}
-\end{figure}
+\begin{table}[htbp]
+	\caption{AES256 Encryption Performance Numbers}
+	\label{tab:AES_NI}
+	\begin{center}
+        \begin{tabular}{ |c||c|c|c|  }
+            %\hline
+            %\multicolumn{4}{|c|}{} \\
+            \hline
+            Size& \makecell{NON AES-NI \\ (msecs)} & \makecell{AES-NI \\ (msecs)} & \makecell{Encryption \\ Acceleration (\%)} \\
+            \hline
+            50 MB  & 1026  & 563   & 45.13 \\
+            100 MB & 2036  & 1297  & 36.30 \\
+            200 MB & 4282  & 2984  & 30.31 \\
+            512 MB & 10754 & 6401  & 40.48 \\
+            1 GB   & 23976 & 15721 & 34.43 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
 
-The E2EE protocol presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On some certain devices, hardware acceleration would be supported. With hardware acceleration, the elapsed time could be dropped a step more. For example applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration} Fig.~\ref{fig:AES-NI} shows the performance of Encryption/Decryption of AES256 with and without hardware acceleration.
+The E2EE protocol presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On some certain devices, hardware acceleration would be supported. With hardware acceleration, the elapsed time could be dropped a step more. For example applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration} According to Intel, Table~\ref{tab:AES_NI} shows the performance of Encryption of AES256 with and without hardware acceleration.
 
 \subsubsection{Issues in End-to-End-Encryption}
 E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, there are some challenges in the E2EE process. Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
@@ -382,10 +395,12 @@ Data subscription is a high risk which data provider may not upload data as the 
 
 \section{Evaluations}
 \label{section:evaluation}
-It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
+We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider. 2) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract.
 
 \subsection{MAM Performance Evaluation}
 \label{section:mam_performance}
+It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
+
 MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
 
 In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC, 3.2GHz 64-bit 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (1.2 GHz 64-bit quad-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM. 
@@ -431,7 +446,9 @@ Therefore, transferring MAM operations to brokers while ensuring the profit and 
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
-What follows is an account of performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values.
+
+\subsubsection{Experiment}
+Applying remote PoW greatly reduce the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM message. With employing delegated MAM and E2EE, MAM channel creation would be delegated by tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending message to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values. In the E2EE protocol framework, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
 \begin{itemize}
@@ -447,14 +464,35 @@ The steps counted in E2EE benchmark including:
 	\item Transmit final message to tangle-accelerator
 \end{itemize}
 
-\begin{figure}[!t]
+\begin{table}[htbp]
+	\caption{Compare the performance between MAM and E2EE on Raspberry Pi}
+    \label{tab:mam_vs_e2ee}
     \centering
-    \includegraphics[width=3in]{mam_vs_e2ee}
-    \caption{Compare the performance between MAM and E2EE on Raspberry Pi.}
-    \label{fig:mam_vs_e2ee}
-\end{figure}
+        \begin{tabular}{|c||c|c|}
+        \hline
+            \textbf{size (bytes)} & \textbf{MAM(ms)} & \textbf{E2EE(ms)} \\
+            \hline
+            100 & 20.28 & 9.21 \\ 
+            500 &  26.92 & 9.27 \\ 
+            900 & 32.02 &  9.35  \\ 
+            1300 & 36.67 & 9.41 \\ 
+            1700 & 40.55 & 9.54 \\
+            \hline
+        \end{tabular}
+\end{table}
 
-It the Fig.~\ref{fig:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for low-level embedded system to send authenticated streaming data. Next, regarding the trend of the two lines, the performance of E2EE is obviously more steady than MAM in the given range. The bump of MAM performance around 750 bytes proves this point. Moreover, the performance of E2EE is almost under constant time, but MAM takes linear time on encrypting messages.
+It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
+
+\begin{gather}
+    \label{eq:lin_mam_e2ee}
+    y=0.0126 x+19.979 \\
+    y=0.0002 x+9.174
+\end{gather}
+
+The equations in Eq.~\ref{eq:lin_mam_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
+
+\subsubsection{Time Complexity}
+With given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc), ensures gentle slope as Eq.~\ref{eq:lin_e2ee} shows.
 
 \section{Conclusion and Future Work}
 \label{section:conclusion}
