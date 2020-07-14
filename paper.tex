@@ -357,41 +357,21 @@ Transferring the encryption key on smart contract instead of off-chain not only 
 \end{figure}
 
 \subsection{Unsubscribe to Data Products}
-Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract marks the consumer as not subscribing, corresponding to the parameter $isSubscribe$ in $Product$ structre, since the delete function in Solidity does not remove the actual element but reseting it to default value. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. 
+Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract marks the consumer as not subscribing, corresponding to the parameter $isSubscribe$ in $Product$ structre, since the delete function in Solidity does not remove the actual element but reseting it to default value. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. 
 
 In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers charge cancellation fee if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue that should be carefully studied.
 
 Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The new key should be updated to the remaining subscribers in $consumer2Purchase$ list in Product Contract.
 
-\begin{equation}
-\label{equation:unsubscribe_provider}
-    F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} 
-\end{equation}
-
-\begin{equation}
-\label{equation:unsubscribe_broker}
-    F_{Broker}(i) = price \frac{i-1}{M} F_{b} -F_{t}
-\end{equation}
-
-\begin{equation}
-\label{equation:unsubscribe_consumer}
+\begin{gather}
+\label{equation:unsubscribe}
+    F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \\
+    F_{Broker}(i) = price \frac{i-1}{M} F_{b} -F_{t} \\
     F_{Consumer}(i) = price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
-\end{equation}
+\end{gather}
 
 \subsection{Launch a Refund}
-Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where $N$ is the number of consumers in this contract:
-
-\begin{equation}
-    F_{DataProvider}(i) = Nprice \frac{i-1}{M} (1-F_{b}) -F_{t}
-\end{equation}
-
-\begin{equation}
-    F_{Broker}(i) = Nprice \frac{i-1}{M} F_{b} -F_{t}
-\end{equation}
-
-\begin{equation}
-    F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
-\end{equation}
+Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following.
 
 \section{Evaluations}
 \label{section:evaluation}
@@ -410,12 +390,20 @@ The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is t
 
 Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
   
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.in]{mam_create}
-    \caption{Time cost of MAM creation.}
-    \label{fig:mam_create}
-\end{figure}
+\begin{figure*}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{mam_create}
+  \caption{Time cost of MAM creation.}\label{fig:mam_create}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{mam_send}
+  \caption{The probability distributed function of time cost for sending a message through MAM.}\label{fig:mam_send}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{rpi3_pow}
+  \caption{Local PoW vs. Remote PoW}\label{fig:rpi3_pow}
+\endminipage
+\end{figure*}
 
 \subsubsection{Messages Publishment}
 Publishing a message to MAM is attaching a zero-value transaction to the Tangle which requires two processes:
@@ -426,23 +414,9 @@ Publishing a message to MAM is attaching a zero-value transaction to the Tangle 
 
 Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. Fig.~\ref{fig:mam_send} shows probability distribution function of publishing a message to MAM endpoint. The time of Raspberry Pi 3 distributed widely, since the randomness of PoW has huge impact while all the tests on PC remain in a acceptable range.
 
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.in]{mam_send}
-    \caption{The probability distributed function of time cost for sending a message through MAM.}
-    \label{fig:mam_send}
-\end{figure}
-
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
 Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with local Pow on Raspberry Pi 3 and remote Pow on Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
-
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=3.5in]{rpi3_pow}
-    \caption{Local PoW vs. Remote PoW}
-    \label{fig:rpi3_pow}
-\end{figure}
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
