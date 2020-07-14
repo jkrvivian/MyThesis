@@ -238,33 +238,13 @@ A channel/endpoint is a stream of MAM transaction bundles, which consist of sign
 \subsection{Enable Access Control and Authentication}
 The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
 
-
 \subsection{The Advantages of Adopting MAM in Subscription-based Data Trading Infrastructure}
-%scalability
 \subsubsection{A Scalable Keys and Data Entry Points Management}
-The importance of scalable key and data entry points management increases over time. In MAM, with an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of transaction and retrieve data. Table.~\ref{tab:mam_scalability} compares the key and addresses that need to be managed by using MAM and other distributed storage systems. Assuming the length of data stream is 7, and each record is encrypted with the same key. With MAM, only 1 key and 1 entry point is required while other distributed storage need to reserve 7 entry points for each data record.
+The importance of scalable key and data entry points management increases over time. In MAM, with an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of transaction and retrieve data. Assuming the length of data stream is 7, and each record is encrypted with the same key. With MAM, only 1 key and 1 entry point is required while other distributed storage need to reserve 7 entry points for each data record.
 
-\begin{table}[htbp]
-	\caption{Number of keys and entry points of a data stream that need to managed with length 7.}
-	\label{tab:mam_scalability}
-	\begin{center}
-	\begin{tabular}{|c|c|c|}
-	\hline
-		\textbf{Items} & \textbf{MAM} & \textbf{Others} \\ 
-		\hline
-		keys & 1 & 1 \\ 
-		\hline
-		entry points & 1 & 7 \\ 
-		\hline
-	\end{tabular}
-	\end{center}
-\end{table}
-
-%classify
 \subsubsection{Data Sreams Classification}
 The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, a voice assistant can create a channel every day with multiple endpoints for each gadgets to record daily logs. Another example is sensor devices like AirBox\cite{LASS}, collects environmental data, can split the statistics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. To do the classification in other distributed storage also encounters the aforementioned scalability problem.
 
-%data trace
 \subsubsection{A Traceable Data Stream}
 Data traceability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
 
@@ -362,14 +342,12 @@ Data consumers can unsubscribe to data products when they're not interested anym
 In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers charge cancellation fee if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue that should be carefully studied.
 
 Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The new key should be updated to the remaining subscribers in $consumer2Purchase$ list in Product Contract.
-
 \begin{gather}
 \label{equation:unsubscribe}
     F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \\
     F_{Broker}(i) = price \frac{i-1}{M} F_{b} -F_{t} \\
     F_{Consumer}(i) = price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
 \end{gather}
-
 \subsection{Launch a Refund}
 Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following.
 
@@ -389,7 +367,6 @@ In this section, time measurement is evaluated in two MAM operations: channel/en
 The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is the height of Merkle Hash Tree in a Merkle signature scheme (MSS), and the "$-1$" is for announcing the ID of next channel or endpoint. A channel with height $n$ can create $2^n-1$ endpoints, and an endpoint with height $m$ can attach $2^m-1$ messages, therefore the capacity of a channel is $2^{nm}-2^n-2^m+1$ messages in total. The greater the \textit{height} of MSS, the longer the channel/endpoint, however the higher the computational power required. In this task, both channel and endpoint creation are tested and the \textit{height} is set from 1 to 7 which is quite enough for data providers to upload data.
 
 Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
-  
 \begin{figure*}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{mam_create}
@@ -437,7 +414,6 @@ The steps counted in E2EE benchmark including:
 	\item Encrypt input payload
 	\item Transmit final message to tangle-accelerator
 \end{itemize}
-
 \begin{table}[htbp]
 	\caption{Compare the performance between MAM and E2EE on Raspberry Pi}
     \label{tab:mam_vs_e2ee}
@@ -456,13 +432,11 @@ The steps counted in E2EE benchmark including:
 \end{table}
 
 It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
-
 \begin{gather}
     \label{eq:lin_mam_e2ee}
     y=0.0126 x+19.979 \\
     y=0.0002 x+9.174
 \end{gather}
-
 The equations in Eq.~\ref{eq:lin_mam_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
 
 \subsubsection{Time Complexity}
