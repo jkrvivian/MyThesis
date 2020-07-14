@@ -124,30 +124,7 @@ We adopt the brokered infrastructure for three reasons. Firstly, it inherits the
 
 
 \subsection{Choice of Data Storage}
-Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt MAM as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. Carrying these properties, MAM is also appropriate for building a self-sovereign identity system where the identity information such as public key, unique identifiers of services and metadata are stored. One can easily prove himself by sharing the identifier on MAM without any authority.
-
-In our work, MAM build the trust of the platform while meeting the requirements of data trading which can be concluded below:
-
-\begin{itemize}
-    \item \textbf{Scalability}:
-	\begin{itemize}
-		\item Benefits from the underlying Tangle network, the system scales when more participants and more transactions join the network. 
-    	\item For both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible
-    \end{itemize}    
-    \item \textbf{Integrity}: 
-	\begin{itemize}    	
-        \item Messages published to the Tangle are tamper-proof that against malicious modification.
-    	\item Messages are signed with the keys pre-generated under Merkle signature scheme\cite{MSS} (MSS) that both keys and messages can be verified by participants.
-    \end{itemize}
-    \item \textbf{Confidentiality}:
-    \begin{itemize}    	
-    	\item The encrypted data are uploaded that only participants that have keys can decrypt.
-    	\item The authorized users can retrieve data streams, since data is written on the Tangle which can be queried as long as the IOTA network is alive.
-    	\item MAM provides forward-secrecy. The entry points of future data can be derived, but it's impossible to trace back those in the past. This feature prevents adversaries from retrieving published history even if the key is revealed.
-    \end{itemize}
-\end{itemize}
-
-MAM publishes authenticated streaming data to channel and endpoint as zero-value transactions to the Tangle and provides the ability to publish and fetch encrypted messages over the network along with data integrity and access control. The payload of a MAM message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents, the ciphertext is then signed with \textbf{signature key} generated with MSS and attached to the Tangle. This approach allows users to validate the signatures without knowing the actual contents but ensuring the messages do come from the exact source. See Fig.~\ref{fig:channel_and_key} for illustration. 
+Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt MAM as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. In our work, MAM build the trust of the platform while meeting the requirements of IoT streaming data storage which can be concluded: 1.) \textbf{Scalability}, for both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible. 2.) \textbf{Integrity}, messages are written on the Tangle network that are not immutable. 3.) \textbf{Confidentiality}, the message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents. 4.) \textbf{Proof of Ownership}, signing messages with \textbf{signature key} generated from Merkle signature scheme\cite{MSS} (MSS) allows users to ensure them originated from the same source by validating the signatures without knowing the actual contents. See Fig.~\ref{fig:channel_and_key} for illustration. 
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
