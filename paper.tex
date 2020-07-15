@@ -281,12 +281,12 @@ Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The ti
   \caption{Time cost of MAM creation.}\label{fig:mam_create}
 \endminipage\hfill
 \minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth]{mam_send}
-  \caption{The probability distributed function of time cost for sending a message through MAM.}\label{fig:mam_send}
+  \includegraphics[width=\linewidth]{rpi3_pow}
+  \caption{MAM with local PoW \newline vs. MAM with remote PoW \newline vs. Delegated MAM with E2EE}\label{fig:rpi3_pow}  
 \endminipage\hfill
 \minipage{0.32\textwidth}%
-  \includegraphics[width=\linewidth]{rpi3_pow}
-  \caption{Local PoW vs. Remote PoW vs. E2EE}\label{fig:rpi3_pow}
+  \includegraphics[width=\linewidth]{op_share}
+  \caption{The percentage each operation takes in total elapsed time.}\label{fig:op_share}  
 \endminipage
 \end{figure*}
 
@@ -307,7 +307,7 @@ Transferring MAM operations to brokers while ensuring the profit and privacy of 
 \label{section:smart_contract_evaluation}
 
 \subsubsection{Experiment}
-PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. Applying remote PoW greatly reduces the elapsed time. To improve MAM into a reliable solution for low-level devices, channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Accel which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Accel are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
+According to Fig.\ref{fig:op_share}, PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. The result directs a way to improve MAM. Applying remote PoW greatly reduces the elapsed time, then channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Accel which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Accel are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
 \begin{enumerate}
