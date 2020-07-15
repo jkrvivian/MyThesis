@@ -364,9 +364,14 @@ Table~\ref{tab:mam_vs_e2ee} is the experiment result of the two methods. Eq.~\re
 
 \section{Conclusion and Future Work}
 \label{section:conclusion}
-By combining the established standards and openly-developed specifications, this paper proposed an autonomous publish/subscribe model design to serve as a vendor and industry-neutral platform, automating the trading of digital assets and services. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to ensure the authenticity of all participants, enable secure communication and flexible trading mechanisms.
+This paper aims to proposes a highly decentralized, autonomous publish/subscribe model that combines data storage and trading together in order to ensure the digital rights of both data providers and consumers during the dynamic data streaming trading. To clarify the data ownership and the identity verification, the data stream is stored on the Tangle, transmitted through MAM and automated by Ethereum smart contracts in our design. Compared to previous works, we (1) identify a trustless data trading infrastructure, (2) ensure the confidentiality of scalable IoT-based sensor data, and (3) consolidate the economic incentives in the entire ecosystem. Meanwhile, we consider the heavy workload of the low-level sensors, conduct an experiment which authenticate the data providers to delegate the MAM operations to TAs, and conclude that the performance of the E2EE approach is more fitting than the MAM solution. In particular, this work discusses the refund mechanism for subscription-based IoT data trading: Launching, voting and implementing the refunding procedure.
 
-Some issues are worth discussing and improving. Brokers are the key to operate a stable system. However, we do not discuss the conditions that brokers are not responsive during trading process. It is worth studying the necessity of adoptin gossip protocol among brokers, which enables other brokers to continue the undone works. Search engine is needed to let consumers search and find interested data products, which might need an authority to design and run the service. 
+However, this work has a main focus on the subscription-based model and relative experiment. Therefore, the next step is to extend the work to:
+\begin{enumerate}
+	\item reduce the use of Gas in key exchange process and consider the possibility of the zero-knowledge protocol to lower transaction costs
+	\item analyze the minimum number of brokers needed for the system and the procedures of the refund mechanism
+	\item develope a searching engine for consumers to find their interested tagging or data products as well as a ranking system to maintain the quality.
+\end{enumerate}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
