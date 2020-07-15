@@ -102,18 +102,18 @@ In the following researches, Masked Authenticated Messaging (MAM)\cite{MAM} is r
 \section{System Design Thinking}
 \label{section:design_thinking}
 \subsection{Data subscription-based trading platform players}
-There are three major roles, data providers, data consumers and brokers which are similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each others, in our proposed architecture, the brokers are only responsible for message delivery and essential verification processes.
+There are three major participants, data providers, data consumers and brokers in our proposed architecture.
 
 \begin{itemize}
 \item \textbf{Data Provider: }
 Data providers are the ones that generate streaming data and set the data price based on the different types of data. With the subscription fee that earned via trading, data providers are incentivized to maintain and improve the quality of data.
 \item \textbf{Data Consumer: }
-Data consumers are entities that are willing to buy data streams. As it is laborious to widely deploy devices to collect data from scratch, and without a marketplace, it is also difficult to find providers of the data sets, purchases is the fastest and efficient way to get the desired data sets.
+Data consumers are entities that are willing to buy data streams. As it is laborious to widely deploy devices to collect data from scratch, and without a marketplace, it is also difficult to find providers of the data sets. Purchase is the fastest and efficient way to get the desired data sets.
 \item \textbf{Broker: }
-Brokers are responsible for building an agreement between data providers and consumers. Also brokers can represent data providers to perform computing tasks as brokers are expected to have higher resource.
+Brokers are responsible for building an agreement and handling trading processes between data providers and consumers. Brokers are required to be online for providers and consumers, and they are incentivized by charging brokerage fees.
 \end{itemize}
 
-We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum information like its identifier and public key. Third, as brokers running on machines in a stable network and electricity environment, participants on resource-constrained devices can offload the computation tasks to brokers that enables a proxy server implementation mentioned in Section~\ref{section:ta_endpoint}. With the end-to-end encryption trasmission protocol we used, brokers can perform verifiable checks without knowing the contents.
+Adopting brokers between providers and consumers has three advantages. First, considering the entities could be machines that are not online anytime, brokers can continue the trading process if either side is offline. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. Brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum information like its identifier and public key. Third, a refund process needs brokers to host and supervise the procedures in order to protect the rights of participants, which will be further discussed in Section.~\ref{section:refund}.
 
 \begin{figure}[h]
     \centering
@@ -121,7 +121,6 @@ We adopt the brokered infrastructure for three reasons. Firstly, it inherits the
     \caption{Within MAM channel, the message publisher has 2 types of key, the encryption keys for content encryption and signature keys for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
     \label{fig:channel_and_key}
 \end{figure}
-
 
 \subsection{Choice of Data Storage}
 Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data which can be verified by the hash of whole pack of data, it consists of continually granular records of each time slots. Therefore, the verification such as, data integrity and source identity are narrow down to a data point as well. In our proposed architecture, we adopt MAM as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. In our work, MAM build the trust of the platform while meeting the requirements of IoT streaming data storage which can be concluded: 1.) \textbf{Scalability}, for both data providers and consumers, MAM keeps the number of managed keys and data entry points as small as possible. 2.) \textbf{Integrity}, messages are written on the Tangle network that are not immutable. 3.) \textbf{Confidentiality}, the message can be encrypted with an \textbf{encryption key} that restricts only authorized players can access contents. 4.) \textbf{Proof of Ownership}, signing messages with \textbf{signature key} generated from Merkle signature scheme\cite{MSS} (MSS) allows users to ensure them originated from the same source by validating the signatures without knowing the actual contents. See Fig.~\ref{fig:channel_and_key} for illustration. 
@@ -294,7 +293,8 @@ Also, data provider will change the encryption key of data product to prevent un
     F_{Broker}(i) &= price \frac{i-1}{M} F_{b} -F_{t} \\
     F_{Consumer}(i) &= price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
 \end{align}
-\subsection{Launch a Refund}
+\subsection{Refund}
+\label{section:refund}
 Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following.
 
 \section{Evaluations}
