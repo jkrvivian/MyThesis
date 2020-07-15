@@ -253,20 +253,34 @@ The refund topics is complicated in a subscription services, therefore, we illus
 
 \section{Evaluations}
 \label{section:evaluation}
-We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider. 2) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract.
+We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract. 2) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider.
+
+\subsection{Gas usage of the Product Contract}
+We investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix. On top of this evaluation, data providers can consider how to set the subscription and brokereage fee to eventually generate profits. The estimated cost is in USD, where $1\ Ether = 238\ USD$ at the time of writing, yet the price is dynamic from time to time. To conquer this condition, we analyze with a fixed range of Gas price. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. The high transaction fee for brokers are due to the multiple store operations in contract deployment and key certification, which takes high Gas usage according to Ethereum Yellow Paper. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys.
+
+\begin{table}[h]
+	\caption{Transaction fees for each participant}
+	\label{tab:gas}
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{participant} & \textbf{Gas used} & \textbf{\makecell{minimum price \\ (USD)}} & \textbf{\makecell{maximum price \\ (USD)}} \\
+		\hline
+		provider & 166203 & 0.288 & 1.048 \\ 
+		broker & 2733985 & 4.750 & 17.243 \\ 
+		consumer & 83572 & 0.145 & 0.527  \\ 
+		\hline
+	\end{tabular}
+\end{table}
 
 \subsection{MAM Performance Evaluation}
 \label{section:mam_performance}
-It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
-
-MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either uploadd data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
-
-In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC; 3.2GHz 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (RPi; 1.2 GHz 4-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM.
+In the following evaluations, all devices run with IOTA client library instead of IOTA full nodes. MAM is the primary key to resolve all the storage difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent, hence the operation of MAM is one of the potential bottleneck in data marketplace. In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and message publishment. To perform the evaluation assessment, a personal computer (PC; 3.2GHz 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (RPi; 1.2 GHz 4-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM.
 
 \subsubsection{Channel / Endpoint Creation}
-The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is the height of Merkle Hash Tree in a Merkle signature scheme (MSS), and the "$-1$" is for announcing the ID of next channel or endpoint. A channel with height $n$ can create $2^n-1$ endpoints, and an endpoint with height $m$ can attach $2^m-1$ messages, therefore the capacity of a channel is $2^{nm}-2^n-2^m+1$ messages in total. The greater the \textit{height} of MSS, the longer the channel/endpoint, however the higher the computational power required. In this task, both channel and endpoint creation are tested and the \textit{height} is set from 1 to 7 which is quite enough for data providers to upload data.
+The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is the height of Merkle Hash Tree in MSS, and the "$-1$" is for announcing the ID of next channel or endpoint. The greater the \textit{height} of MSS, the longer the channel/endpoint, however the higher the computational power is required. In this task, both channel and endpoint creation are tested and the \textit{height} is set from 1 to 7 which is quite enough for data providers to upload data.
 
-Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of RPi is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a RPi when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
+Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the workflow of channel and endpoint creation are identical, the curves of the same hardware are almost matched. On the other hand, the elapsed time of RPi is grows rapidly when \textit{height} is 5 or above. And the elapsed time of PC remains acceptable even the \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for RPi when data providers need a longer channel/endpoint, which can considered delegating to Accel.
 \begin{figure*}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{mam_create}
@@ -283,21 +297,12 @@ Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The ti
 \end{figure*}
 
 \subsubsection{Messages Publishment}
-Publishing a message to MAM is attaching a zero-value transaction to the Tangle which requires two processes:
-\begin{itemize}
-	\item	Tips selection: In the IOTA protocol, a new-coming transaction needs to pick up 2 existed transactions called tips to reference and verify. The tips are provided by IOTA full nodes.
-	\item	Proof-of-Work (PoW): An algorithm which prevents Denial of Service and spam attacks on a network. A computationally hard puzzle to solve, but easy to verify.
-\end{itemize}
+Publishing a message to MAM is attaching a zero-value transaction to the Tangle which requires two processes: 1.) \textbf{Tips selection}: In the IOTA protocol, a new-coming transaction needs to pick up 2 existed transactions called tips to reference and verify. The tips are provided by IOTA full nodes. 2.) \textbf{Proof-of-Work (PoW)}: An algorithm which prevents Denial of Service and spam attacks on a network.
 
-Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. Fig.~\ref{fig:mam_send} shows probability distribution function of publishing a message to MAM endpoint. The time of RPi distributed widely, since the randomness of PoW has huge impact while all the tests on PC remain in a acceptable range.
-
-The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
-
-Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Accel, where Ethereum client is used to interact with Ethereum, and Accel provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local PoW on RPi, remote PoW on Accel and E2EE on RPi. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
+Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. The time of RPi distributed widely, from 5 secs to over 2500 secs, since the randomness of PoW has huge impact. The simulation results indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Therefore, the low-level devices can delegate MAM operations to Accels while ensuring the profit and privacy of providers through E2EE can effectively solve performance problems and lower the threshold to participate in such framework. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local PoW on RPi, remote PoW on Accel and E2EE on RPi. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
-
 \subsubsection{Experiment}
 According to Fig.\ref{fig:op_share}, PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. The result directs a way to improve MAM. Applying remote PoW greatly reduces the elapsed time, then channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Accel which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Accel are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
