@@ -122,7 +122,7 @@ Data storage is the trust basis of data trading platforms where the data assets 
 
 Using MAM as a data storage benefits from the scalability of the underlying IOTA network as well as the decentralized and fault-tolerant characteristics of distributed ledgers, which reduce the risks of centralized storage services. Furthermore, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 
-However, the performance results of MAM operations, in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}. 
+However, the performance results of MAM operations, in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator (Accel)\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}. 
 
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
@@ -180,14 +180,14 @@ The channel and endpoint structures enable users to be able to easily categorize
 \subsubsection{A Traceable Data Stream}
 Data traceability is an important security issue that allows users to track the changes of data. Currently, hash is widely used to generate checksums of entire package of files, users can compare the hash value of files in order to check the integrity. Yet the hash values of each new version are unrelated and it's hard to point out the differences between versions. MAM benefits from the singly linked-list data structure which attaches messages chronologically, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
 
-\subsection{Delegate MAM operations to Tangle-accelerator}
+\subsection{Delegate MAM operations to Accel}
 \label{section:ta_endpoint}
-MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers. Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
+MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in regular operating system. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Accel, proxy servers with high computation power, which can accelerates the interactions with Tangle while ensuring the privacy of data providers. Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
 
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{delegation}
-    \caption{Data providers can use MAM in 2 ways: the provider performs MAM operations locally, and the provider delegates MAM operations to Tangle-accelerator.}
+    \caption{Data providers can use MAM in 2 ways: the provider performs MAM operations locally, and the provider delegates MAM operations to Accel.}
     \label{fig:delegation}
 \end{figure}
 
@@ -218,7 +218,7 @@ The E2EE protocol presented in this paper combines a series of different cryptog
 In this paper, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and ECDSA P-256 for digital signature. In this E2EE protocol, ECDSA would take constant time, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which cause the time complexity is $O(n)$, too. Therefore, the E2EE protocol takes only linear time versus arbitrary string length.
 
 \subsubsection{Issues in End-to-End-Encryption}
-E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, there are some challenges in the E2EE process. Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
+E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, there are some challenges in the E2EE process. Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a Accel which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy Accel would be the easiest solution.
 
 \section{Decentralized Subscription-based Data Trading Case Study}
 \label{section:trading_model}
@@ -228,7 +228,7 @@ In this section, we illustrate how participants can join the data subscription p
 All participants are required to register on TangleID to get DID document and public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
 
 \subsection{Launch Data Products}
-To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
+To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Accel, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
 
 The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, brokers are asked to  record encryption keys to smart contracts. To record encryption key to smart contract, data provider computes the digest of sensitive contents with hash function, and sends the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key, otherwise the process will be aborted. Note that the broker needs to sign the messages he/she receives, which has been proven to be key uploaded by a broker recorded on the Product Contract. The number of key uploading time is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the encryption key does not match the signature or can not decrypt data streams as expected, they can launch a vote refund to withdraw their funds. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to Product Contract via a broker, and the overall workflow is shown in Fig.~\ref{fig:launching_product}. Finally, the data product is launched and data providers can start uploading data.
 \begin{figure}[h]
@@ -315,13 +315,13 @@ Tips selection requires a stable network connection to wait the response from IO
 
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
-Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local PoW on RPi, remote Pow on Tangle-accelerator and E2EE on RPi. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
+Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Accel, where Ethereum client is used to interact with Ethereum, and Accel provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local PoW on RPi, remote PoW on Accel and E2EE on RPi. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
 
 \subsubsection{Experiment}
-PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. Applying remote PoW greatly reduces the elapsed time. To improve MAM into a reliable solution for low-level devices, channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
+PoW, sending to IOTA full node and creating channel these three steps take most of the time to broadcast a MAM message. Applying remote PoW greatly reduces the elapsed time. To improve MAM into a reliable solution for low-level devices, channel creation is the next primary barrier should be removed. With employing delegated MAM and E2EE, MAM channel creation would be delegated to Accel which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM for different payload sizes. Elapsed time for internet communication and PoW are not included, because the processes after sending messages to Accel are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too, because the two operations would seldom be executed. In the E2EE protocol, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
 \begin{enumerate}
@@ -335,7 +335,7 @@ The steps counted in delegated MAM (E2EE) benchmark including:
 	\item Generate symmetric key for encryption
 	\item Hash input payload
 	\item Encrypt input payload
-	\item Transmit final message to tangle-accelerator
+	\item Transmit final message to Accel
 \end{enumerate}
 
 \begin{table}[htbp]
@@ -360,7 +360,7 @@ The steps counted in delegated MAM (E2EE) benchmark including:
     y &= 0.0002 x+9.174 \label{lin_e2ee}
 \end{align}
 
-Table~\ref{tab:mam_vs_e2ee} is the experiment result of the two methods. Eq.~\ref{lin_mam},~\ref{lin_e2ee} are the linear equations for the experiment data of MAM and E2EE respectively. The result reveals elapsed time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data. The slope of the result of E2EE is much more flat than the result of MAM which ensures E2EE can consistently perform in an acceptable time range. Under our design which delegate MAM operations with Tangle-accelerator and the presented E2EE protocol, data provider can include resource-constrained hardware into the data subscription economy. E2EE protocol promises tamperless data transmission, and only authorized subscribers can read the encrypted information.
+Table~\ref{tab:mam_vs_e2ee} is the experiment result of the two methods. Eq.~\ref{lin_mam},~\ref{lin_e2ee} are the linear equations for the experiment data of MAM and E2EE respectively. The result reveals elapsed time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data. The slope of the result of E2EE is much more flat than the result of MAM which ensures E2EE can consistently perform in an acceptable time range. Under our design which delegate MAM operations with Accel and the presented E2EE protocol, data provider can include resource-constrained hardware into the data subscription economy. E2EE protocol promises tamperless data transmission, and only authorized subscribers can read the encrypted information.
 
 \section{Conclusion and Future Work}
 \label{section:conclusion}
