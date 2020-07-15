@@ -275,7 +275,25 @@ Data subscription is a high risk which data provider may not upload data as the 
 
 \section{Evaluations}
 \label{section:evaluation}
-We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider. 2) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract.
+We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract. 2) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider.
+
+\subsection{Gas usage of the Product Contract}
+We investigate the cost of executing Product Contract with Ethereum web browser based IDE Remix. On top of this evaluation, data providers can consider how to set the subscription and brokereage fee to eventually generate profits. The estimated cost is in USD, where $1\ Ether = 238\ USD$ at the time of writing, yet the price is dynamic from time to time. To conquer this condition, we analyze with a fixed range of Gas price. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. The high transaction fee for brokers are due to the multiple store operations in contract deployment and key certification, which takes high Gas usage according to Ethereum Yellow Paper. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys.
+
+\begin{table}[h]
+	\caption{Transaction fees for each participant}
+	\label{tab:gas}
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{participant} & \textbf{Gas used} & \textbf{\makecell{minimum price \\ (USD)}} & \textbf{\makecell{maximum price \\ (USD)}} \\
+		\hline
+		provider & 166203 & 0.288 & 1.048 \\ 
+		broker & 2733985 & 4.750 & 17.243 \\ 
+		consumer & 83572 & 0.145 & 0.527  \\ 
+		\hline
+	\end{tabular}
+\end{table}
 
 \subsection{MAM Performance Evaluation}
 \label{section:mam_performance}
