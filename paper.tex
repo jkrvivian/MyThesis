@@ -131,9 +131,8 @@ However, the performance results of MAM operations, in Section.\ref{section:mam_
 
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
-
 \begin{table}[h]
-	\caption{The comparison of centralized and decentralized identity model}
+	\caption{Identity models: centralized vs. decentralized}
 	\label{tab:did}
 	\begin{tabularx}{\linewidth}{|l|X|X|}
 	\hline
@@ -150,18 +149,9 @@ The digital identity represents an entity and holds the digital assets within th
 
 Centralized identity model may have single point failure in identifier management and security issues like data leakage. With sensitive information holding on certain authorities, whether the data leakage is caused by cyber attacks or unscrupulous organizations trading user data, the users' privacy are damaged. Furthermore, having a recognizable and portable identifier is important, otherwise, it is hard to cooperate fragmented identities of different data formats among institutions, and organizations may not approve identifiers of others.
 
-In the decentralized identity model, every entity has a Decentralized Identifiers (DID\cite{DID} defined by W3C that contains identity information such as public key, unique identifiers of services and metadata. The digital footprints of entities is made up of Verifiable Credential (VC) added to their DIDs, issued by trusted issuers, such as schools and government departments. If a VC is verified via issuer's public key, the message will be labelled as trusted. Fig.~\ref{fig:did_vc} shows the relationship of VC issuer, verifier and user.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=3.in]{DID_VC}
-    \caption{The trusted issuer requests user's DID, then issues a VC with his/hers signature. The user can then present the VC to verifier for signature validation.}
-    \label{fig:did_vc}
-\end{figure}
-
 In our architecture, a decentralized identity system TangleID\cite{TangleID} is used, which is built on top of MAM where change logs of DIDs are traceable. One can easily prove himself by sharing the identifier on MAM without any authority.
 
-Through TangleID, entities get a public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are encrypted with data consumers' public key on DID document which ensures only the subscribed consumers are accessible.
+Through TangleID, entities get a public/private key pair, the location of DID document and the seed (i.e., the identifier of its owner in IOTA) that generates the DID document MAM public channel. The public/private key pair can be used to exchange sensitive data and establish the trust communication, where messages that are encrypted with a public key can only be decrypted with private key owner. During data subscription process, the encryption keys of data products are transmitted with the public key on the DID document.
 
 \subsection{Enable Automated Trading Process}
 \begin{figure}[h]
