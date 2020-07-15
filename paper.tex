@@ -220,58 +220,44 @@ In this paper, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption and 
 \subsubsection{Issues in End-to-End-Encryption}
 E2EE helps a lot for low-level edge device utilizing blockchain service. It dramatically reduces execution time encryption takes. However, there are some challenges in the E2EE process. Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a Accel which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy Accel would be the easiest solution.
 
-\section{Decentralized Subscription-based Data Trading Case Study}
+\section{Decentralized Subscription-based Data Trading Models}
 \label{section:trading_model}
-In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
+In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription. A discussion of refund is illustrated.
 
 \subsection{Prerequisite}
 All participants are required to register on TangleID to get DID document and public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
 
 \subsection{Launch Data Products}
-To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Accel, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
-
-The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, brokers are asked to  record encryption keys to smart contracts. To record encryption key to smart contract, data provider computes the digest of sensitive contents with hash function, and sends the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key, otherwise the process will be aborted. Note that the broker needs to sign the messages he/she receives, which has been proven to be key uploaded by a broker recorded on the Product Contract. The number of key uploading time is also restricted in order to avoid data provider uploading fake key frequently. If the data consumers find out the encryption key does not match the signature or can not decrypt data streams as expected, they can launch a vote refund to withdraw their funds. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to Product Contract via a broker, and the overall workflow is shown in Fig.~\ref{fig:launching_product}. Finally, the data product is launched and data providers can start uploading data.
+To launch a data product, brokers are responsible to create Product Contract and record the metadatas of data product for data providers. The Product Contract will not accept subscriptions until brokers certify the encryption key. To certify the encryption key, the data provider first computes its digest with hash function, and sends the digest as well as the signature to brokers. The broker verify the signature with the public key on provider's DID document. If it's valid, the broker will sign and upload the key to Product Contract, otherwise the process will be aborted. The number of key uploading time is restricted in order to avoid data provider uploading fake keys frequently. If data consumers find out the encryption key does not match the provider's signature after payment, they can request a refund. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to Product Contract via a broker. Finally, the data product is launched and data providers can start uploading data.
 \begin{figure}[h]
     \centering
     \includegraphics[width=3.5in]{key_upload}
-    \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well, then write the result to the Product Contract.}
+    \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she signs it as well, then write the result to the Product Contract.}
     \label{fig:key_upload}
 \end{figure}
 
-\begin{figure}[!t]
-    \centering
-    \includegraphics[width=2.5in]{launching_product}
-    \caption{The process of launching a product.}
-    \label{fig:launching_product}
-\end{figure}
-
 \subsection{Subscribe to Data Product}
-Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can decode it via Product Contract.
+Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by data provider and written on the Product Contract, which ensures only data consumers can decode it.
 
 Transferring the encryption key on smart contract instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=3.5in]{key_exchange}
+    \includegraphics[width=3.5in]{key_exchange_reorganize}
     \caption{Encryption key exchange process.}
     \label{fig:key_exchange}
 \end{figure}
 
 \subsection{Unsubscribe to Data Products}
-Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract marks the consumer as not subscribing, corresponding to the parameter $isSubscribe$ in $Product$ structure, since the delete function in Solidity does not remove the actual element but resetting it to default value. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. 
-
-In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers charge cancellation fee if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue that should be carefully studied.
-
-Also, data provider will change the encryption key of data product to prevent unsubscribers access to rest of the data. The new key should be updated to the remaining subscribers in $consumer2Purchase$ list in Product Contract.
+When data consumers unsubscribe to data products, they are marked as not subscribing on the Product Contract, and the withdraw function is executed to pay the fee proportionally to participants, which is defined in formula~\ref{equation:unsubscribe},~\ref{equation:unsubscribe_1},~\ref{equation:unsubscribe_2}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data records, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. In SaaS, the cancellation fee is a way to make sure the service providers are protected if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue, which should be carefully studied. Finally, data provider will change the encryption key to prevent unsubscribers continue accessing the following data. The new key should be updated for the remaining subscribers.
 \begin{align}
-\label{equation:unsubscribe}
-    F_{DataProvider}(i) &= price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \\
-    F_{Broker}(i) &= price \frac{i-1}{M} F_{b} -F_{t} \\
-    F_{Consumer}(i) &= price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
+    F_{DataProvider}(i) &= price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \label{equation:unsubscribe} \\
+    F_{Broker}(i) &= price \frac{i-1}{M} F_{b} -F_{t} \label{equation:unsubscribe_1} \\
+    F_{Consumer}(i) &= price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t} \label{equation:unsubscribe_2}
 \end{align}
 \subsection{Refund}
 \label{section:refund}
-Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following.
+The refund topics is complicated in a subscription services, therefore, we illustrated the challenges in this section. As the subscription-based services in real world, participants can launch a refund in following conditions: First, consumers launch a vote for refund when the data provider does not upload data as expected after receiving the subscription fee. However, issues such as, consumers can only initiate a refund after getting the data or in a certain time period, the broker should host and set a vote timeline to count the votes, and handling the condition that not enough consumers join the vote need to be considered carefully. Second, brokers operate the subscription platform by earning brokerage fee, which is a deal between brokers and providers. If they can't reach a consensus of the brokerage fee during subsription period, brokers can launch a refund and refuse to handle the product. Third, the refund could launch by providers when they can't maintain products as committed.
 
 \section{Evaluations}
 \label{section:evaluation}
