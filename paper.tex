@@ -281,14 +281,14 @@ We evaluate the cost of operating the subscription-based data trading infrastruc
 \label{section:mam_performance}
 It is worth making a claim that all participants in data marketplace do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
 
-MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either upload data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
+MAM is a secure and validatable data storage of the proposed architecture. And publishing data to MAM is the primary key to resolve all the difficulties discussed in previous sections. The interactions between data providers and MAM can be frequent. Data providers can either uploadd data in a short time interval or maintain multiple MAM channels or endpoints at the same time, hence the operation of MAM is one of the potential bottleneck in data marketplace.
 
-In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC, 3.2GHz 64-bit 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (1.2 GHz 64-bit quad-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM. 
+In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC; 3.2GHz 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (RPi; 1.2 GHz 4-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM.
 
 \subsubsection{Channel / Endpoint Creation}
 The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is the height of Merkle Hash Tree in a Merkle signature scheme (MSS), and the "$-1$" is for announcing the ID of next channel or endpoint. A channel with height $n$ can create $2^n-1$ endpoints, and an endpoint with height $m$ can attach $2^m-1$ messages, therefore the capacity of a channel is $2^{nm}-2^n-2^m+1$ messages in total. The greater the \textit{height} of MSS, the longer the channel/endpoint, however the higher the computational power required. In this task, both channel and endpoint creation are tested and the \textit{height} is set from 1 to 7 which is quite enough for data providers to upload data.
 
-Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
+Fig.~\ref{fig:mam_create} shows the results of channel/endpoint creation. The time duration for each \textit{height} is the average time of running 100 rounds. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of RPi is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a RPi when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
 \begin{figure*}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{mam_create}
@@ -311,11 +311,11 @@ Publishing a message to MAM is attaching a zero-value transaction to the Tangle 
 	\item	Proof-of-Work (PoW): An algorithm which prevents Denial of Service and spam attacks on a network. A computationally hard puzzle to solve, but easy to verify.
 \end{itemize}
 
-Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. Fig.~\ref{fig:mam_send} shows probability distribution function of publishing a message to MAM endpoint. The time of Raspberry Pi 3 distributed widely, since the randomness of PoW has huge impact while all the tests on PC remain in a acceptable range.
+Tips selection requires a stable network connection to wait the response from IOTA full nodes, and PoW requires enough computation resources to perform. Fig.~\ref{fig:mam_send} shows probability distribution function of publishing a message to MAM endpoint. The time of RPi distributed widely, since the randomness of PoW has huge impact while all the tests on PC remain in a acceptable range.
 
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority hardware in the IoT scenarios. Furthermore, sensors with the low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM and even trading process with subscribers simultaneously. 
 
-Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local Pow on Raspberry Pi 3, remote Pow on Tangle-accelerator and E2EE on Raspberry Pi 3. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
+Transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such framework. Brokers can be PCs or powerful machines that runs Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with 500 bytes payload with local PoW on RPi, remote Pow on Tangle-accelerator and E2EE on RPi. However, MAM operations are fairly time-consuming that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \subsection{MAM vs. the delegated MAM}
 \label{section:smart_contract_evaluation}
@@ -339,7 +339,7 @@ The steps counted in delegated MAM (E2EE) benchmark including:
 \end{enumerate}
 
 \begin{table}[htbp]
-	\caption{Compare the performance between MAM and E2EE on Raspberry Pi}
+	\caption{Compare the performance between MAM and E2EE on RPi}
     \label{tab:mam_vs_e2ee}
     \centering
         \begin{tabular}{|c||c|c|}
