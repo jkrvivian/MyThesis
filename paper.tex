@@ -290,7 +290,7 @@ Also, data provider will change the encryption key of data product to prevent un
     F_{Broker}(i) &= price \frac{i-1}{M} F_{b} -F_{t} \\
     F_{Consumer}(i) &= price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
 \end{align}
-\subsection{Launch a Refund}
+\subsection{Refund}
 \label{section:refund}
 Data subscription is a high risk which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following.
 
