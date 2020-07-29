@@ -287,16 +287,7 @@ contract Product {
 \end{lstlisting}
 
 \subsection{Enable computation tasks delegation to broker with privacy}
-To manage data products and to benefit from trading, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the limited resources of low-level devices should be used on its jobs instead of handling all trading processes. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. 
-
-The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM without knowing the contents as well as record encryption keys to smart contracts. To record encryption key to smart contract, data provider computes the digest of sensitive contents with hash function, and sends the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key; otherwise the process will be aborted. Note that the broker needs to sign the encrypted encryption key he/she receives proving that it is uploaded by the responsible broker. This procedure allows data consumers to check whether the encryption key is uploaded by committed data provider and broker before subscription. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to Product Contract via a broker. 
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=3.5in]{key_upload}
-    \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well to prove the ecryption key is uploaded by the responsible broker, then writes the result to the Product Contract.}
-    \label{fig:key_upload}
-\end{figure}
+To manage data products and to benefit from trading, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the limited resources of low-level devices should be used on its jobs instead of handling all trading processes. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM and record encryption keys to smart contracts without knowing the contents. The encryption key upload procedure is illustrated in Section.~\ref{section:launch_data_product}.
 
 As for MAM operations, the performance results in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}. 
 
@@ -417,10 +408,18 @@ In this section, we illustrate how participants can join the data subscription p
 All participants are required to register on TangleID to get DID document and public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
 
 \subsection{Launch Data Products}
+\label{section:launch_data_product}
 To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation. 
 
-The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data providers send the hash digest of encryption key to a broker, who will then sign it and write it on the Product Contract. This provides an approach for data consumers to verify the encryption key that avoid data providers dishonest toward data consumers with a wrong one. The workflow is shown in Fig.~\ref{fig:launching_product} and the certification codes in Product Contract is in Listing.~\ref{lst:key_certification}. Finally, the data product is launched and data providers can start uploading data.
- 
+The details of data product, such as data price, MAM channel/endpoint ID and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data provider computes the digest of sensitive contents with hash function, and sends the digest as well as the signature to brokers. Broker can first verify the signature from data provider with the public key on DID document. If it's valid, then the broker uploads the key; otherwise the process will be aborted. Note that the broker needs to sign the encrypted encryption key he/she receives proving that it is uploaded by the responsible broker. This procedure allows data consumers to check whether the encryption key is uploaded by committed data provider and broker before subscription. Furthermore, the encryption key can only be uploaded/updated under two circumstances: 1.) the new product launching. 2.) when data consumer unsubscribe to the product. Finally, the data product is launched and data providers can start uploading data. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to Product Contract via a broker. The product launching workflow is shown in Fig.~\ref{fig:launching_product} and Listing.~\ref{lst:key_certification} lists the Solidity codes of key certification process.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=3.5in]{key_upload}
+    \caption{To add encryption key to Product Contract, the data provider sends the digest of encryption key and the one that signed with his/hers private key. After the broker receive the request, he/she performs digital signature as well to prove the ecryption key is uploaded by the responsible broker, then writes the result to the Product Contract.}
+    \label{fig:key_upload}
+\end{figure}
+
 \begin{figure}[!t]
     \centering
     \includegraphics[width=2.5in]{launching_product}
