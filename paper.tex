@@ -294,9 +294,11 @@ As for MAM operations, the performance results in Section.\ref{section:mam_perfo
 
 \section{Masked Authenticated Messaging}
 \label{section:MAM}
-MAM enables broadcasting encrypted and authenticated data stream, referring as channel, on the Tangle. The publisher publishes messages that are propagated through the network and can be accessed by the subscribers only. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. 
+MAM enables broadcasting encrypted and authenticated data stream, referring as channel, on the Tangle. The publisher publishes messages that are propagated through the network and can be accessed by the subscribers only. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
+Section.~\ref{section:mam_streams} to ~\ref{section:mam_features} explain the structure, fuctions and features of MAM, and our proposed MAM delegation mechanism  is clarified in Section.~\ref{section:ta_endpoint}.
 
 \subsection{The Message Streams}
+\label{section:mam_streams}
 A channel/endpoint is a stream of MAM transaction bundles, which consist of signature and the masked message payload. To publish a MAM message to channel, MAM deploys MSS to sign the message payload to channel, where $channel\ ID = root$ i.e., the MSS Merkle root. The Merkle tree is generated with \textbf{seed}, an identifier of its owner in the IOTA protocol, represents the ownership of all things associated with the user in the IOTA ecosystem. Furthermore, the structure of channel/endpoint implements forward linking, each address of a message can be derived from the previous one that other entities can fetch the next payload. This design also brings the advantage of forward secrecy, where no one has access to the data back from his/her entry point. Figure.~\ref{fig:mam_structure} shows the structure of MAM channel/endpoint. 
 
 \begin{figure}[h]
@@ -307,9 +309,11 @@ A channel/endpoint is a stream of MAM transaction bundles, which consist of sign
 \end{figure}
 
 \subsection{Enable Access Control and Authentication}
+\label{section:mam_functions}
 The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
 
 \subsection{The Advantages of Adopting MAM in Subscription-based Data Trading Infrastructure}
+\label{section:mam_features}
 %scalability
 \subsubsection{A Scalable Keys and Data Entry Points Management}
 The importance of scalable key and data entry points management increases over time. In MAM, with an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of transaction and retrieve data. To manage a data stream, the owner only needs to preserve 1 entry point and 1 encryption key in MAM, but $N$ entry points and 1 encryption key in other distributed storage.
