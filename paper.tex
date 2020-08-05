@@ -124,6 +124,8 @@ Using MAM as a data storage benefits from the underlying IOTA network as well as
 
 However, the performance results of MAM operations, in Section.\ref{section:mam_performance} show that operating MAM requires lots of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator (Accel)\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}.
 
+Currently, considering the efficiency of uploading large files, IPFS performs better than MAM (i.e., writing contents to IOTA network). However, IOTA network scales when more users and transactions join, and the MAM operations can be delegated. Furthermore, adopting IPFS in IoT scenarios may meet the challenges of data loss and data retreiving efficiency.
+
 \subsection{Digital Identity}
 The digital identity represents an entity and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
 \begin{table}[h]
@@ -151,13 +153,14 @@ Through TangleID, entities get a public/private key pair, the location of DID do
 \subsection{Enable Automated Trading Process}
 With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be achieved. In our system, \textbf{Product Contract} contains the metadata of a data product and defines the trading procedures. Product Contract records the MAM channel/endpoint ID of both DID document of participants and the data stream. The subscription and brokerage fee, and the broker-certified encryption key are listed on Product Contract as well. 
 
-Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, participants only need to reveal the minimum information containing an Ethereum address and the DID document address to progress. Moreover, binding the encryption key with the transparent subscription procedure on Product Contract allows data providers to track and manage the authorized user list, and allows data consumers to always have access after payment, even if the key is lost.  
+Furthermore, the participants can exchange encryption keys without any authorities via smart contracts. Though this design may cost extra transaction fees than exchanging key off-chain, participants only need to reveal the minimum information containing an Ethereum address and the DID document address to progress. Moreover, binding the encryption key with the transparent subscription procedure on Product Contract allows data providers to track and manage the authorized user list, and allows data consumers to always have access after payment, even if the key is lost. The enforcement of smart contracts also ensures the rights of participants that they fulfill the agreed contract under any circumstances and without any authority.
 
 \section{Masked Authenticated Messaging}
 \label{section:MAM}
-With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
+With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage. Section.~\ref{section:mam_streams} and ~\ref{section:mam_features} explain the structure, fuctions and features of MAM proposed by IOTA Foundation, and our proposed MAM delegation mechanism is clarified in Section.~\ref{section:ta_endpoint}.
 
 \subsection{The Message Streams}
+\label{section:mam_streams}
 A channel/endpoint is a stream of MAM transaction bundles, consisting of signature and the masked message payload. To publish a MAM message to channel, MAM deploys MSS to sign the message payload to channel, where $channel\ ID = root$ i.e., the MSS Merkle root. The Merkle tree is generated with \textbf{seed}, an identifier of its owner in the Tangle, represents the ownership of all things associated with the user in the IOTA ecosystem.
 
 The structure of channel/endpoint implements forward linking, each address of a message can be derived from the previous one that other entities can fetch the next payload. This design also brings the advantage of forward secrecy, where no one has access to the data back from his/her entry point. Figure.~\ref{fig:mam_structure} shows the structure of MAM channel/endpoint. Furthermore, MAM attaches messages chronologically, which preserves the correct order of IoT streaming data. Though combining other distributed storage like IPFS\cite{IPFS} with signature schemes can also preserve the order of each record, the problem surfaced if the order maintained is wrong.
@@ -170,6 +173,7 @@ The structure of channel/endpoint implements forward linking, each address of a 
 \end{figure}
 
 \subsection{Enable Access Control and Authentication}
+\label{section:mam_features}
 The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data. 
 
 \subsection{Delegate MAM operations to Accel}
