@@ -3,7 +3,8 @@ all:	paper.pdf
 paper.pdf: paper.tex references.bib
 	pdflatex $^
 	bibtex paper >/dev/null || echo
-	pdflatex $^ 2>/dev/null >/dev/null
+	#pdflatex $^ 2>/dev/null >/dev/null
+	pdflatex $^ 
 	pdflatex $^
 
 edit:
