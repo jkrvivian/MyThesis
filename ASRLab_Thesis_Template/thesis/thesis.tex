@@ -153,7 +153,7 @@
 
 \begin{spacing}{2.0}
 
-在物聯網場景中，machine-to-machine（M2M）的發展勢不可擋，它允許機器擁有自己的數位資產並開始參與經濟活動，讓裝置間可以共享和交易其資源。在發布/訂閱（publish/subscribe）通訊模型上將及時資料貨幣化，就可以依據資料使用量來計費，這類似於軟體即服務 (Software-as-a-Service)，一種基於訂閱的定價模型。這種定價模型讓資料提供者可以更好地管理預算，且資料消費者可以隨興的訂閱和退訂。然而，動態的資料流提升了資料所有權和身份驗證的重要性和難度。因此，一個不需信任單一機構的資料交易基礎建設是必需的，除了能允許參與者進行交易，還能驗證資料所有權和完整性。此外，訂閱流程的自動化亦是資料貨幣化中至關重要的。在本文中，我們利用分散式帳本技術 (Distributed Ledger Techonology)，在 IoT 中介基礎架構之上構建去中心化資料交易平台。這種方法可以有效地提高運作透明度和系統可擴展性，建立在加密訊息協議之上的存儲允許在沒有權限的情況下通過分散式帳本儲存、傳輸、存取和驗證資料流，在我們的設計中也讓交易參與者的數位權益得到保證。
+在物聯網場景中，machine-to-machine（M2M）的發展勢不可擋，它允許機器擁有自己的數位資產並開始參與經濟活動，讓裝置間可以共享和交易其資源。在發布/訂閱（publish/subscribe）通訊模型上將及時資料貨幣化，就可以依據資料使用量計費，這是一種基於訂閱的定價模型，類似於軟體即服務 (Software-as-a-Service)。這種定價模型讓資料提供者可以更好地管理預算，且資料消費者可以隨興的訂閱和退訂。然而，動態的資料流提升了資料所有權和身份驗證的重要性和難度。因此，一個不需信任單一機構的資料交易基礎建設是必需的，除了能允許參與者進行交易，還能驗證資料來源和完整性。此外，訂閱流程的自動化亦是資料貨幣化中至關重要的。在本文中，我們利用分散式帳本技術 (Distributed Ledger Techonology)，在 IoT 中介基礎架構之上構建去中心化資料交易平台。這種方法可以有效地提高運作透明度和系統可擴展性，建立在加密訊息協議之上的存儲允許在沒有權限的情況下通過分散式帳本儲存、傳輸、存取和驗證資料流，在我們的設計中也讓交易參與者的數位權益得到保證。
 
 \end{spacing}
 
@@ -242,7 +242,7 @@ The economic incentive model in our proposed IoT data trading platform works as 
 
 %trustless & automated
 %trust: 對系統、對身份、對資料
-In data trading platforms, there are three major aspects that need trust: identity, data ownership, and trading. Proving the identity as well as the ownership of data is a challenging issue among various roles in a large scale platform. In current systems, a trusted third-party authority like certificate authority (CA) is widely adopted to certify each member. However, building trust upon CA is dangerous and fragile. The compromise of routers or CA can break the trust of the entire system, and the data portability of using third-party services is still under suspicion. Meanwhile, these concerns are taking into data storage as well, keeping data assets in a centralized data storage or a cloud service meet the constraints of data portability, which may violate the General Data Protection Regulation (GDPR)\cite{GDPR}. Besides CA and storage, the subscription history of data consumers may reveal his/her interests and the exposure of personal information during trading process against GDPR as well. The final trust is trading procedures, apart from setting up the agreement between providers and consumers, both of them need to confirm that the agreement will be executed even if one party fails to comply.
+In data trading platforms, there are three major aspects that need trust: identity, data ownership, and trading. Proving the identity as well as the ownership of data is a challenging issue among various roles in a large scale platform. In current systems, a trusted third-party authority like certificate authority (CA) is widely adopted to certify each member. However, building trust upon CA is dangerous and fragile. The compromise of routers or CA can break the trust of the entire system, and the data portability of using third-party services is still under suspicion. Meanwhile, these concerns are taking into data storage as well, keeping data assets in a centralized data storage or a cloud service meet the constraints of data portability, which may violate the General Data Protection Regulation (GDPR)\cite{GDPR}. Besides CA and storage, the subscription history of data consumers may reveal his/her interests, and the exposure of personal information during the trading process against GDPR as well. The final trust is trading procedures, apart from setting up the agreement between providers and consumers, both of them need to confirm that the agreement will be executed even if one party fails to comply.
 
 Among the challenges of data trading platform\cite{BigDataMarket} and the requirements mentioned above, we conclude the following five essential ones:
 \begin{itemize}
@@ -255,9 +255,9 @@ Among the challenges of data trading platform\cite{BigDataMarket} and the requir
     \item \textbf{Economics Incentive}. The economic incentives can encourage the data providers to participate in the system and pay more attention to quality control.
 \end{itemize}
 
-Taking all the requirements and the features of streaming data into consideration, the data trading platform for IoT towards a decentralized and trustless design. In this paper, we investigate the use of a decentralized publish/subscribe (pub/sub) model and DLTs to construct the authority-less and trusted infrastructure. See Fig.~\ref{fig:system_design}. The pub/sub model features the scalability and resource-efficiency, and DLTs resolve the trust of the service, since data and contracts (i.e., smart contracts) written on DLTs are transparent, immutable, and enforced automatically, the digital rights of participants are protected. Lastly, an end-to-end encrypted transmission protocol built on top of DLT is used as data storage, which not only ensures the data integrity but also enables access control and provides a scalable key and data management.
+Taking all the requirements and the features of streaming data into consideration, the data trading platform for IoT towards a decentralized and trustless design. In this thesis, we investigate the use of a decentralized publish/subscribe (pub/sub) model and DLTs to construct the authority-less and trusted infrastructure. See Fig.~\ref{fig:system_design}. The pub/sub model features the scalability and resource-efficiency, and DLTs resolve the trust of the service, since data and contracts (i.e., smart contracts) written on DLTs are transparent, immutable, and enforced automatically, the digital rights of participants are protected. Lastly, an end-to-end encrypted transmission protocol built on top of DLT is used as data storage, which not only ensures the data integrity but also enables access control and provides a scalable key and data management.
 
-\subsection{Contributions}
+\section{Contributions}
 The contributions in the thesis are summarized as follow:
 \begin{itemize}
     \item We investigate the usage of DLTs and distributed data storages in order to propose a decentralized architecture for IoT trading and to enable participants to automate the trading procedures and secure digital assets exchange across different organizations.
@@ -267,8 +267,8 @@ The contributions in the thesis are summarized as follow:
 \end{itemize}
 \clearpage
 
-\subsection{Thesis Organization}
-The rest of this thesis is organized as follows. In Section~\ref{section:relatedWork}, some related work of pub/sub over blockchain, decentralized data trading infrastructures, and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the components of proposed subscription-based data trading architecture is illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the thesis in Section~\ref{section:conclusion} and the future work in Section~\ref{section:future_work}.
+\section{Thesis Organization}
+The rest of this thesis is organized as follows. In Section~\ref{section:relatedWork}, some related work of pub/sub over blockchain, decentralized data trading infrastructures, and distributed data storage are analyzed. In Section~\ref{section:design_thinking}, the components of proposed subscription-based data trading architecture are illustrated. In Section~\ref{section:MAM}, the end-to-end encrypted transmission protocol is introduced along with the protocol delegation solution for low-level devices. In Section~\ref{section:trading_model}, the trading models of proposed architecture are well explained. The analysis results are given in Section~\ref{section:evaluation}. Finally, we conclude the thesis in Section~\ref{section:conclusion} and the future work in Section~\ref{section:future_work}.
 
 \begin{figure}[!t]
     \centering
@@ -293,17 +293,17 @@ The rest of this thesis is organized as follows. In Section~\ref{section:related
 
 \begin{spacing}{2.0}
 
-\subsection{The Publish/subscribe Communication Models Over Blockchain}
+\section{The Publish/subscribe Communication Models Over Blockchain}
 The pub/sub service model consists of publishers, subscribers, and brokers, which has been proven\cite{pubSubAnalysis, pubSubAnalysis2} to be an efficient and flexible solution for a large number of diverse entities like IoT applications. A lot of work in the pub/sub system built on top of blockchain focused on the reliability, scalability, and the different security issues such as, encrypted data communication, privacy-preserving data subscription, and access control of the digital asset.
 
 M. B. Abdullahi and G. Wang\cite{centralPubSub} presented a secure pub/sub data storage service in Wireless sensor networks (WSNs) which ensures several security issues. Each user has an identity for authentication, whereas subscribers' interests are encoded before matching to protect users' interests. Additionally, the proposed encryption scheme can prevent adversary to access published data if the sensor node is compromised. However, the access control and encryption keys of data are enforced by the network controllers (NCs) and CAs, which may be a potential security risk of the system, e.g., single-point failure. G. S. Ramachandran et al.\cite{trinity} pointed out the security risk of centralized brokers and applied DLTs to build a distributed pub/sub system that promotes the transparency of interactions of participants and the status of data. With the help of the Ethereum smart contract, users can perform data validation easily, and brokers can keep track of data status. But data is plaintext on blockchain, in which the privacy problem of sensitive data needs to be considered carefully.
 
-In \cite{userCentricData}, the publisher runs a node in blockchain that preserves all the history data of the ledger, therefore, they can publish and manage data without any third-parties. The subscribers request publisher directly and ask them to save a cache space for interesting data. The main contribution of the system is to ensure data owners have full controls of produced data, but the data owners need to have well devices and environments to perform such functionalities and preserve data. Also, the rights for accessing digital assets are more compatible in the IoT scenarios instead of copying raw data. Secure Pub-Sub model\cite{SPS}, a brokerless of pub/sub model, is proposed to eliminate the security risk of middleware in the model and to provide a reputation-based fairness payment strategy on blockchain. The privacy and data security are considered thoroughly with the encryption scheme, while the reputation of publishers, payment, and data sharing are deployed on smart contracts that allow all operations are transparent. The reputation system and the punishment rules against malicious acts of subscribers and publishers. Yet, without brokers, providers and subscribers may need to reveal more sensitive information like IP address in order to match both sides. Another broker-less model in \cite{PrivacyPreservPubSub} protects the subscribers' privacy by encrypting users' interests with the light-weight PKEwET\cite{PKEwET}, which allows publishers to match the subscribers' interests in the ciphertext.
+In \cite{userCentricData}, the publisher runs a node in blockchain that preserves all the history data of the ledger, therefore, they can publish and manage data without any third-parties. The subscribers request publishers directly and ask them to save a cache space for interesting data. The main contribution of the system is to ensure data owners have full controls of produced data, but the data owners need to have well devices and environments to perform such functionalities and preserve data. Also, the rights for accessing digital assets are more compatible in the IoT scenarios instead of copying raw data. Secure Pub-Sub model\cite{SPS}, a brokerless pub/sub model, is proposed to eliminate the security risk of middleware in the model and to provide a reputation-based fairness payment strategy on blockchain. The privacy and data security are considered thoroughly with the encryption scheme, while the reputation system, the punishment rules against malicious acts of subscribers and publishers, payment, and data sharing are deployed on smart contracts that allow all operations are transparent. Yet, without brokers, providers and subscribers may need to reveal more sensitive information like IP address in order to match both sides. Another broker-less model in \cite{PrivacyPreservPubSub} protects the subscribers' privacy by encrypting users' interests with the light-weight PKEwET\cite{PKEwET}, which allows publishers to match the subscribers' interests in the ciphertext.
 
 The previous works contribute to different aspects of building a reliable pub/sub system over blockchain. However, a few work propose an overall thinking of the pub/sub system, which ensures the privacy of players, preserves data securely and make data trackable, which is a vital consideration for IoT and mobile computing across organizations, and even stimulates data economics.
 
-\subsection{Trusted IoT Trading Infrastructure}
-Multiple infrastructures for trusted IoT data trading have been proposed by Paolo Missier et. al\cite{MindMyValue} presenting an IoT brokered infrastructure based marketplace that enables trading with Ethereum smart contracts. The brokers are only responsible for data transmission in order to adapt flexible agreement between participants. Unlike the standard pub/sub model that matches publishers and subscribers that participants are unaware of each other. However, the data cubes (i.e., a tuple of information, such as provider, subscriber, and time period) are stored in a centralized Cassandra NoSQL database, which is guaranteed to be tamper-proof but the risk of single-point failure still exists.
+\section{Trusted IoT Trading Infrastructure}
+Multiple infrastructures for trusted IoT data trading have been proposed. Paolo Missier et. al\cite{MindMyValue} presented an IoT brokered infrastructure based marketplace that enables trading with Ethereum smart contracts. The brokers are only responsible for data transmission in order to adapt flexible agreement between participants. Unlike the standard pub/sub model that matches publishers and subscribers that participants are unaware of each other. However, the data cubes (i.e., a tuple of information, such as provider, subscriber, and time period) are stored in a centralized Cassandra NoSQL database, which is guaranteed to be tamper-proof but the risk of single-point failure still exists.
 
 A. Colman et al. \cite{TrustedMarketplaceWearable} discussed on trading the sensitive data among wearables. Several security issues are well discussed and solved with DLTs in the paper, the system consists of multiple components aiming for different responsibilities, such as data anonymizer eliminates keen information for privacy protection, access controller handles the key management and contract manager manages Ethereum smart contracts. While the trading processes are split into multiple servers, and the request/response communication model is applied, the scalability problem of the marketplace remains.
 
@@ -313,9 +313,9 @@ The researches below adopt MAM as data storage and a secure data transmission la
 
 O. Lamtzidis and J. Gialelis \cite{IOTASensorNode} proposed a distributed sensor node system to exchange data and establish a data monetization economy paradigm. The Back-End server helps sensor nodes to accelerate data uploads to MAM, manages keys and metadata of data streams, and evaluates data price according to its quality. Furthermore, the Back-End server operates a user-friendly interface of the marketplace and tackles all trading procedures. The heavy loading of Back-End server encounters the system scalability problem, single-point failure as well as malicious attacks which may damage the profits of all players. And the pricing strategy allows buyout but does not take subscribe/unsubscribe based diagrams into consideration. The decentralized data marketplace in \cite{DDMSmartCities} is fully decentralized without the existence of any intermediate server but data providers only, data providers attach, and trade data streams via MAM. With MAM, the data streams subscription is enabled, yet the conditions and details like refund and unsubscription are not discussed in this paper.
  
-\subsection{Distributed Storage System}
+\section{Distributed Storage System}
 \label{section:distributed_storage}
-Decentralized storage systems allow users to store files in a distributed network that is maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems like data storage and also an incentive layer to encourage people to get involved in the network.
+Decentralized storage systems allow users to store files in a distributed network that maintained by individual nodes around the world instead of a central service provider. Nevertheless, DLTs are often used as the backbone of these systems like data storage and also an incentive layer to encourage people to get involved in the network.
 
 Filecoin \cite{FileCoin} in the Inter-Planetary File system (IPFS) is an incentive layer to incent nodes to provide storage. IPFS is a content-based addressing storage model in a peer-to-peer network, in which users can obtain the data with the unique hash value through the network. Furthermore, considering the data may lose in the network, IPFS provides \textbf{pin} command for users to store the contents locally that will not be removed. However, the IoT sensor devices have limited space which is not appropriate to preserve generated data. Also, users can have a hard time finding the contents quickly if data is not widely available, and the large amount of IPFS nodes and contents. Thus, several pinning services like Pinata provide multiple IPFS nodes around the world to pin users' contents and charge by the size and replicas of contents, and users can even join the dedicated network to speed up the retrieving process. Nevertheless, the efficiency problems still occur if the dedicated network grows larger.
 
@@ -336,7 +336,7 @@ Sia\cite{Sia} splits the uploaded file into multiple data segments encrypted wit
 
 \begin{spacing}{2.0}
 \label{section:design_thinking}
-\subsection{Data Subscription-based Trading Platform Players}
+\section{Data Subscription-based Trading Platform Players}
 There are three major roles, data providers, data consumers, and brokers which are similar to the pub/sub messaging model. But unlike the standard pub/sub model where brokers link the publishers and subscribers who are not aware of each other, in our proposed architecture, the brokers are only responsible for message delivery and essential verification processes. As shown in Fig.~\ref{fig:pub_sub_model}.
 
 \begin{figure}[H]
@@ -355,12 +355,12 @@ Data consumers are entities that are willing to buy data streams. As it is labor
 Brokers are responsible for building an agreement between data providers and consumers. Brokers are required to be online for providers and consumers, and they are incentivized by charging brokerage fees.
 \end{itemize}
 
-We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum information like its identifier and public key. Third, a refund process needs brokers to host and supervise the procedures in order to protect the rights of participants, which will be further discussed in Section.~\ref{section:refund}.
+We adopt the brokered infrastructure for three reasons. Firstly, it inherits the benefits from the standard pub/sub model which is more efficient than the request/response model specifically in a large scale system. Furthermore, if either side is offline, the proceeding tasks have to stop and start over. With brokers, the unfinished work can be cached or accomplished. Second, a fully decentralized architecture has difficulties to brings data providers and consumers together, both of them need to reveal more sensitive information, such as IP address, in order to build the communication tunnel. The existence of brokers resolved the privacy issue, as brokers are the bridges that link data providers and consumers, participants can trade with minimum information like its identifier and public key. Third, a refund process needs a broker to host and supervise the procedures in order to protect the rights of participants, which will be further discussed in Section.~\ref{section:refund}.
 
-\subsection{Choice of Data Storage}
+\section{Choice of Data Storage}
 Data storage is the trust basis of data trading platforms where the data assets are reserved. Streaming data unlike a fixed set of data that can be verified by the hash of the whole pack of data, it consists of continually granular records of each time slot. Therefore, the verification such as, data integrity and source identity is narrow down to a data point as well. In our proposed architecture, we adopt MAM as data storage to resolve the challenges of managing and verifying data streams. MAM is the second layer data communication protocol built on top of IOTA\cite{IOTAwhitepaper} network, the Tangle, a feeless cryptocurrency designed for IoT, which introduces properties like publishing, classifying and tracking authenticated message streams. Carrying these properties, MAM is also appropriate for building a self-sovereign identity system where the identity information such as public key, unique identifiers of services and metadata are stored. One can easily prove himself by sharing the identifier on MAM without any authority.
 
-Currently, considering the efficiency of uploading large files, IPFS performs better than MAM (i.e., writing contents to IOTA network). However, IOTA network scales when more users and transactions join, and the MAM operations can be delegated to powerful proxy servers which is illustrated in Section.~\ref{section:ta_endpoint}. Furthermore, adopting IPFS in IoT scenarios may meet the challenges of data loss and data retrieving efficiency.
+Currently, considering the efficiency of uploading large files, IPFS performs better than MAM (i.e., writing contents to IOTA network). However, IOTA network scales when more users and transactions join, and the MAM operations can be delegated to powerful proxy servers which will be illustrated in Section.~\ref{section:ta_endpoint}. Furthermore, adopting IPFS in IoT scenarios may meet the challenges of data loss and data retrieving efficiency.
 
 In our work, MAM builds the trust of the platform while meeting the requirements of data trading which can be concluded below:
 
@@ -372,7 +372,7 @@ In our work, MAM builds the trust of the platform while meeting the requirements
     \end{itemize}    
     \item \textbf{Integrity}:
     \begin{itemize}
-        \item Messages published to the Tangle are tamper-proof against malicious modification.
+        \item Messages published to the Tangle are tamper-proof against malicious modifications.
         \item Messages are signed with the keys pre-generated under Merkle signature scheme\cite{MSS} (MSS) that both keys and messages can be verified by participants.
     \end{itemize}
     \item \textbf{Confidentiality}:
@@ -390,12 +390,12 @@ Using MAM as a data storage benefits from the scalability of the underlying IOTA
 \begin{figure}
     \centering
     \includegraphics[width=6.5in]{img/channel_and_key}
-    \caption{Within MAM channel, the message publisher has 2 types of key, an encryption key for encrypting contents and a signature key per message for digital signatures. Subscribers can validate the message with signature keys and decrypt messages with encryption keys.}
+    \caption{Within MAM channel, the message publisher has 2 types of key, an encryption key for encrypting contents and a signature key per message for digital signatures. Subscribers can validate the messages with signature keys and decrypt them with the encryption key.}
     \label{fig:channel_and_key}
 \end{figure}
 \clearpage
 
-\subsection{Digital Identity}
+\section{Digital Identity}
 The digital identity represents entities and holds the digital assets within the digital world, it is important to prove and show the identity to others during interactions. We select the decentralized identity model rather than a centralized one for the concerns in Table.\ref{tab:did}.
 
 \begin{table}[h]
@@ -437,7 +437,7 @@ Through TangleID, entities get a public/private key pair, the location of the DI
 \end{figure}
 \clearpage
 
-\subsection{Enable Automated Trading Process}
+\section{Enable Automated Trading Process}
 Ethereum is a cryptocurrency building on top of a public blockchain-based distributed ledger. It provides the smart contract, which is a protocol for formulating agreement on a blockchain that running on decentralized virtual machines. A smart contract can interact with other contracts, make decisions, store data, and transfer cryptocurrency. All the participants in Ethereum can verify and execute the contracts, and once the contract is triggered, it is uninterruptible and will be executed automatically without any third-parties.
 
 With the functionalities of Ethereum smart contracts, a flexible and verifiable trading mechanism can be achieved. In our system, \textbf{Product Contract} is made for the product launching and subscribing. The information on data products such as the address of the data provider, subscription fee, brokerage fee, the threshold of consent votes of refunding, MAM channel/endpoint ID (the data entry point), time period, and the broker-verified encryption key are listed on Product Contract. Listing. \ref{lst:constructor} list the data fields of Product Contract, and Fig.~\ref{fig:smart_contract_mam} shows the relationship of Product Contract and MAM.
@@ -447,7 +447,7 @@ Furthermore, the participants can exchange encryption keys without any authoriti
 \begin{figure}[h]
     \centering
     \includegraphics[width=5.5in]{img/smart_contract_mam}
-    \caption{The information of identity and data streams are stored on the Tangle with MAM which is all recorded on Product Contracts. Participants can easily retrieve information via the Product Contract and proceed to trade. For signature validation check and further exchange encryption keys, the MAM channel ID of participants' DID document are written down, presented in blue color. The orange color stands for the information of data products, which includes the data stream channel/endpoint ID.}
+    \caption{The information of identity and data streams are stored on the Tangle with MAM which is all recorded on Product Contracts. Participants can easily retrieve information via the Product Contract and proceed to trade. For signature validation check and further encryption key exchange, the MAM channel ID of participants' DID document are written down, presented in blue color. The orange color stands for the information of data products, which includes the data stream channel/endpoint ID.}
     \label{fig:smart_contract_mam}
 \end{figure}
 \clearpage
@@ -498,7 +498,7 @@ contract Product {
 \end{lstlisting}
 \clearpage
 
-\subsection{Enable Computation Tasks Delegation to Broker with Privacy}
+\section{Enable Computation Tasks Delegation to Broker with Privacy}
 To manage data products and to benefit from trading, data providers have to interact with MAM and Ethereum smart contract while doing its original tasks. However, the limited resources of low-level devices should be used in their jobs instead of handling all trading processes. Therefore, the operations of MAM and smart contracts are better to be delegated to brokers. The delegation should ensure the privacy of data providers, for instance, brokers are asked to attach messages to MAM and record encryption keys to smart contracts without knowing the contents. The encryption key upload procedure is illustrated in Section.~\ref{section:launch_data_product}.
 
 As for MAM operations, the performance results in Section.\ref{section:mam_performance} show that operating MAM costs a lot of resources for the devices, therefore, we present an alternative solution for data providers to delegate these computing tasks to powerful proxy servers, Tangle-accelerator\cite{TA}, while ensuring the privacy. The details would be further illustrated in Section.\ref{section:ta_endpoint}.
@@ -520,7 +520,7 @@ As for MAM operations, the performance results in Section.\ref{section:mam_perfo
 MAM enables broadcasting encrypted and authenticated data stream, referring as a channel, on the Tangle. The publisher publishes messages that are propagated through the network and can be accessed by the subscribers only. With MAM, the rights of data access are traded instead of a copy of data in the trading platform, which eliminates the need for data consumers to have additional storage.
 Section.~\ref{section:mam_streams} to ~\ref{section:mam_features} explain the structure, fuctions and features of MAM proposed by IOTA Foundation, and our proposed MAM delegation mechanism is clarified in Section.~\ref{section:ta_endpoint}.
 
-\subsection{The Message Streams}
+\section{The Message Streams}
 \label{section:mam_streams}
 A channel/endpoint is a stream of MAM transaction bundles, which consist of signature and the masked message payload. To publish a MAM message to a channel, MAM deploys MSS to sign the message payload to the channel, where $channel\ ID = root$ i.e., the MSS Merkle root. The Merkle tree is generated with \textbf{seed}, an identifier of its owner in the IOTA protocol, represents the ownership of all things associated with the user in the IOTA ecosystem. Furthermore, the structure of channel/endpoint implements forward linking, each address of a message can be derived from the previous one that other entities can fetch the next payload. This design also brings the advantage of forward secrecy, where no one has access to the data back from his/her entry point. Figure.~\ref{fig:mam_structure} shows the structure of the MAM channel/endpoint.
 
@@ -532,22 +532,22 @@ A channel/endpoint is a stream of MAM transaction bundles, which consist of sign
 \end{figure}
 \clearpage
 
-\subsection{Enable Access Control and Authentication}
+\section{Enable Access Control and Authentication}
 \label{section:mam_functions}
 The access control can be enabled via encryption with NTRU\cite{NTRU}, a quantum secure cryptosystem, or Pre-shared key (PSK), to prevent random users retrieving the data from channels. If the message payload is encrypted, subscribers are required for encryption keys to decode messages. The authentication in MAM includes two aspects: source and data. Source authentication ensures the message that originates from the claimed owner, and data authentication ensures the integrity of the data from the sender. These are achieved through the MSS and One-way hash functions by validating the signature added in the signature section of the MAM bundle. However, the size of Merkle Hash Trees, that is, the size of a channel/endpoint should be determined at the start. Thus, data providers need to first decide how to distribute data products into MAM channels/endpoints before uploading data.
 
-\subsection{The Advantages of Adopting MAM in Subscription-based Data Trading Infrastructure}
+\section{The Advantages of Adopting MAM in Subscription-based Data Trading Infrastructure}
 \label{section:mam_features}
 %scalability
-\subsubsection{A Scalable Keys and Data Entry Points Management}
-The importance of scalable key and data entry points management increases over time. In MAM, with an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of the transaction and retrieve data. To manage a data stream, the owner only needs to preserve 1 entry point and 1 encryption key in MAM, but $N$ entry points and 1 encryption key in other distributed storage.
+\subsection{A Scalable Keys and Data Entry Points Management}
+The importance of scalable key and data entry points management increases over time. In MAM, with an entry point (i.e., the address of transaction) and the encryption key, one can derive the following addresses of the transaction and retrieve data. To manage a data stream, the owner only needs to preserve 1 entry point and 1 encryption key in MAM, but $N$ entry points and 1 encryption key in other distributed storages.
 \clearpage
 
 %classify
-\subsubsection{Data Streams Classification and Traceability}
+\subsection{Data Streams Classification and Traceability}
 The channel and endpoint structures enable users to be able to easily categorized data streams with respect to different types and usages. For instance, sensor devices like AirBox\cite{LASS}, collect environmental data, can split the statistics like PM 2.5 and humidity by time period into separate channels, which is useful for data providers to organize records and to pack into different data products. As for data traceability, users can easily track the footprints of data change logs as well as checking the validity of modifications with the signature.
 
-\subsection{Delegate MAM operations to Tangle-accelerator}
+\section{Delegate MAM Operations to Tangle-accelerator}
 \label{section:ta_endpoint}
 MAM builds a secure and authenticated communication protocol on top of multiple cryptosystems, which low-level devices need to spend a lot of resources to apply it, and they may not even support built-in libraries in the regular operating systems. To overcome these concerns, we propose another approach that allows data providers to delegate the MAM operations to Tangle-accelerators, proxy servers with high computation power, which can accelerate the interactions with Tangle while ensuring the privacy of data providers. Fig.~ \ref{fig:ta_struct} shows the structure of Tangle-accelerator, and Fig.~\ref{fig:delegation} shows how data providers can adopt MAM.
 \clearpage
@@ -567,7 +567,7 @@ MAM builds a secure and authenticated communication protocol on top of multiple 
 \end{figure}
 \clearpage
 
-\subsubsection{Communication Protocol}
+\subsection{Communication Protocol}
 In the following sections, we refer to the low-level devices as \textbf{endpoint}s. MQTT\cite{MQTT} is chosen as the communication protocol, which requires fewer TCP packets and less traffic. The topic-based pub/sub pattern and lightweight packet that MQTT adopts would undoubtedly play an important role in endpoints with limited bandwidth. The pub/sub model decouples publishers and subscribers in many ways:
 
 \begin{itemize}
@@ -576,25 +576,25 @@ In the following sections, we refer to the low-level devices as \textbf{endpoint
     \item Synchronization decoupling: Operations are decoupled from the publishers and subscribers. The publishers do not need to be alive until the response arrives. Messages from the publisher can be served as send-and-forget fashion.
 \end{itemize}
 
-\subsubsection{End-to-End-Encryption}
+\subsection{End-to-End-Encryption}
 Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures only authorized subscribers can read the messages published on MAM.
 
 %pic
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{img/MAM_E2EE}
+    \includegraphics[width=6.5in]{img/MAM_E2EE}
     \caption{The process of E2EE.}
     \label{fig:MAM_E2EE}
 \end{figure}
 
-In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE process. The details of steps are addressed below:
+In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step of the presented E2EE process. The details of steps are addressed below:
 
 \begin{enumerate}
-    \item Generate symmetric keys with the unique device identifier and Message Authentication Code (MAC) of the previous message. If the message is the genesis message, then sharing secret initialization information would serve as the MAC of the previous message. Key Derivation Function (KDF) is used to generate the symmetric keys.
-    \item Compute the Message Authentication Code (MAC) of current message with the Hash-based Message Authentication Code(HMAC). Both plaintext and symmetric key would be given as parameters in HMAC.
+    \item Generate symmetric keys with the unique device identifier and Message Authentication Code (MAC) of the previous message. If the message is the first one, then sharing secret initialization information would serve as the MAC of the previous message. Key Derivation Function (KDF) is used to generate the symmetric keys.
+    \item Compute the MAC of the current message with the Hash-based Message Authentication Code(HMAC). Both plaintext and the symmetric key would be given as parameters in HMAC.
     \item Apply the generated symmetric key to encrypt the plaintext.
-    \item Concatenate the MAC of the current message would and the MAC of the previous message, and then the result will be signed with a digital signature algorithm.
-    \item Send the ciphertext along with signed MAC.
+    \item Concatenate the MAC of the current message and the MAC of the previous message, then the result will be signed with a digital signature algorithm.
+    \item Send the ciphertext along with the signed MAC.
 \end{enumerate}
 
 \begin{table}[htbp]
@@ -617,19 +617,19 @@ In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE pr
     \end{center}
 \end{table}
 
-The E2EE protocol presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On certain devices, hardware acceleration would be supported. With hardware-acceleration, the elapsed time could be dropped a step more. For example, applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration} According to Intel, Table~\ref{tab:AES_NI} shows the performance of Encryption of AES256 with and without hardware acceleration.
+The E2EE protocol presented in this thesis combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On certain devices, hardware acceleration would be supported. With hardware-acceleration, the elapsed time could be dropped a step more. For example, applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration} According to Intel, Table~\ref{tab:AES_NI} shows the performance of Encryption of AES256 with and without hardware acceleration.
 
-\subsubsection{Register with Tangle-accelerator}
-Users with channel seed can acquire channel chain ownership. Seed is generated by unique hardware information on the edge device, so it should be transmitted to tangle-accelerator which allows it to publish messages on the MAM channel chain. Once the Tangle-accelerator receives the Seed from the edge device, it would return a unique user identifier that can be mapped to corresponding Seed when edge devices send requests. Asymmetric encryption is utilizing during the process of exchanging seed. The digital signature should be taken at the same time to ensure data integrity. Once the seed has been successfully exchanged, the edge device is successfully registered on the specific tangle-accelerator. Thus, the seed will not be exposed during communication after an edge device is successfully registered.
+\subsection{Register with Tangle-accelerator}
+Users with channel seed can acquire channel chain ownership. Seed is generated by unique hardware information on the edge device, so it should be transmitted to Tangle-accelerator to publish messages on the MAM channel chain. Once the Tangle-accelerator receives the Seed from the edge device, it would return a unique user identifier that can be mapped to corresponding Seed when edge devices send requests. Asymmetric encryption is utilizing during the process of exchanging seed. The digital signature should be performed at the same time to ensure data integrity. Once the seed has been successfully exchanged, the edge device is successfully registered on the specific Tangle-accelerator. Thus, the seed will not be exposed during communication in further usages.
 
-\subsubsection{Issues in End-to-End-Encryption}
-E2EE helps a lot with low-level edge devices utilizing blockchain service. It dramatically reduces the execution time encryption takes. However, we met two challenges in the E2EE process:
+\subsection{Issues in End-to-End-Encryption}
+E2EE helps a lot with low-level edge devices utilizing blockchain service. It dramatically reduces the execution time of encryption. However, we meet two challenges in the E2EE process:
 
-\paragraph{Time to Read Message}
+\subsubsection{Time to Read Message}
 It is linear time to decrypt messages instead of constant time. Nevertheless, there is one way to speed up the message decryption process. A subscriber can fetch multiple MAM messages with one API call, then the subscriber can decrypt the ciphertext at the local side. This procedure can reduce the time spending on internet communication.
 
-\paragraph{Spam on Message Channel Chain}
-Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers to waste plenty of time on decrypting useless messages. To prevent edge devices from the annoying attack, connecting to an known, trustworthy tangle-accelerator would be the easiest solution.
+\subsubsection{Spam on Message Channel Chain}
+Tampering the messages which have conducted E2EE would be a challenging mission. However, spamming would be the critical issue participants may meet under this architecture. It is risky for an edge device connects to a Tangle-accelerator which is operated by unknown third-party. Sharing Channel Chain ownership with an unknown third-party would allow them to spam on the MAM Channel Chain. Spam would cause subscribers wasting plenty of time on decrypting useless messages. Since Tangle-accelerator can be easily hosted on regular personal computers, the actual device holders can set up an instance to prevent edge devices from such attack.
 
 \end{spacing}
 \clearpage
@@ -645,16 +645,16 @@ Tampering the messages which have conducted E2EE would be a challenging mission.
 
 \begin{spacing}{2.0}
 \label{section:trading_model}
-In this section, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
+In this chapter, we illustrate how participants can join the data subscription platform, start subscribing, cancel subscription, and request refund.
 
-\subsection{Prerequisite}
-All participants are required to register on TangleID to get a DID document and public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
+\section{Prerequisite}
+All participants are required to register on TangleID to get a DID document and a  public/private key pair for sensitive contents exchange and authentication. An Ethereum account is also needed to interact with smart contracts and transfer Ethereum tokens.
 
-\subsection{Launch Data Products}
+\section{Launch Data Products}
 \label{section:launch_data_product}
 To launch a data product, data providers need to create a MAM channel/endpoint for data streams and a Product Contract. For those resource-constraint IoT devices, the MAM related operations can be delegated to Tangle-accelerator, as mentioned in Section.~\ref{section:ta_endpoint}. And brokers are responsible for Product Contract creation.
 
-The details of data products, such as data price, MAM channel/endpoint ID, and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data provider computes the digest of sensitive contents with a hash function, and sends the digest as well as the signature to brokers. The broker can first verify the signature from data provider with the public key on the DID document. If it's valid, then the broker uploads the key; otherwise, the process will be aborted. Note that the broker needs to sign the encrypted encryption key he/she receives proving that it is uploaded by the responsible broker. This procedure allows data consumers to check whether the encryption key is uploaded by the committed data provider and broker before subscription. Furthermore, the encryption key can only be uploaded/updated under two circumstances: 1.) the new product launching. 2.) when data consumer unsubscribe to the product. Finally, the data product is launched and data providers can start uploading data. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to the Product Contract via a broker. The product launching workflow is shown in Fig.~\ref{fig:launching_product} and Listing.~\ref{lst:key_certification} lists the Solidity codes of the key certification process.
+The details of data products, such as data price, MAM channel/endpoint ID, and the length of data stream are listed on the Product Contract. As regard to the encryption key of data product, data provider computes the digest of sensitive contents with a hash function, and sends the digest as well as the signature to a  broker. The broker can first verify the signature from data provider with the public key on the DID document. If it's valid, then the broker uploads the key; otherwise, the process will be aborted. Note that the broker needs to sign the encrypted encryption key he/she receives proving that it is uploaded by the responsible broker. This procedure allows data consumers to check whether the encryption key is uploaded by the committed data provider and broker before subscription. Furthermore, the encryption key can only be uploaded/updated under two circumstances: 1.) the new product launches. 2.) a data consumer unsubscribe to the product. Finally, the data product is launched and data providers can start uploading data. Fig.~\ref{fig:key_upload} demonstrates the key uploading process to the Product Contract via a broker. The product launching workflow is shown in Fig.~\ref{fig:launching_product} and Listing.~\ref{lst:key_certification} lists the Solidity codes of the key certification process.
 \clearpage
 
 \begin{figure}[t]
@@ -707,7 +707,7 @@ The details of data products, such as data price, MAM channel/endpoint ID, and t
 \end{lstlisting}
 \clearpage
 
-\subsection{Subscribe to Data Product}
+\section{Subscribe to a Data Product}
 Data consumers pay subscription fees to the Product Contract of desired data products, and data providers give the encryption key of data stream instead of the files to consumers. The MAM channel/endpoint encryption key is encrypted with the public key of data consumer by the data provider and written on the Product Contract, which ensures only data consumers can decode it via Product Contract.
 
 Transferring the encryption key on smart contracts instead of off-chain not only ensures the consistency of the encryption key but also prevents frauds from malicious participants, and the exchange process is transparent to the public. Furthermore, with the help of brokers and smart contracts, both data providers and consumers do not need to be online at the same time to proceed with the trading process. The key sending process is shown in Fig.~\ref{fig:key_exchange} and Listing.~\ref{lst:key_exchange}. The subscription fee is transferred from the Product Contract to data providers when the committed data is available on MAM.
@@ -740,60 +740,51 @@ function addEncryptKey(
 }
 \end{lstlisting}
 
-\subsection{Unsubscribe to Data Products}
+\section{Unsubscribe to a Data Product}
 Data consumers can unsubscribe to data products when they're not interested anymore. Product Contract marks the consumer as not subscribing, corresponding to the parameter $isSubscribe$ in $Product$ structure since the delete function in Solidity does not remove the actual element but resetting it to default value. When data consumers trigger the unsubscribe event, a withdraw function is executed to pay a subscription fee to providers and return the rest of the fee back to consumers. The amount of payment distributed to different players is defined in formula~\ref{equation:unsubscribe_provider}, \ref{equation:unsubscribe_broker}, \ref{equation:unsubscribe_consumer}. $i$ is the number of data when unsubscription request is launched, $price$  is the subscription price, $M$ is the number of expected data samples, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription.
 
-In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers to charge cancellation fee if subscribers drop out at the early stage. However, asking the cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue that should be carefully studied.
+In SaaS, the cancellation fee is a way to make sure the service providers are protected. It is commonly used in pre-paid subscription-based services that allows service providers to charge cancellation fee if subscribers drop out at the early stage. However, asking the cancellation fee arbitrarily may cause an unfair contract which leads to the legal issue that should be carefully studied.
 
 Also, data providers will change the encryption key of the data product to prevent unsubscribers access to the rest of the data. The new key should be updated to the remaining subscribers in the $consumer2Purchase$ list in the Product Contract. Fig.~\ref{fig:unsubscribe} shows the unsubscription flow.
 
-\hfsetfillcolor{white!10}
-\hfsetbordercolor{white}
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+\begin{equation}
 \label{equation:unsubscribe_provider}
     F_{DataProvider}(i) = price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+\begin{equation}
 \label{equation:unsubscribe_broker}
     F_{Broker}(i) = price \frac{i-1}{M} F_{b} -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+\begin{equation}
 \label{equation:unsubscribe_consumer}
     F_{Consumer}(i) = price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=5.5in]{img/unsubscribe}
-    \caption{Once a data consumer launch a unsubscription procedure, he/she is added to unsubscriber list and the Product Contract will distribute the funds to provider, broker and consumers respectively. Then, the data provider will generate a new encryption key and upload it for every remaining subscribers.}
+    \caption{Once a data consumer launch a unsubscription procedure, he/she is marked as not subscribing and the Product Contract will distribute the funds to provider, broker and consumers respectively. Then, the data provider will generate a new encryption key and upload it for every remaining subscribers.}
     \label{fig:unsubscribe}
 \end{figure}
 \clearpage
 
-\subsection{Launch a Refund}
+\section{Launch a Refund}
 \label{section:refund}
-Data subscription is a high risk in which data provider may not upload data as the agreement set after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where $N$ is the number of consumers in this contract:
+Data subscription is a high risk in which data provider may not upload data as the agreement after receiving the subscription fee. Therefore, in our proposed architecture, data consumers can trigger a refund procedure by sending a transaction on Ethereum if the data is not available or defective. When the refund procedure is launched, all consumers vote to decide whether the refund is established. See Fig.~\ref{fig:refund}. Once the ratio of consent votes of refunding is higher than a threshold, the subscription fee is proportionally transferred to the data provider, broker and every consumer as following, where $N$ is the number of consumers in this contract:
 
-\hfsetfillcolor{white!10}
-\hfsetbordercolor{white}
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+
+\begin{equation}
     F_{DataProvider}(i) = Nprice \frac{i-1}{M} (1-F_{b}) -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+\begin{equation}
     F_{Broker}(i) = Nprice \frac{i-1}{M} F_{b} -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
-\begin{equation}\tikzmarkin{a}(0.2,-0.5)(-0.2,0.65)
+\begin{equation}
     F_{Consumer}(i) = price (1-\frac{i-1}{M}) -F_{t}
-    \tikzmarkend{a}
 \end{equation}
 
 \begin{figure}[h]
@@ -803,7 +794,7 @@ Data subscription is a high risk in which data provider may not upload data as t
     \label{fig:refund}
 \end{figure}
 
-However, refund conditions are complicated in the subscription services in the real world, participants can launch a refund in following conditions: First, as proposed methods above, consumers launch a refund vote when the data provider does not upload data as expected after receiving the subscription fee. Nevertheless, multiple issues still need to be investigated such as, consumers can only initiate a refund after getting the data or in a certain time period, the broker should host and set a vote timeline to count the votes, and handling the condition that not enough consumers join the vote need to be considered carefully. Second, brokers operate the subscription platform by earning brokerage fee, which is a deal between brokers and providers. If they can not reach a consensus of the brokerage fee during the subscription period, brokers can launch a refund and refuse to handle the product. Third, the refund could launch by providers when they fail to maintain products as committed.
+However, refund conditions are complicated in subscription services in the real world, participants can launch a refund in following conditions: First, as proposed methods above, consumers launch a refund vote when the data provider does not upload data as expected after receiving the subscription fee. Nevertheless, multiple issues still need to be investigated such as, consumers can only initiate a refund after getting the data or in a certain time period, the broker should host and set a vote timeline to count the votes, and handling the condition that not enough consumers join the vote need to be considered carefully. Second, brokers operate the subscription platform by earning brokerage fee, which is a deal between brokers and providers. If they can not reach a consensus of the brokerage fee during the subscription period, brokers can launch a refund and refuse to handle the product. Third, the refund could launch by providers when they fail to maintain products as committed.
 
 \end{spacing}
 
@@ -822,7 +813,7 @@ However, refund conditions are complicated in the subscription services in the r
 \label{section:evaluation}
 We evaluate the cost of operating the subscription-based data trading infrastructure in two aspects: 1) Evaluate the cost of adopting MAM on devices, since it is the most commonly used component to data provider. 2) Evaluate the minimum cost for participants to sustain or subscribe to a data product via Product Contract.
 
-\subsection{MAM Performance Evaluation}
+\section{MAM Performance Evaluation}
 \label{section:mam_performance}
 It is worth making a claim that all participants in the data subscription platform do not need to hold an IOTA full node which maintains the transaction history and exchanges information of the Tangle. Each role is only required to run client libraries and communicate with IOTA full nodes to interact with the Tangle. Therefore, in the following evaluations, all devices run with client library only.
 
@@ -830,7 +821,7 @@ MAM is a secure and validatable data storage of the proposed architecture. And p
 
 In this section, time measurement is evaluated in two MAM operations: channel/endpoint creation and data attachment to endpoints. To perform the evaluation assessment, a personal computer (PC, 3.2GHz 64-bit 6-core i7-8700 with 16GB DDR4 RAM) and a Raspberry Pi 3 Model B (1.2 GHz 64-bit quad-core ARM Cortex-A53 with 1GB LPDDR2 RAM) have been used to run MAM.
 
-\subsubsection{Channel / Endpoint Creation}
+\subsection{Channel / Endpoint Creation}
 The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is the height of Merkle Hash Tree in a Merkle signature scheme (MSS), and the "$-1$" is for announcing the ID of next channel or endpoint. A channel with height $n$ can create $2^n-1$ endpoints, and an endpoint with height $m$ can attach $2^m-1$ messages, therefore the capacity of a channel is $2^{nm}-2^n-2^m+1$ messages in total. The greater the \textit{height} of MSS, the longer the channel/endpoint, however the higher the computational power required. In this task, both channel and endpoint creation are tested and the \textit{height} is set from 1 to 7 which is quite enough for data providers to upload data. The results are shown in Table \ref{tab:channel_create} and Table \ref{tab:endpoint_create}. The time duration for each \textit{height} is the average time of running 100 rounds.
 
 \begin{table}[htbp]
@@ -873,7 +864,7 @@ The length of a channel or endpoint is $2^{height}-1$ where \textit{height} is t
 	\end{center}
 \end{table}
 
-The results of Table \ref{tab:channel_create} and Table \ref{tab:endpoint_create} are plotted in Fig.~\ref{fig:mam_create}. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to brokers.
+The results of Table \ref{tab:channel_create} and Table \ref{tab:endpoint_create} are plotted in Fig.~\ref{fig:mam_create}. Since the creation of channel and endpoint are MSS calculations, the curves of the same hardware are nearly identical. On the other hand, the performance of Raspberry Pi 3 is acceptable when \textit{height} is smaller than 4, but time grows rapidly when \textit{height} is 5 or above. And the performance of PC remains acceptable even \textit{height} gets to 7. The results indicate that MAM channel/endpoint creation is a laborious job for a Raspberry Pi 3 when data providers need a longer channel/endpoint, which is one of the reason that MAM operations should be forwarded to the Tangle-accelerator.
 
 \begin{figure}[h]
     \centering
@@ -882,7 +873,7 @@ The results of Table \ref{tab:channel_create} and Table \ref{tab:endpoint_create
     \label{fig:mam_create}
 \end{figure}
 
-\subsubsection{Messages Publishment}
+\subsection{Messages Publishment}
 Publishing a message to MAM is attaching a zero-value transaction to the Tangle which requires two processes:
 \begin{itemize}
     \item    Tips selection: In the IOTA protocol, a new-coming transaction needs to pick up 2 existed transactions called tips to reference and verify. The tips are provided by IOTA full nodes.
@@ -900,7 +891,7 @@ Tips selection requires a stable network connection to wait for the response fro
 
 The simulation results above indicate that MAM is difficult for low-level sensor devices to run, whereas these kind of devices are the majority of hardware in the IoT scenarios. Furthermore, sensors with low computing power and unstable internet connection are not able to have enough resources to handle data collection, data transmission on MAM, and even trading process with subscribers simultaneously.
 
-Therefore, transferring MAM operations to brokers while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such a framework. Brokers can be PCs or powerful machines that run Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with local Pow on Raspberry Pi 3 and remote Pow on Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
+Therefore, transferring MAM operations to Tangle-accelerators while ensuring the profit and privacy of providers through blind signatures can effectively solve performance problems and lower the threshold to participate in such a framework. Brokers can be PCs or powerful machines that run Ethereum client and Tangle-accelerator, where Ethereum client is used to interact with Ethereum and Tangle-accelerator provides PoW acceleration and MAM delegation. Fig.~\ref{fig:rpi3_pow} shows the time cost of sending a MAM message with local Pow on Raspberry Pi 3 and remote Pow on Tangle-accelerator. However, MAM operations still cost a considerable time that improving the performance of MAM is an essential issue that needs to be done for the next step.
 
 \begin{figure}[H]
     \centering
@@ -909,28 +900,28 @@ Therefore, transferring MAM operations to brokers while ensuring the profit and 
     \label{fig:rpi3_pow}
 \end{figure}
 
-\subsection{MAM vs. the Delegated MAM}
+\section{MAM vs. the Delegated MAM}
 \label{section:smart_contract_evaluation}
 
-\subsubsection{Experiment}
-Applying remote PoW greatly reduces the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM message. With employing delegated MAM and E2EE, MAM channel creation would be delegated by tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending messages to tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more clearly. In addition, MAM Channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values. In the E2EE protocol framework, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption, and Curve P-256 for ECDSA, respectively.
+\subsection{Experiment}
+Applying remote PoW greatly reduces the elapsed time. Channel creation is the next primary barrier for low-level devices to broadcast MAM message. With employing delegated MAM and E2EE, MAM channel creation would be delegated to the Tangle-accelerator which dramatically enhances the efficiency and makes MAM available for low-level devices. What follows is the performance comparison between MAM and delegated MAM (E2EE) for different payload sizes. Elapsed time for internet communication and PoW are not included, because the following processes starting from sending messages to Tangle-accelerator are the common steps. Excluding the common steps allows us to compare the performance between MAM and delegated MAM more precisely. In addition, MAM channel creation and E2EE asymmetric key pair generation are not included, too. The two excluded steps take much more time than encrypting messages only, so counting these two steps would cause extreme values. In the E2EE protocol framework, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption, and Curve P-256 for ECDSA, respectively.
 
 The steps counted in MAM benchmark including:
 \begin{itemize}
-    \item Encrypt input payload
-    \item Publish final message on IOTA Tangle
+    \item Encrypt the input payload
+    \item Publish the last message to the Tangle network
 \end{itemize}
 
 The steps counted in E2EE benchmark including:
 \begin{itemize}
-    \item Generate symmetric key for encryption
-    \item Hash input payload
-    \item Encrypt input payload
-    \item Transmit final message to tangle-accelerator
+    \item Generate a symmetric key for encryption
+    \item Hash the input payload
+    \item Encrypt the input payload
+    \item Transmit the last message to the Tangle-accelerator
 \end{itemize}
 
 \begin{table}[htbp]
-    \caption{Compare the performance between MAM and E2EE on Raspberry Pi}
+    \caption{Compare the performance between MAM and E2EE on Raspberry Pi 3 B+}
     \label{tab:mam_vs_e2ee}
 		\centering
         \begin{tabular}{|c||c|c|}
@@ -946,7 +937,7 @@ The steps counted in E2EE benchmark including:
         \end{tabular}
 \end{table}
 
-It the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two result reveals elapsing time of E2EE is obviously less than elapsing time of MAM which shows the E2EE process presented in the paper is a much more appropriate solution for resource-constrained systems to send authenticated streaming data.
+In the Table~\ref{tab:mam_vs_e2ee}, a comparison of the two results reveals the elapsing time of E2EE is obviously less than that of MAM which shows the E2EE process presented in the thesis is a much more appropriate solution for resource-constrained devices to send authenticated streaming data.
 
 \begin{equation}
 \label{eq:lin_mam}
@@ -960,11 +951,11 @@ y=0.0002 x+9.174
 
 The Eq.~\ref{eq:lin_mam} and Eq.~\ref{eq:lin_e2ee} are the linear equation for the experiment data of MAM and E2EE respectively. Apparently, the slope of the result of MAM is much greater than the result of E2EE. The small slope of E2EE ensures E2EE can consistently perform in an acceptable time range.
 
-\subsubsection{Time Complexity}
+\subsection{Time Complexity}
 With the given E2EE protocol framework, ECDSA would take constant time under our situation, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which causes the time complexity is $O(n)$, too. Therefore, the E2EE protocol framework takes only linear time versus arbitrary string length. Applying mature cryptographic functions (e.g. SHA-256, AES-CBC, etc), ensures gentle slope as Eq.~\ref{eq:lin_e2ee} shows.
 \clearpage
 
-\subsection{Smart Contract}
+\section{Smart Contract}
 In this experiment, we investigate the cost of executing Product Contract with Ethereum web browser-based IDE Remix that we can define the minimum cost, which data providers should pay in order to launch a product and processing trade.  On top of this evaluation, data providers can consider how to set the price to eventually generate profits. The estimated cost is in Ether, which is 238 USD at the time of writing, yet the price is dynamic from time to time. To conquer this condition, the authors in \cite{MindMyValue} suggested to analyze with a fixed range of Gas price,  yet the main drawback of low Gas price is the increase of time required before a transaction is validated. According to the report of Ethereum network\cite{ethereumChart} in 2020 (January to June), we set this range from 7.3 Gwei to 26.5 Gwei, which is $7.3 \times 10^{-9}$ and $2.65 \times 10^{-8}$ Ether respectively, the minimum average and average gas price. The Gas usage estimation is shown in Table.~\ref{tab:gas}.
 
 \begin{table}[h]
@@ -990,7 +981,7 @@ In this experiment, we investigate the cost of executing Product Contract with E
 	}
 \end{table}
 
-Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. Creating a Product Contract (Listing \ref{lst:constructor}) costs the most Gas (0.164 - 0.596 Ether), providers should have enough Ethers to launch the product at the start. Functions (Listing \ref{lst:key_exchange} (0.012 - 0.044 Ether) and Listing \ref{lst:key_certification} (0.022 - 0.0834 Ether)) that are related to key certification and key exchange need a lot of gas as well. Storage on blockchain is expensive. For instance, an SSTORE operation may cost 20000 gas when the value is set to non-zero from zero according to Ethereum Yellow Paper\cite{Ethereum}. However, in our trading model, we preserve a lot of information in the Product Contract in order to record as more details as possible during trading procedures, such as ciphertexts,  signatures during key certification and key exchange. Especially, in the key exchange protocol, it takes several steps of communications between brokers, data providers, and data consumers via storing states to Product Contract. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys. However, using the zero-knowledge protocol is out of the scope of this paper.
+Note that data uploading is only related to MAM operations on IOTA, which does not require any fees. Therefore, the Gas estimation only includes trading processes. Creating a Product Contract (Listing \ref{lst:constructor}) costs the most Gas (0.164 - 0.596 Ether), providers should have enough Ethers to launch the product at the start. Functions (Listing \ref{lst:key_exchange} (0.012 - 0.044 Ether) and Listing \ref{lst:key_certification} (0.022 - 0.0834 Ether)) that are related to key certification and key exchange need a lot of gas as well. Storage on blockchain is expensive. For instance, an SSTORE operation may cost 20000 gas when the value is set to non-zero from zero according to Ethereum Yellow Paper\cite{Ethereum}. However, in our trading model, we preserve a lot of information in the Product Contract in order to record as more details as possible during trading procedures, such as ciphertexts,  signatures during key certification and key exchange. Especially, in the key exchange protocol, it takes several steps of communications between brokers, data providers, and data consumers via storing states to Product Contract. Therefore, it is worth to explore the usage of the non-interactive zero-knowledge protocol such as zk-SNARKS(zero-knowledge succinct non-interactive argument of knowledge)\cite{Snark} which can generate proofs off-chain and simplify the verification process that could not only reduce network and storage cost but also improve the privacy and security of encryption keys. However, using the zero-knowledge protocol is out of the scope of this thesis.
 
 Base on Gas estimation in Table.~\ref{tab:gas}, we calculate the exact Ether with Formula~\ref{equa:ether_calculation} that data providers and data consumers need during the trade in Table.~\ref{tab:ether}. We combine the Gas usage of providers and brokers since the brokerage fee is also a critical cost to sustain the trade, which providers should considered. We conclude the three situations during the trading process: 1.) basic cost of a trade, including product launching, subscribing, encryption key uploading and withdraw. 2.) refund operation, the fees needed for launching refund. 3.) unsubscribe operation, the fees needed for launching unsubscription.
 
@@ -1042,7 +1033,7 @@ When a consumer request a refund, he/she need to pay 0.0008 - 0.0003 Ether addit
 
 \begin{spacing}{2.0}
 
-By combining the established standards and openly-developed specifications, this paper proposed a highly decentralized, autonomous publish/subscribe model design that combines data storage and trading together in order to ensure the digital rights of both data providers and consumers during the dynamic data streaming trading. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to enable the data stream trading by shifting risks from centralized services, ensure the authenticity of all participants, clarify the data ownership, enable secure communication and flexible trading mechanisms.
+By combining the established standards and openly-developed specifications, this thesis proposed a highly decentralized, autonomous publish/subscribe model design that combines data storage and trading together in order to ensure the digital rights of both data providers and consumers during the dynamic data streaming trading. It was built with blockchain network, immutable audit trails, and contracts with an integrated decentralized identity system, to enable the data stream trading by shifting risks from centralized services, ensure the authenticity of all participants, clarify the data ownership, enable secure communication and flexible trading mechanisms.
 
 Compared to previous works, we 1.) identify a trustless data trading infrastructure, 2.) ensure the confidentiality of scalable IoT-based sensor data, and 3.) consolidate the economic incentives in the entire ecosystem. Meanwhile, we consider the heavy workload of the low-level sensors, conduct an experiment which authenticates the data providers to delegate the MAM operations to Tangle-accelerators, and conclude that the performance of the E2EE approach is more fitting than the MAM solution. In particular, this work discusses the workflow for subscription-based IoT data trading: Launching, subscribing, unsubscribing, and refund.
 
