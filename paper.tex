@@ -240,7 +240,7 @@ Transferring the encryption key on smart contracts instead of off-chain not only
 \subsection{Unsubscribe to Data Products}
 When data consumers unsubscribe to data products, they are marked as not subscribing on the Product Contract, and the withdraw function is executed to pay the fee proportionally to participants, which is defined in formula~\ref{equation:unsubscribe},~\ref{equation:unsubscribe_1},~\ref{equation:unsubscribe_2}. $i$ is the number of data when refunding condition is met, $price$  is the subscription price, $M$ is the number of expected data records, $F_{b}$ (\%) is the brokerage fee which is expressed as a percentage, $F_{t}$ is the transaction fee of the smart contract, and $F_{cancel}$ is the cancellation fee charged for unsubscription. In SaaS, the cancellation fee is a way to make sure the service providers are protected if subscribers drop out at the early stage. However, asking cancellation fee arbitrarily may cause an unfair contract that leads to the legal issue, which should be carefully studied. Finally, data provider will change the encryption key to prevent unsubscribers continue accessing the following data. The new key should be updated for the remaining subscribers.
 \begin{align}
-    F_{DataProvider}(i) &= price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \label{equation:unsubscribe} \\
+    F_{Provider}(i) &= price \frac{i-1}{M} (1-F_{b}+F_{cancel}) -F_{t} \label{equation:unsubscribe} \\
     F_{Broker}(i) &= price \frac{i-1}{M} F_{b} -F_{t} \label{equation:unsubscribe_1} \\
     F_{Consumer}(i) &= price (1-\frac{i-1}{M})(1 -F_{cancel}) -F_{t} \label{equation:unsubscribe_2}
 \end{align}
