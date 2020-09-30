@@ -182,7 +182,7 @@ MAM builds a secure and authenticated communication protocol on top of multiple 
 \end{figure}
 
 \subsubsection{End-to-End-Encryption}
-Introducing a proxy server to process all the cryptographic operations causes the proxy server or the middle man can easily tamper the message. To avoid such malicious operations during transmission, we introduce another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with this lightweight end-to-end-encryption. The E2EE process ensures that only authorized subscribers can read the messages published on MAM.
+Introducing a proxy server to process all the cryptographic operations increases the risk of messages being tampered during transmission. To avoid such malicious operations, we propose another lightweight end-to-end-encryption (E2EE) upon MAM protocol. The plaintext will be encrypted with E2EE, which ensures only authorized subscribers can access the messages.
 
 \begin{figure}[!h]
     \centering
@@ -191,17 +191,17 @@ Introducing a proxy server to process all the cryptographic operations causes th
     \label{fig:MAM_E2EE}
 \end{figure}
 
-In the Fig.~\ref{fig:MAM_E2EE}, we illustrate each step in the presented E2EE process. The details of the steps are addressed below:
+The presented E2EE process is shown in Fig.~\ref{fig:MAM_E2EE} and illustrated below:
 
 \begin{enumerate}
-    \item Generate symmetric keys with a unique device identifier and Message Authentication Code (MAC) of the previous message. If the message is the genesis message, then sharing secret initialization information would serve as the MAC of the previous message. Key Derivation Function (KDF) is used to generate the symmetric keys.
-    \item Compute the Message Authentication Code (MAC) of the current message with the Hash-based Message Authentication Code(HMAC). Both plaintext and the symmetric key would be given as parameters in HMAC.
-    \item Apply the generated symmetric key to encrypt the plaintext.
-    \item Concatenate the MAC of the current message would and the MAC of the previous message, and then the result will be signed with a digital signature algorithm.
-    \item Send the ciphertext along with signed MAC.
+    \item Generate symmetric keys from the unique device identifier and Message Authentication Code (MAC) of the previous message with Key Derivation Function (KDF). For the first message, the sharing secret initialization information is taken as the MAC of the previous message.\label{item:1}
+    \item Compute the MAC of the current message with the Hash-based Message Authentication Code (HMAC) using the symmetric key from \ref{item:1}.
+    \item Apply the generated symmetric key to encrypt the plaintext.\label{item:3}
+    \item Concatenate the MACs of the current and the previous message, then sign it.\label{item:4}
+    \item Send the results of \ref{item:3} and \ref{item:4}.
 \end{enumerate}
 
-The E2EE protocol presented in this paper combines a series of different cryptographic procedures. Each of them can be chosen on the basis of the working hardware and scenario by developers. On certain devices, hardware acceleration would be supported. With hardware-acceleration, the elapsed time could be dropped a step more. For example, applying AES-NI can accelerate AES operations around 40\% on Intel devices.\cite{AES-NI-Acceleration} Some popular microcontrollers have integrated hardware accelerators for AES as well.\cite{stm}
+The E2EE protocol combines a series of different cryptographic procedures, which can be swapped by developers to adjust different hardwares or scenarios. The elapsed time could be dropped a step more on hardwares that supported acceleration, for example, applying AES-NI can speed up AES operations around 40\% on Intel devices\cite{AES-NI-Acceleration}, and AES accelerators are integrated on some popular microcontrollers as well\cite{stm}.
 
 \subsubsection{Time Complexity}
 In this paper, we choose SHA-256 for HMAC, AES-CBC for symmetric encryption, and ECDSA P-256 for digital signature. In this E2EE protocol, ECDSA would take constant time, since the string needed to be signed is in fixed length. HMAC and AES-CBC are the procedures that cost most of the elapsed time. Time complexity of HMAC with SHA-256 is $O(n)$.\cite{hmac_time_complexity} Block cipher takes constant time for a single block which causes the time complexity is $O(n)$, too. Therefore, the E2EE protocol takes only linear time versus arbitrary string length.
